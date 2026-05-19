@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Name the Frame</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --gold:#c9a96e;--gold-dim:rgba(201,169,122,.15);
+  --text:#f0ebe2;--muted:rgba(240,235,226,.5);--border:rgba(255,255,255,.1);
+  --glass:rgba(6,6,6,.75);--r:4px;
+  --ok:rgba(100,180,120,.18);--ok-t:#a8dab5;
+  --bad:rgba(180,90,90,.18);--bad-t:#dab5b5;
+}
+body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min-height:100vh;overflow-x:hidden;}
+
+/* SETUP */
+#setup{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2.5rem 1.5rem;}
+#setup::before{content:'';position:fixed;top:0;left:50%;transform:translateX(-50%);width:700px;height:350px;background:radial-gradient(ellipse,rgba(201,169,110,.07) 0%,transparent 70%);pointer-events:none;}
+.brand{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2.75rem,7vw,4.5rem);letter-spacing:-.01em;line-height:1;text-align:center;margin-bottom:.375rem;animation:fu .5s ease both;}
+.brand em{font-style:italic;color:var(--gold);}
+.tagline{font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:3rem;animation:fu .5s .08s ease both;}
+@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.scard{width:100%;max-width:460px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;animation:fu .5s .16s ease both;}
+.csec{padding:1.375rem 1.5rem;border-bottom:1px solid var(--border);}
+.csec:last-of-type{border-bottom:none;}
+.slbl{font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem;display:block;}
+.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.dbtn{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:var(--r);padding:.75rem;cursor:pointer;text-align:left;color:var(--text);font-family:inherit;transition:all .12s;}
+.dbtn:hover{border-color:rgba(201,169,110,.3);background:rgba(201,169,110,.04);}
+.dbtn.on{background:var(--gold-dim);border-color:var(--gold);}
+.dbtn .dn{font-family:'Cormorant Garamond',serif;font-size:15px;display:block;margin-bottom:2px;}
+.dbtn .dp{font-size:9px;letter-spacing:.08em;color:var(--muted);}
+.wwrap{display:flex;flex-wrap:wrap;gap:5px;}
+.wbtn{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:2px;padding:5px 10px;font-size:10px;cursor:pointer;color:var(--text);font-family:inherit;transition:all .12s;}
+.wbtn:hover{border-color:rgba(201,169,110,.3);}
+.wbtn.on{background:var(--gold-dim);border-color:var(--gold);color:var(--gold);}
+.stbtn{width:100%;background:var(--gold);color:#080808;border:none;padding:1rem;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;cursor:pointer;transition:all .12s;}
+.stbtn:hover{background:#d4b47a;}
+.scred{margin-top:1.25rem;font-size:9px;letter-spacing:.1em;color:rgba(240,235,226,.15);text-align:center;animation:fu .5s .24s ease both;}
+
+/* GAME */
+#game{display:none;min-height:100vh;position:relative;flex-direction:column;}
+
+.bgf{position:fixed;inset:0;z-index:0;}
+.bgf img{width:100%;height:100%;object-fit:cover;display:block;}
+.bgf::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,.42);}
+.bgf .vig{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.15) 0%,transparent 20%,transparent 45%,rgba(0,0,0,.65) 80%,rgba(0,0,0,.88) 100%);z-index:1;}
+
+.hud{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:.875rem 1.5rem;background:rgba(0,0,0,.32);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.06);}
+.hbrand{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300;font-style:italic;color:var(--gold);letter-spacing:.03em;}
+.hstats{display:flex;gap:1.5rem;font-size:10px;letter-spacing:.15em;color:var(--muted);}
+.hstats b{color:var(--text);}
+.hprog{position:fixed;top:44px;left:0;right:0;height:2px;background:rgba(255,255,255,.06);z-index:20;}
+.hprogf{height:100%;background:var(--gold);transition:width .5s ease;}
+
+.floader{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;font-size:9px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;z-index:5;transition:opacity .3s;}
+
+.qpanel{position:fixed;bottom:0;left:0;right:0;z-index:10;padding:1.5rem 1.5rem 2rem;background:linear-gradient(to bottom,transparent,var(--glass) 28%);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,.06);max-height:72vh;overflow-y:auto;}
+.qinner{max-width:520px;margin:0 auto;}
+
+.qtxt{font-family:'Cormorant Garamond',serif;font-size:clamp(1.2rem,3vw,1.625rem);font-weight:300;line-height:1.3;margin-bottom:.875rem;letter-spacing:.01em;}
+
+.refl{display:inline-flex;align-items:center;gap:10px;margin-bottom:.875rem;}
+.rl{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-style:italic;color:var(--gold);background:rgba(201,169,110,.14);border:1px solid rgba(201,169,110,.35);border-radius:2px;padding:3px 14px;letter-spacing:5px;}
+.rll{font-size:9px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;}
+
+.opts{display:grid;gap:6px;}
+.opt{background:rgba(6,6,6,.58);border:1px solid rgba(255,255,255,.1);border-radius:var(--r);padding:.75rem 1rem;text-align:left;cursor:pointer;color:var(--text);font-family:'Space Mono',monospace;font-size:12px;line-height:1.4;transition:all .12s;backdrop-filter:blur(4px);}
+.opt:hover:not(:disabled){border-color:rgba(201,169,110,.4);background:rgba(201,169,110,.1);}
+.opt.correct{background:var(--ok);border-color:rgba(100,180,120,.5);color:var(--ok-t);}
+.opt.wrong{background:var(--bad);border-color:rgba(180,90,90,.5);color:var(--bad-t);}
+
+.ti{background:rgba(6,6,6,.62);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;color:var(--text);font-family:'Space Mono',monospace;font-size:12px;width:100%;outline:none;transition:border-color .12s;margin-bottom:6px;backdrop-filter:blur(4px);}
+.ti:focus{border-color:rgba(201,169,110,.45);}
+.cb{width:100%;background:rgba(6,6,6,.62);border:1px solid rgba(201,169,110,.5);border-radius:var(--r);padding:.7rem;color:var(--gold);font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.25em;text-transform:uppercase;cursor:pointer;transition:all .12s;}
+.cb:hover{background:rgba(201,169,110,.14);}
+
+.rbox{margin-top:.875rem;padding:.75rem 1rem;border-radius:var(--r);font-size:12px;line-height:1.6;display:none;backdrop-filter:blur(4px);}
+.rbox.ok{background:var(--ok);border:1px solid rgba(100,180,120,.3);color:var(--ok-t);}
+.rbox.bad{background:var(--bad);border:1px solid rgba(180,90,90,.3);color:var(--bad-t);}
+.frev{margin-top:.75rem;padding:.75rem 1rem;background:rgba(6,6,6,.55);border:1px solid var(--border);border-radius:var(--r);display:none;backdrop-filter:blur(4px);}
+.frt{font-family:'Cormorant Garamond',serif;font-size:1rem;margin-bottom:2px;}
+.frm{font-size:10px;letter-spacing:.1em;color:var(--muted);}
+.nbtn{margin-top:.75rem;width:100%;background:transparent;border:1px solid rgba(255,255,255,.12);border-radius:var(--r);padding:.7rem;color:var(--muted);font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.25em;text-transform:uppercase;cursor:pointer;transition:all .12s;display:none;}
+.nbtn:hover{border-color:var(--gold);color:var(--gold);}
+
+/* END */
+#end{display:none;min-height:100vh;align-items:center;justify-content:center;flex-direction:column;padding:2rem;text-align:center;background:#080808;position:relative;}
+#end::before{content:'';position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(ellipse,rgba(201,169,110,.06) 0%,transparent 70%);pointer-events:none;}
+.esc{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:min(22vw,9rem);color:var(--gold);line-height:1;margin-bottom:.25rem;}
+.emx{font-size:10px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;margin-bottom:.5rem;}
+.evd{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-style:italic;opacity:.7;margin-bottom:2.5rem;}
+.erp{background:var(--gold);color:#080808;border:none;border-radius:var(--r);padding:.875rem 2.5rem;font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;cursor:pointer;transition:all .12s;}
+.erp:hover{background:#d4b47a;}
+.ecr{position:fixed;bottom:1.5rem;font-size:9px;letter-spacing:.1em;color:rgba(240,235,226,.12);max-width:360px;line-height:1.6;text-align:center;padding:0 1rem;}
+</style>
+</head>
+<body>
+
+<section id="setup">
+  <h1 class="brand">Name the <em>Frame</em></h1>
+  <p class="tagline">Rozpoznaj kadr · Udowodnij że byłeś uważny</p>
+  <div class="scard">
+    <div class="csec">
+      <span class="slbl">Poziom trudności</span>
+      <div class="dgrid">
+        <button class="dbtn on" data-d="test"><span class="dn">Test</span><span class="dp">4 opcje · +1 pkt</span></button>
+        <button class="dbtn" data-d="letter"><span class="dn">Litera</span><span class="dp">podpowiedź · +2 pkt</span></button>
+        <button class="dbtn" data-d="full"><span class="dn">Pełna</span><span class="dp">wpisujesz · +3 pkt</span></button>
+        <button class="dbtn" data-d="expert"><span class="dn">Ekspert</span><span class="dp">tytuł+reżyser+rok · +5 pkt</span></button>
+      </div>
+    </div>
+    <div class="csec" id="wsec">
+      <span class="slbl">Zgadujesz</span>
+      <div class="wwrap">
+        <button class="wbtn on" data-w="title">Tytuł</button>
+        <button class="wbtn" data-w="director">Reżyser</button>
+        <button class="wbtn" data-w="year">Rok</button>
+        <button class="wbtn" data-w="title_dir">Tytuł + reżyser</button>
+        <button class="wbtn" data-w="title_year">Tytuł + rok</button>
+      </div>
+    </div>
+    <button class="stbtn" id="stbtn" onclick="startGame()">▶ &nbsp;Zapal projektor</button>
+  </div>
+  <p class="scred">Dane i obrazy: The Movie Database (TMDB) · nametheframe.app</p>
+</section>
+
+<div id="game" style="display:none;flex-direction:column;min-height:100vh;">
+  <div class="bgf" id="bgf">
+    <img id="bgimg" src="" alt="" onload="imgOK()" onerror="imgErr()"/>
+    <div class="vig"></div>
+  </div>
+  <div class="floader" id="floader">ładowanie kadru…</div>
+  <header class="hud">
+    <span class="hbrand">Name the Frame</span>
+    <div class="hstats">
+      <span>RUNDA <b id="rnd">1</b> / <b id="mrnd">10</b></span>
+      <span>PUNKTY <b id="pts">0</b></span>
+    </div>
+  </header>
+  <div class="hprog"><div class="hprogf" id="prog" style="width:10%"></div></div>
+  <div class="qpanel">
+    <div class="qinner">
+      <p class="qtxt" id="qtxt">Jaki to film?</p>
+      <div id="rw" style="display:none"><div class="refl"><span class="rl" id="rl">?</span><span class="rll">litera z odpowiedzi</span></div></div>
+      <div id="aa"></div>
+      <div class="rbox" id="rb"></div>
+      <div class="frev" id="fr"><div class="frt" id="frt"></div><div class="frm" id="frm"></div></div>
+      <button class="nbtn" id="nb" onclick="nextRound()">Następny kadr &nbsp;→</button>
+    </div>
+  </div>
+</div>
+
+<div id="end" style="display:none;min-height:100vh;align-items:center;justify-content:center;flex-direction:column;padding:2rem;text-align:center;">
+  <div class="esc" id="esc">0</div>
+  <div class="emx" id="emx">z 10 możliwych punktów</div>
+  <div class="evd" id="evd"></div>
+  <button class="erp" onclick="resetGame()">Zagraj jeszcze raz</button>
+  <div class="ecr">This product uses the TMDB API but is not endorsed or certified by TMDB.</div>
+</div>
+
+<script>
+const KEY='1c61618d5544a3d8f83110b7b8444d61',IMG='https://image.tmdb.org/t/p/w1280',API='https://api.themoviedb.org/3';
+const FILMS=[
+  {id:797,   title:'Persona',         dir:'Bergman',        y:1966},
+  {id:1398,  title:'Stalker',         dir:'Tarkowski',      y:1979},
+  {id:422,   title:'8½',              dir:'Fellini',        y:1963},
+  {id:11906, title:'Suspiria',        dir:'Argento',        y:1977},
+  {id:10234, title:'Funny Games',     dir:'Haneke',         y:1997},
+  {id:680,   title:'Pulp Fiction',    dir:'Tarantino',      y:1994},
+  {id:1018,  title:'Mulholland Drive',dir:'Lynch',          y:2001},
+  {id:670,   title:'Oldboy',          dir:'Park Chan-wook', y:2003},
+  {id:758866,title:'Drive My Car',    dir:'Hamaguchi',      y:2021},
+  {id:785398,title:'EO',              dir:'Skolimowski',    y:2022},
+];
+let cache={},S={diff:'test',what:'title',round:0,score:0,used:[],cur:null};
+
+document.querySelectorAll('.dbtn').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.dbtn').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');S.diff=b.dataset.d;
+  const ws=document.getElementById('wsec');
+  ws.style.opacity=S.diff==='expert'?'.35':'1';
+  ws.style.pointerEvents=S.diff==='expert'?'none':'auto';
+}));
+document.querySelectorAll('.wbtn').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.wbtn').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');S.what=b.dataset.w;
+}));
+
+async function loadF(f){
+  try{
+    const r=await fetch(`${API}/movie/${f.id}/images?api_key=${KEY}`);
+    const d=await r.json();
+    const bds=(d.backdrops||[]).filter(b=>!b.iso_639_1).sort((a,b)=>b.vote_average-a.vote_average).slice(0,8);
+    cache[f.id]=bds.length?bds:(d.backdrops||[]).slice(0,3);
+  }catch{cache[f.id]=[];}
+}
+
+async function startGame(){
+  const btn=document.getElementById('stbtn');
+  btn.textContent='⏳  Ładowanie…';btn.style.pointerEvents='none';
+  await Promise.all(FILMS.map(loadF));
+  S.round=0;S.score=0;S.used=[];
+  document.getElementById('mrnd').textContent=FILMS.length;
+  document.getElementById('setup').style.display='none';
+  document.getElementById('game').style.display='flex';
+  btn.textContent='▶  Zapal projektor';btn.style.pointerEvents='auto';
+  nextRound();
+}
+
+function imgOK(){
+  const ld=document.getElementById('floader');
+  ld.style.opacity='0';setTimeout(()=>ld.style.display='none',300);
+}
+function imgErr(){
+  const ld=document.getElementById('floader');
+  ld.textContent='brak kadru';ld.style.opacity='0.35';
+}
+
+function nextRound(){
+  if(S.round>=FILMS.length){endGame();return;}
+  const av=FILMS.filter(f=>!S.used.includes(f.id));
+  if(!av.length){endGame();return;}
+  S.cur=av[Math.floor(Math.random()*av.length)];
+  S.used.push(S.cur.id);S.round++;
+  document.getElementById('rnd').textContent=S.round;
+  document.getElementById('pts').textContent=S.score;
+  document.getElementById('prog').style.width=(S.round/FILMS.length*100)+'%';
+  const bds=cache[S.cur.id]||[];
+  const bd=bds[Math.floor(Math.random()*Math.max(bds.length,1))];
+  const img=document.getElementById('bgimg'),ld=document.getElementById('floader');
+  img.style.opacity='0';ld.style.display='flex';ld.style.opacity='1';ld.textContent='ładowanie kadru…';
+  if(bd?.file_path){img.src=IMG+bd.file_path;img.style.opacity='1';}
+  document.getElementById('rb').style.display='none';
+  document.getElementById('rb').className='rbox';
+  document.getElementById('fr').style.display='none';
+  document.getElementById('nb').style.display='none';
+  document.getElementById('rw').style.display='none';
+  renderQ();
+}
+
+function renderQ(){
+  const diff=S.diff,what=diff==='expert'?'expert':S.what,f=S.cur;
+  const lbl={title:'Jaki to film?',director:'Kto wyreżyserował?',year:'Z którego roku?',title_dir:'Tytuł i reżyser?',title_year:'Tytuł i rok?',expert:'Tytuł, reżyser i rok?'};
+  document.getElementById('qtxt').textContent=lbl[what]||'Jaki to film?';
+  const area=document.getElementById('aa');
+  if(diff==='test'){
+    const c=ga(f,what);let opts=[c],tries=0;
+    while(opts.length<4&&tries++<40){const x=ga(FILMS[Math.floor(Math.random()*FILMS.length)],what);if(!opts.includes(x))opts.push(x);}
+    opts.sort(()=>Math.random()-.5);
+    area.innerHTML=`<div class="opts">${opts.map(o=>`<button class="opt" onclick="cOpt(this,'${es(c)}','${es(o)}')">${he(o)}</button>`).join('')}</div>`;
+  }else if(diff==='letter'){
+    const tgt=what==='director'?f.dir:what==='year'?String(f.y):f.title;
+    const cl=tgt.replace(/[^a-zA-Z0-9\u00C0-\u024F]/g,'');
+    document.getElementById('rl').textContent=cl.length?cl[Math.floor(Math.random()*cl.length)].toUpperCase():'?';
+    document.getElementById('rw').style.display='block';
+    area.innerHTML=bti(what,f);
+  }else if(diff==='full'){
+    area.innerHTML=bti(what,f);
+  }else{
+    area.innerHTML=`<input class="ti" id="et" placeholder="Tytuł…" autocomplete="off"><input class="ti" id="ed" placeholder="Reżyser…" autocomplete="off"><input class="ti" id="ey" placeholder="Rok…" autocomplete="off" style="margin-bottom:6px"><button class="cb" onclick="cExp()">Sprawdź</button>`;
+  }
+}
+
+function bti(w,f){const c=es(ga(f,w));return`<input class="ti" id="mi" placeholder="Odpowiedź…" autocomplete="off" onkeydown="if(event.key==='Enter')cTxt('${c}',this.value,'${es(w)}')"><button class="cb" onclick="cTxt('${c}',document.getElementById('mi').value,'${es(w)}')">Sprawdź</button>`;}
+function ga(f,w){if(w==='title')return f.title;if(w==='director')return f.dir;if(w==='year')return String(f.y);if(w==='title_dir')return`${f.title} — ${f.dir}`;if(w==='title_year')return`${f.title} (${f.y})`;return f.title;}
+function nm(s){return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,'').trim();}
+function es(s){return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;');}
+function he(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function cOpt(btn,correct,picked){
+  document.querySelectorAll('.opt').forEach(b=>{b.disabled=true;if(b.textContent.trim()===correct)b.classList.add('correct');});
+  if(picked!==correct)btn.classList.add('wrong');
+  sr(picked===correct,correct);
+}
+function cTxt(correct,guess,what){
+  const f=S.cur;let ok=false;
+  if(what==='year')ok=guess.trim()===String(f.y);
+  else if(what==='director')ok=nm(guess).includes(nm(f.dir).split(' ').pop());
+  else if(what==='title_dir')ok=nm(guess).includes(nm(f.title))&&nm(guess).includes(nm(f.dir).split(' ').pop());
+  else if(what==='title_year')ok=nm(guess).includes(nm(f.title))&&guess.includes(String(f.y));
+  else ok=nm(guess)===nm(correct)||(nm(correct).includes(nm(guess))&&nm(guess).length>3);
+  document.querySelectorAll('.ti,.cb').forEach(el=>el.disabled=true);
+  sr(ok,correct);
+}
+function cExp(){
+  const f=S.cur,t=document.getElementById('et').value,d=document.getElementById('ed').value,y=document.getElementById('ey').value;
+  const tOK=nm(t)===nm(f.title)||(nm(f.title).includes(nm(t))&&nm(t).length>2);
+  const dOK=nm(d).includes(nm(f.dir).split(' ').pop());
+  const yOK=y.trim()===String(f.y);
+  const ok=tOK&&dOK&&yOK;
+  document.querySelectorAll('.ti,.cb').forEach(el=>el.disabled=true);
+  sr(ok,`${f.title} — ${f.dir} (${f.y})`,ok?'':` · Tytuł ${tOK?'✓':'✗'} Reżyser ${dOK?'✓':'✗'} Rok ${yOK?'✓':'✗'}`);
+}
+function sr(ok,ct,ex=''){
+  const pts={test:1,letter:2,full:3,expert:5}[S.diff];
+  if(ok)S.score+=pts;
+  document.getElementById('pts').textContent=S.score;
+  const rb=document.getElementById('rb');
+  rb.className='rbox '+(ok?'ok':'bad');
+  rb.innerHTML=ok?`✓ &nbsp;Tak! &nbsp;<strong>${he(ct)}</strong> &nbsp;+${pts} pkt`:`✗ &nbsp;Nie. To: &nbsp;<strong>${he(ct)}</strong>${ex}`;
+  rb.style.display='block';
+  document.getElementById('frt').textContent=S.cur.title;
+  document.getElementById('frm').textContent=`${S.cur.dir} · ${S.cur.y}`;
+  document.getElementById('fr').style.display='block';
+  document.getElementById('nb').style.display='block';
+}
+function endGame(){
+  const max={test:1,letter:2,full:3,expert:5}[S.diff]*FILMS.length;
+  const pct=Math.round(S.score/max*100);
+  const v=pct>=90?'Kinoman pierwszej kategorii.':pct>=70?'Solidna znajomość kina.':pct>=50?'Obiecujący kinofil.':pct>=30?'Więcej seansów, mniej scrollowania.':'Tarkowski czeka.';
+  document.getElementById('game').style.display='none';
+  document.getElementById('end').style.display='flex';
+  document.getElementById('esc').textContent=S.score;
+  document.getElementById('emx').textContent=`z ${max} możliwych punktów`;
+  document.getElementById('evd').textContent=v;
+}
+function resetGame(){
+  S={diff:S.diff,what:S.what,round:0,score:0,used:[],cur:null};
+  document.getElementById('end').style.display='none';
+  document.getElementById('setup').style.display='flex';
+}
+</script>
+</body>
+</html>
