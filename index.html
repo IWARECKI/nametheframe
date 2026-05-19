@@ -6,156 +6,12 @@
 <title>Name the Frame</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-:root{
-  --gold:#c9a96e;--gold-dim:rgba(201,169,122,.13);
-  --text:#f0ebe2;--muted:rgba(240,235,226,.46);--border:rgba(255,255,255,.09);
-  --glass:rgba(6,6,6,.8);--r:4px;
-  --ok:rgba(100,180,120,.18);--ok-t:#a8dab5;
-  --bad:rgba(180,90,90,.18);--bad-t:#dab5b5;
-  --warn:rgba(200,160,60,.18);--warn-t:#d4b870;
-}
-body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min-height:100vh;overflow-x:hidden;}
-
-/* INTRO */
-#intro{position:fixed;inset:0;background:#000;z-index:100;display:flex;align-items:center;justify-content:center;flex-direction:column;}
-.beam{position:absolute;top:0;left:50%;transform:translateX(-50%);width:0;height:0;border-left:0 solid transparent;border-right:0 solid transparent;border-top:100vh solid rgba(201,169,110,.05);animation:beam 2s ease forwards;pointer-events:none;}
-@keyframes beam{0%{opacity:0;border-left-width:0;border-right-width:0;}40%{opacity:1;}100%{opacity:1;border-left-width:200px;border-right-width:200px;}}
-.ilogo{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2.5rem,8vw,5rem);letter-spacing:-.01em;text-align:center;opacity:0;animation:up 1s 1.1s ease forwards;position:relative;z-index:1;}
-.ilogo em{font-style:italic;color:var(--gold);}
-.isub{font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--muted);margin-top:.5rem;opacity:0;animation:up .8s 1.9s ease forwards;position:relative;z-index:1;}
-.iline{position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent);opacity:0;transform:scaleX(0);animation:line 1s 2.6s ease forwards;}
-@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-@keyframes line{from{opacity:0;transform:scaleX(0)}to{opacity:1;transform:scaleX(1)}}
-
-/* SETUP */
-#setup{min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;padding:2.5rem 1.5rem;opacity:0;transition:opacity .6s;}
-#setup.vis{opacity:1;}
-#setup::before{content:'';position:fixed;top:0;left:50%;transform:translateX(-50%);width:700px;height:300px;background:radial-gradient(ellipse,rgba(201,169,110,.06) 0%,transparent 70%);pointer-events:none;}
-.brand{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2rem,5vw,3.5rem);letter-spacing:-.01em;line-height:1;text-align:center;margin-bottom:.3rem;}
-.brand em{font-style:italic;color:var(--gold);}
-.tagline{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:2.5rem;max-width:420px;line-height:1.8;}
-
-.form-row{width:100%;max-width:700px;display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
-@media(max-width:600px){.form-row{grid-template-columns:1fr;}}
-.field-wrap{display:flex;flex-direction:column;gap:.4rem;}
-.field-label{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);}
-.field-sub{font-size:9px;color:var(--muted);letter-spacing:.04em;}
-.nick-input{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;color:var(--text);font-family:'Cormorant Garamond',serif;font-size:1.15rem;width:100%;outline:none;transition:border-color .15s;letter-spacing:.04em;}
-.nick-input:focus{border-color:rgba(201,169,110,.4);}
-.nick-input::placeholder{color:var(--muted);font-style:italic;}
-.genre-select{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;color:var(--text);font-family:'Space Mono',monospace;font-size:11px;width:100%;outline:none;transition:border-color .15s;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23c9a96e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center;}
-.genre-select:focus{border-color:rgba(201,169,110,.4);}
-.genre-select option{background:#141414;color:var(--text);}
-
-.levels-label{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:.875rem;align-self:flex-start;width:100%;max-width:700px;}
-.levels{width:100%;max-width:700px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem;}
-@media(max-width:600px){.levels{grid-template-columns:1fr;}}
-
-.lvl-card{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:var(--r);cursor:pointer;transition:all .15s;overflow:hidden;position:relative;display:flex;flex-direction:column;}
-.lvl-card:hover{border-color:rgba(201,169,122,.3);background:rgba(201,169,122,.04);}
-.lvl-card.active{background:var(--gold-dim);border-color:var(--gold);}
-.lvl-main{padding:1rem;flex:1;}
-.lvl-emoji{font-size:1.4rem;display:block;margin-bottom:.5rem;}
-.lvl-name{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:400;display:block;margin-bottom:.4rem;}
-.lvl-desc{font-size:9.5px;color:var(--muted);line-height:1.6;letter-spacing:.02em;}
-
-.lvl-spoiler-btn{width:100%;background:transparent;border:none;border-top:1px solid rgba(255,255,255,.06);padding:.5rem .75rem;font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:rgba(201,169,122,.38);cursor:pointer;text-align:center;transition:all .15s;}
-.lvl-spoiler-btn:hover{color:rgba(201,169,122,.7);background:rgba(201,169,122,.04);}
-.lvl-spoiler-content{max-height:0;overflow:hidden;transition:max-height .35s ease,padding .35s ease;}
-.lvl-spoiler-content.open{max-height:160px;padding:.75rem 1rem;border-top:1px solid rgba(201,169,122,.12);}
-.spoiler-text{font-size:9.5px;line-height:1.65;color:rgba(201,169,122,.82);font-style:italic;letter-spacing:.02em;}
-
-.start-btn{width:100%;max-width:700px;background:var(--gold);color:#080808;border:none;border-radius:var(--r);padding:1rem;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;cursor:pointer;transition:all .15s;}
-.start-btn:hover{background:#d4b47a;}
-.start-btn:disabled{opacity:.35;cursor:not-allowed;}
-.scred{margin-top:1.25rem;font-size:9px;letter-spacing:.1em;color:rgba(240,235,226,.13);text-align:center;}
-
-/* GAME */
-#game{display:none;min-height:100vh;position:relative;flex-direction:column;}
-.bgf{position:fixed;inset:0;z-index:0;}
-.bgf img{width:100%;height:100%;object-fit:cover;display:block;}
-.bgf::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,.4);}
-.bgf .vig{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.12) 0%,transparent 20%,transparent 45%,rgba(0,0,0,.65) 80%,rgba(0,0,0,.9) 100%);z-index:1;}
-.hud{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:.875rem 1.5rem;background:rgba(0,0,0,.3);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.06);}
-.hbrand{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:300;font-style:italic;color:var(--gold);}
-.hright{display:flex;align-items:center;gap:1.25rem;}
-.hnick{font-size:10px;color:var(--gold);letter-spacing:.1em;}
-.hstats{display:flex;gap:1.25rem;font-size:10px;letter-spacing:.12em;color:var(--muted);}
-.hstats b{color:var(--text);}
-.hprog{position:fixed;top:44px;left:0;right:0;height:2px;background:rgba(255,255,255,.05);z-index:20;}
-.hprogf{height:100%;background:var(--gold);transition:width .5s ease;}
-.floader{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;font-size:9px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;z-index:5;transition:opacity .3s;}
-.qpanel{position:fixed;bottom:0;left:0;right:0;z-index:10;padding:1.5rem 1.5rem 2rem;background:linear-gradient(to bottom,transparent,var(--glass) 28%);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,.06);max-height:75vh;overflow-y:auto;}
-.qinner{max-width:520px;margin:0 auto;}
-.qtxt{font-family:'Cormorant Garamond',serif;font-size:clamp(1.2rem,3vw,1.625rem);font-weight:300;line-height:1.3;margin-bottom:.875rem;}
-
-/* Wisielec / okienka liter */
-.hangman-wrap{margin-bottom:1rem;}
-.hangman-label{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;}
-.hangman-boxes{display:flex;flex-wrap:wrap;gap:4px;}
-.hbox{
-  width:28px;height:34px;
-  border-bottom:2px solid rgba(201,169,110,.5);
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:400;
-  color:var(--gold);letter-spacing:0;
-  transition:all .2s;
-}
-.hbox.revealed{
-  background:rgba(201,169,110,.1);
-  border:1px solid rgba(201,169,110,.4);
-  border-radius:2px;
-  color:var(--gold);
-}
-.hbox.space{border:none;width:10px;}
-
-.opts{display:grid;gap:6px;}
-.opt{background:rgba(6,6,6,.58);border:1px solid rgba(255,255,255,.1);border-radius:var(--r);padding:.75rem 1rem;text-align:left;cursor:pointer;color:var(--text);font-family:'Space Mono',monospace;font-size:12px;line-height:1.4;transition:all .12s;backdrop-filter:blur(4px);}
-.opt:hover:not(:disabled){border-color:rgba(201,169,110,.4);background:rgba(201,169,110,.1);}
-.opt.correct{background:var(--ok);border-color:rgba(100,180,120,.5);color:var(--ok-t);}
-.opt.wrong{background:var(--bad);border-color:rgba(180,90,90,.5);color:var(--bad-t);}
-
-.ti{background:rgba(6,6,6,.62);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;color:var(--text);font-family:'Space Mono',monospace;font-size:12px;width:100%;outline:none;transition:border-color .12s;margin-bottom:6px;backdrop-filter:blur(4px);}
-.ti:focus{border-color:rgba(201,169,110,.4);}
-
-.dir-bonus-wrap{margin-top:8px;padding:.75rem 1rem;background:rgba(201,169,110,.05);border:1px solid rgba(201,169,110,.15);border-radius:var(--r);}
-.dir-bonus-label{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(201,169,122,.6);margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;}
-.dir-bonus-pts{font-size:10px;color:var(--gold);}
-.dir-input{background:rgba(6,6,6,.5);border:1px solid rgba(201,169,110,.2);border-radius:var(--r);padding:.6rem .875rem;color:var(--text);font-family:'Space Mono',monospace;font-size:11px;width:100%;outline:none;transition:border-color .12s;}
-.dir-input:focus{border-color:rgba(201,169,110,.5);}
-.dir-input::placeholder{color:rgba(240,235,226,.25);font-style:italic;}
-
-.cb{width:100%;background:rgba(6,6,6,.6);border:1px solid rgba(201,169,110,.5);border-radius:var(--r);padding:.7rem;color:var(--gold);font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.25em;text-transform:uppercase;cursor:pointer;transition:all .12s;margin-top:6px;}
-.cb:hover{background:rgba(201,169,110,.13);}
-
-.rbox{margin-top:.875rem;padding:.75rem 1rem;border-radius:var(--r);font-size:12px;line-height:1.7;display:none;backdrop-filter:blur(4px);}
-.rbox.ok{background:var(--ok);border:1px solid rgba(100,180,120,.28);color:var(--ok-t);}
-.rbox.bad{background:var(--bad);border:1px solid rgba(180,90,90,.28);color:var(--bad-t);}
-.rbox.partial{background:var(--warn);border:1px solid rgba(200,160,60,.28);color:var(--warn-t);}
-
-.frev{margin-top:.75rem;padding:.75rem 1rem;background:rgba(6,6,6,.55);border:1px solid var(--border);border-radius:var(--r);display:none;backdrop-filter:blur(4px);}
-.frt{font-family:'Cormorant Garamond',serif;font-size:1rem;margin-bottom:2px;}
-.frm{font-size:10px;letter-spacing:.1em;color:var(--muted);}
-.nbtn{margin-top:.75rem;width:100%;background:transparent;border:1px solid rgba(255,255,255,.12);border-radius:var(--r);padding:.7rem;color:var(--muted);font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.25em;text-transform:uppercase;cursor:pointer;transition:all .12s;display:none;}
-.nbtn:hover{border-color:var(--gold);color:var(--gold);}
-
-/* END */
-#end{display:none;min-height:100vh;align-items:center;justify-content:center;flex-direction:column;padding:2rem;text-align:center;background:#080808;position:relative;}
-#end::before{content:'';position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(ellipse,rgba(201,169,110,.05) 0%,transparent 70%);pointer-events:none;}
-.esc{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:min(22vw,9rem);color:var(--gold);line-height:1;margin-bottom:.25rem;}
-.emx{font-size:10px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;margin-bottom:.5rem;}
-.enick-line{font-family:'Cormorant Garamond',serif;font-size:1rem;font-style:italic;color:rgba(201,169,110,.7);margin-bottom:.25rem;}
-.evd{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;opacity:.65;margin-bottom:2.5rem;}
-.erp{background:var(--gold);color:#080808;border:none;border-radius:var(--r);padding:.875rem 2.5rem;font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;cursor:pointer;transition:all .12s;}
-.erp:hover{background:#d4b47a;}
-.ecr{position:fixed;bottom:1.5rem;font-size:9px;letter-spacing:.1em;color:rgba(240,235,226,.12);max-width:360px;line-height:1.6;text-align:center;padding:0 1rem;}
-</style>
+<!-- Django equivalent: {% load static %} <link rel="stylesheet" href="{% static 'css/main.css' %}"> -->
+<link rel="stylesheet" href="css/main.css">
 </head>
 <body>
 
-<!-- INTRO -->
+<!-- Django equivalent: {% block intro %}{% include "partials/intro.html" %}{% endblock %} -->
 <div id="intro">
   <div class="beam"></div>
   <div class="ilogo">Name the <em>Frame</em></div>
@@ -163,7 +19,7 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   <div class="iline"></div>
 </div>
 
-<!-- SETUP -->
+<!-- Django equivalent: {% block setup %}{% include "partials/setup.html" %}{% endblock %} -->
 <section id="setup">
   <div class="brand">Name the <em>Frame</em></div>
   <p class="tagline">Rozpoznaj kadr &nbsp;·&nbsp; Sprawdź swój poziom filmowtajemniczenia</p>
@@ -267,15 +123,21 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   <p class="scred">Dane i obrazy: The Movie Database (TMDB) · nametheframe.com</p>
 </section>
 
-<!-- GAME -->
+<!-- Django equivalent: {% block game %}{% include "partials/game.html" %}{% endblock %} -->
 <div id="game" style="display:none;flex-direction:column;min-height:100vh;">
-  <div class="bgf"><img id="bgimg" src="" alt="" onload="imgOK()" onerror="imgErr()"/><div class="vig"></div></div>
+  <div class="bgf">
+    <img id="bgimg" src="" alt="" onload="imgOK()" onerror="imgErr()"/>
+    <div class="vig"></div>
+  </div>
   <div class="floader" id="floader">ładowanie kadru…</div>
   <header class="hud">
     <span class="hbrand">Name the Frame</span>
     <div class="hright">
       <span class="hnick" id="hnick"></span>
-      <div class="hstats"><span>RUNDA <b id="rnd">1</b>/<b id="mrnd">10</b></span><span>PUNKTY <b id="pts">0</b></span></div>
+      <div class="hstats">
+        <span>RUNDA <b id="rnd">1</b>/<b id="mrnd">10</b></span>
+        <span>PUNKTY <b id="pts">0</b></span>
+      </div>
     </div>
   </header>
   <div class="hprog"><div class="hprogf" id="prog" style="width:10%"></div></div>
@@ -285,13 +147,16 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
       <div id="hangman-area"></div>
       <div id="aa"></div>
       <div class="rbox" id="rb"></div>
-      <div class="frev" id="fr"><div class="frt" id="frt"></div><div class="frm" id="frm"></div></div>
+      <div class="frev" id="fr">
+        <div class="frt" id="frt"></div>
+        <div class="frm" id="frm"></div>
+      </div>
       <button class="nbtn" id="nb" onclick="nextRound()">Następny kadr &nbsp;→</button>
     </div>
   </div>
 </div>
 
-<!-- END -->
+<!-- Django equivalent: {% block end %}{% include "partials/end.html" %}{% endblock %} -->
 <div id="end" style="display:none;min-height:100vh;align-items:center;justify-content:center;flex-direction:column;padding:2rem;text-align:center;">
   <div class="esc" id="esc">0</div>
   <div class="emx" id="emx"></div>
@@ -301,337 +166,31 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   <div class="ecr">This product uses the TMDB API but is not endorsed or certified by TMDB.</div>
 </div>
 
-<script>
-const KEY='1c61618d5544a3d8f83110b7b8444d61',IMG='https://image.tmdb.org/t/p/w1280',APIBASE='https://api.themoviedb.org/3';
-const FILMS=[
-  {id:797,   title:'Persona',         dir:'Bergman',        y:1966},
-  {id:1398,  title:'Stalker',         dir:'Tarkowski',      y:1979},
-  {id:422,   title:'8½',              dir:'Fellini',        y:1963},
-  {id:11906, title:'Suspiria',        dir:'Argento',        y:1977},
-  {id:10234, title:'Funny Games',     dir:'Haneke',         y:1997},
-  {id:680,   title:'Pulp Fiction',    dir:'Tarantino',      y:1994},
-  {id:1018,  title:'Mulholland Drive',dir:'Lynch',          y:2001},
-  {id:670,   title:'Oldboy',          dir:'Park Chan-wook', y:2003},
-  {id:758866,title:'Drive My Car',    dir:'Hamaguchi',      y:2021},
-  {id:785398,title:'EO',              dir:'Skolimowski',    y:2022},
-];
+<!-- ── Scripts — load order matters (dependencies first) ──────────────────
+     Django equivalent: {% block scripts %}...{% endblock %} at bottom of base.html
+     Future: replace with ES modules + a bundler (Vite/esbuild) -->
 
-const GENRE_LABELS={
-  'horror':'siekacz horrorów','thriller':'łowca thrillerów','noir':'czciciel mroku',
-  'kryminał':'detektyw kina','dramat':'dramaturg salonów','komedia':'kronikarz śmiechu',
-  'romans':'romantyk srebrnego ekranu','melodramat':'płakacz pierwszego rzędu',
-  'akcja':'żołnierz ekranu','przygodowy':'odkrywca nowych światów','western':'rewolwerowiec kina',
-  'wojenny':'kronikarz wojen','szpiegowski':'agent specjalny','superbohaterski':'obrońca galaktyki',
-  'sci-fi':'wizjoner przyszłości','fantasy':'strażnik magii','animacja':'dusza rysunku',
-  'baśń':'bajarz wieczorny','surrealizm':'budowniczy snów','art-house':'kapłan sztuki',
-  'slow-cinema':'kontemplator ciszy','eksperyment':'demolator formy','esej-filmowy':'myśliciel z projektora',
-  'dokumentalny':'łowca prawdy','mockumentary':'kłamca z kamerą','body-horror':'anatom ekranu',
-  'giallo':'kolekcjoner czerwieni','yakuza':'samuraj multipleksu','road-movie':'nomad asfaltu',
-  'coming-of-age':'strażnik niewinności','mumblecore':'szeptem o życiu','neon-noir':'nocny łowca neonów',
-  'musical':'śpiewak w ciemności'
-};
+<!-- Data layer -->
+<script src="js/data/films.js"></script>
+<script src="js/data/genres.js"></script>
 
-let cache={},S={level:null,nick:'',genre:'',diff:'test',round:0,score:0,used:[],cur:null,revealedIdx:0};
+<!-- Service layer -->
+<script src="js/services/tmdb.js"></script>
+<script src="js/services/scores.js"></script>
 
-// INTRO
-setTimeout(()=>{
-  const i=document.getElementById('intro');
-  i.style.transition='opacity .8s';i.style.opacity='0';
-  setTimeout(()=>{
-    i.style.display='none';
-    const s=document.getElementById('setup');
-    s.style.display='flex';
-    setTimeout(()=>s.classList.add('vis'),50);
-  },800);
-},3400);
+<!-- Game logic (no DOM dependencies) -->
+<script src="js/game/scoring.js"></script>
+<script src="js/game/engine.js"></script>
+<script src="js/game/modes.js"></script>
 
-['nick-input','genre-select'].forEach(id=>{
-  document.getElementById(id).addEventListener('change',checkReady);
-  document.getElementById(id).addEventListener('input',checkReady);
-});
-function checkReady(){
-  const nick=document.getElementById('nick-input').value.trim();
-  const genre=document.getElementById('genre-select').value;
-  document.getElementById('start-btn').disabled=!(nick&&genre&&S.level);
-}
+<!-- UI layer (depends on game logic + data) -->
+<script src="js/ui/game.js"></script>
+<script src="js/ui/end.js"></script>
+<script src="js/ui/setup.js"></script>
+<script src="js/ui/intro.js"></script>
 
-function selectLevel(card){
-  document.querySelectorAll('.lvl-card').forEach(c=>c.classList.remove('active'));
-  card.classList.add('active');
-  S.level=card.dataset.lvl;
-  S.diff=S.level==='popcorn'?'test':S.level==='kinoman'?'letter':'expert';
-  checkReady();
-}
+<!-- App bootstrap -->
+<script src="js/app.js"></script>
 
-function toggleSpoiler(e,btn){
-  e.stopPropagation();
-  const content=btn.nextElementSibling;
-  const isOpen=content.classList.contains('open');
-  content.classList.toggle('open');
-  btn.textContent=isOpen?'kliknij jeśli nie boisz się spoilerów':'▲ schowaj spoiler';
-}
-
-async function loadF(f){
-  try{
-    const r=await fetch(`${APIBASE}/movie/${f.id}/images?api_key=${KEY}`);
-    const d=await r.json();
-    const bds=(d.backdrops||[]).filter(b=>!b.iso_639_1).sort((a,b)=>b.vote_average-a.vote_average).slice(0,8);
-    cache[f.id]=bds.length?bds:(d.backdrops||[]).slice(0,3);
-  }catch{cache[f.id]=[];}
-}
-
-async function startGame(){
-  const nick=document.getElementById('nick-input').value.trim();
-  const genre=document.getElementById('genre-select').value;
-  if(!nick||!genre||!S.level)return;
-  S.nick=nick;S.genre=genre;
-  const btn=document.getElementById('start-btn');
-  btn.textContent='⏳  Ładowanie kadrów…';btn.disabled=true;
-  await Promise.all(FILMS.map(loadF));
-  S.round=0;S.score=0;S.used=[];
-  document.getElementById('mrnd').textContent=FILMS.length;
-  document.getElementById('hnick').textContent=S.nick;
-  document.getElementById('setup').style.display='none';
-  document.getElementById('game').style.display='flex';
-  nextRound();
-}
-
-function imgOK(){const l=document.getElementById('floader');l.style.opacity='0';setTimeout(()=>l.style.display='none',300);}
-function imgErr(){const l=document.getElementById('floader');l.textContent='brak kadru';l.style.opacity='0.35';}
-
-function nextRound(){
-  if(S.round>=FILMS.length){endGame();return;}
-  const av=FILMS.filter(f=>!S.used.includes(f.id));
-  if(!av.length){endGame();return;}
-  S.cur=av[Math.floor(Math.random()*av.length)];S.used.push(S.cur.id);S.round++;
-  document.getElementById('rnd').textContent=S.round;
-  document.getElementById('pts').textContent=S.score;
-  document.getElementById('prog').style.width=(S.round/FILMS.length*100)+'%';
-  const bds=cache[S.cur.id]||[];
-  const bd=bds[Math.floor(Math.random()*Math.max(bds.length,1))];
-  const img=document.getElementById('bgimg'),ld=document.getElementById('floader');
-  img.style.opacity='0';ld.style.display='flex';ld.style.opacity='1';ld.textContent='ładowanie kadru…';
-  if(bd?.file_path){img.src=IMG+bd.file_path;img.style.opacity='1';}
-  document.getElementById('rb').style.display='none';
-  document.getElementById('rb').className='rbox';
-  document.getElementById('fr').style.display='none';
-  document.getElementById('nb').style.display='none';
-  document.getElementById('hangman-area').innerHTML='';
-  renderQ();
-}
-
-// ── WISIELEC ─────────────────────────────────────────────
-function buildHangman(word, revealedIdx){
-  // word = tytuł, revealIdx = indeks odkrytej litery (tylko litery/cyfry)
-  const letters=[];
-  let letterCount=0;
-  for(let i=0;i<word.length;i++){
-    const ch=word[i];
-    if(ch===' '||ch==='-'||ch===':'){
-      letters.push({ch,type:'space'});
-    } else {
-      letters.push({ch,type:'letter',idx:letterCount,revealed:letterCount===revealedIdx});
-      letterCount++;
-    }
-  }
-  return letters;
-}
-
-function renderHangman(word, revealedIdx){
-  const area=document.getElementById('hangman-area');
-  const letters=buildHangman(word, revealedIdx);
-  const boxes=letters.map(l=>{
-    if(l.type==='space') return `<div class="hbox space"></div>`;
-    if(l.revealed) return `<div class="hbox revealed">${he(l.ch.toUpperCase())}</div>`;
-    return `<div class="hbox"></div>`;
-  }).join('');
-  area.innerHTML=`<div class="hangman-wrap"><div class="hangman-label">Podpowiedź — jedna litera odkryta</div><div class="hangman-boxes">${boxes}</div></div>`;
-}
-
-// ── LEVENSHTEIN ───────────────────────────────────────────
-function levenshtein(a,b){
-  const m=a.length,n=b.length;
-  const dp=Array.from({length:m+1},(_,i)=>Array.from({length:n+1},(_,j)=>i===0?j:j===0?i:0));
-  for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)
-    dp[i][j]=a[i-1]===b[j-1]?dp[i-1][j-1]:1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
-  return dp[m][n];
-}
-
-function fuzzyMatch(guess, correct){
-  const g=nm(guess), c=nm(correct);
-  if(g===c) return true;
-  if(levenshtein(g,c)<=1) return true;
-  return false;
-}
-
-// ── YEAR SCORING ──────────────────────────────────────────
-function yearScore(guess, correct, basePts){
-  const diff=Math.abs(parseInt(guess)-correct);
-  if(diff===0) return {pts:basePts,label:'✓ Dokładnie!'};
-  if(diff===1) return {pts:Math.round(basePts*.5),label:`⚡ Blisko! (±1 rok) +${Math.round(basePts*.5)} pkt`};
-  if(diff===2) return {pts:Math.round(basePts*.25),label:`⚡ Prawie (±2 lata) +${Math.round(basePts*.25)} pkt`};
-  return {pts:0,label:'✗ Rok daleki od prawdy'};
-}
-
-// ── RENDER QUESTION ───────────────────────────────────────
-function renderQ(){
-  const diff=S.diff, f=S.cur;
-  const area=document.getElementById('aa');
-  document.getElementById('hangman-area').innerHTML='';
-
-  if(diff==='test'){
-    document.getElementById('qtxt').textContent='Jaki to film?';
-    const c=f.title;
-    let opts=[c],t=0;
-    while(opts.length<4&&t++<40){const x=FILMS[Math.floor(Math.random()*FILMS.length)].title;if(!opts.includes(x))opts.push(x);}
-    opts.sort(()=>Math.random()-.5);
-    area.innerHTML=`<div class="opts">${opts.map(o=>`<button class="opt" onclick="cOpt(this,'${es(c)}','${es(o)}')">${he(o)}</button>`).join('')}</div>`;
-
-  } else if(diff==='letter'){
-    document.getElementById('qtxt').textContent='Jaki to film?';
-    // Pick random revealed letter index
-    const word=f.title;
-    const letterChars=word.replace(/[^a-zA-Z0-9\u00C0-\u024F]/g,'');
-    const revIdx=letterChars.length>0?Math.floor(Math.random()*letterChars.length):0;
-    S.revealedIdx=revIdx;
-    renderHangman(word, revIdx);
-    area.innerHTML=`
-      <input class="ti" id="mi" placeholder="Wpisz tytuł…" autocomplete="off" onkeydown="if(event.key==='Enter')cLetter()">
-      <div class="dir-bonus-wrap">
-        <div class="dir-bonus-label"><span>Reżyser? (opcjonalnie)</span><span class="dir-bonus-pts">+3 pkt / -1 pkt za błąd</span></div>
-        <input class="dir-input" id="di" placeholder="Wpisz reżysera lub zostaw puste…" autocomplete="off">
-      </div>
-      <button class="cb" onclick="cLetter()">Sprawdź</button>`;
-
-  } else {
-    // EXPERT
-    document.getElementById('qtxt').textContent='Tytuł, reżyser i rok?';
-    area.innerHTML=`
-      <input class="ti" id="et" placeholder="Tytuł…" autocomplete="off">
-      <input class="ti" id="ey" placeholder="Rok…" autocomplete="off">
-      <div class="dir-bonus-wrap">
-        <div class="dir-bonus-label"><span>Reżyser? (opcjonalnie)</span><span class="dir-bonus-pts">+3 pkt / -1 pkt za błąd</span></div>
-        <input class="dir-input" id="ed" placeholder="Wpisz reżysera lub zostaw puste…" autocomplete="off">
-      </div>
-      <button class="cb" onclick="cExpert()">Sprawdź</button>`;
-  }
-}
-
-function cOpt(btn,correct,picked){
-  document.querySelectorAll('.opt').forEach(b=>{b.disabled=true;if(b.textContent.trim()===correct)b.classList.add('correct');});
-  if(picked!==correct)btn.classList.add('wrong');
-  sr(picked===correct,1,correct,'');
-}
-
-function cLetter(){
-  const f=S.cur;
-  const title=document.getElementById('mi').value.trim();
-  const dir=(document.getElementById('di')||{value:''}).value.trim();
-  disableInputs();
-
-  const titleOK=fuzzyMatch(title,f.title);
-  let pts=0, lines=[];
-
-  // Title: 2 pts base for letter mode
-  if(titleOK){pts+=2;lines.push(`✓ Tytuł: <strong>${he(f.title)}</strong> +2 pkt`);}
-  else{lines.push(`✗ Tytuł: <strong>${he(f.title)}</strong>`);}
-
-  // Director bonus
-  if(dir){
-    const dirOK=nm(dir).includes(nm(f.dir).split(' ').pop());
-    if(dirOK){pts+=3;lines.push(`✓ Reżyser: <strong>${he(f.dir)}</strong> +3 pkt`);}
-    else{pts=Math.max(0,pts-1);lines.push(`✗ Reżyser: <strong>${he(f.dir)}</strong> -1 pkt`);}
-  }
-
-  S.score+=pts;
-  showResult(pts>0?'ok':'bad', lines.join('<br>'));
-}
-
-function cExpert(){
-  const f=S.cur;
-  const title=document.getElementById('et').value.trim();
-  const year=document.getElementById('ey').value.trim();
-  const dir=(document.getElementById('ed')||{value:''}).value.trim();
-  disableInputs();
-
-  let pts=0, lines=[], partial=false;
-
-  // Title: 3 pts
-  const titleOK=fuzzyMatch(title,f.title);
-  if(titleOK){pts+=3;lines.push(`✓ Tytuł: <strong>${he(f.title)}</strong> +3 pkt`);}
-  else{lines.push(`✗ Tytuł: <strong>${he(f.title)}</strong>`);}
-
-  // Year: 2 pts with partial
-  const ys=yearScore(year,f.y,2);
-  pts+=ys.pts;
-  if(ys.pts>0&&ys.pts<2)partial=true;
-  lines.push(`${ys.pts>0?'✓':'✗'} Rok: <strong>${f.y}</strong> ${ys.label}`);
-
-  // Director bonus
-  if(dir){
-    const dirOK=nm(dir).includes(nm(f.dir).split(' ').pop());
-    if(dirOK){pts+=3;lines.push(`✓ Reżyser: <strong>${he(f.dir)}</strong> +3 pkt`);}
-    else{pts=Math.max(0,pts-1);lines.push(`✗ Reżyser: <strong>${he(f.dir)}</strong> -1 pkt`);}
-  }
-
-  S.score+=pts;
-  const cls=pts===0?'bad':partial||pts<5?'partial':'ok';
-  showResult(cls, lines.join('<br>'));
-}
-
-function disableInputs(){
-  document.querySelectorAll('.ti,.dir-input,.cb').forEach(el=>el.disabled=true);
-}
-
-function showResult(cls, html){
-  document.getElementById('pts').textContent=S.score;
-  const rb=document.getElementById('rb');
-  rb.className='rbox '+cls;
-  rb.innerHTML=html;
-  rb.style.display='block';
-  document.getElementById('frt').textContent=S.cur.title;
-  document.getElementById('frm').textContent=`${S.cur.dir} · ${S.cur.y}`;
-  document.getElementById('fr').style.display='block';
-  document.getElementById('nb').style.display='block';
-}
-
-// sr kept for test mode compatibility
-function sr(ok, pts, ct, ex){
-  if(ok) S.score+=pts;
-  document.getElementById('pts').textContent=S.score;
-  const rb=document.getElementById('rb');
-  rb.className='rbox '+(ok?'ok':'bad');
-  rb.innerHTML=ok?`✓ &nbsp;Tak! &nbsp;<strong>${he(ct)}</strong> &nbsp;+${pts} pkt`:`✗ &nbsp;Nie. To: &nbsp;<strong>${he(ct)}</strong>${ex}`;
-  rb.style.display='block';
-  document.getElementById('frt').textContent=S.cur.title;
-  document.getElementById('frm').textContent=`${S.cur.dir} · ${S.cur.y}`;
-  document.getElementById('fr').style.display='block';
-  document.getElementById('nb').style.display='block';
-}
-
-function nm(s){return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,'').trim();}
-function es(s){return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;');}
-function he(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-
-function endGame(){
-  const maxPts=S.diff==='popcorn'?10:S.diff==='letter'?50:80;
-  const pct=Math.round(S.score/maxPts*100);
-  const v=pct>=85?'Nie ma co tu robić. Idź napisz recenzję.':pct>=65?'Solidnie. Torba filmfestiwalowa zasłużona.':pct>=45?'Obiecująco. Więcej Kieślowskiego, mniej Netflixa.':pct>=25?'Popcorn był dobry?':'Tarkowski czeka. Zaczynaj od Stalkera.';
-  const genreLabel=GENRE_LABELS[S.genre]||S.genre;
-  document.getElementById('game').style.display='none';
-  document.getElementById('end').style.display='flex';
-  document.getElementById('esc').textContent=S.score;
-  document.getElementById('emx').textContent=`punktów · poziom: ${S.level==='popcorn'?'Akolita Popcornu':S.level==='kinoman'?'Samozwańczy Kinoman':'Orędownik Wielkiej Kinezy'}`;
-  document.getElementById('enick-line').textContent=`${S.nick} · żywioł: ${genreLabel}`;
-  document.getElementById('evd').textContent=v;
-}
-
-function resetGame(){
-  S={...S,round:0,score:0,used:[],cur:null};
-  document.getElementById('end').style.display='none';
-  document.getElementById('setup').style.display='flex';
-  document.getElementById('setup').classList.add('vis');
-}
-</script>
 </body>
 </html>
