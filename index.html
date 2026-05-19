@@ -9,91 +9,138 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --gold:#c9a96e;--gold-dim:rgba(201,169,122,.15);
-  --text:#f0ebe2;--muted:rgba(240,235,226,.5);--border:rgba(255,255,255,.1);
-  --glass:rgba(6,6,6,.75);--r:4px;
+  --gold:#c9a96e;--gold-dim:rgba(201,169,122,.13);
+  --text:#f0ebe2;--muted:rgba(240,235,226,.46);--border:rgba(255,255,255,.09);
+  --glass:rgba(6,6,6,.8);--r:4px;
   --ok:rgba(100,180,120,.18);--ok-t:#a8dab5;
   --bad:rgba(180,90,90,.18);--bad-t:#dab5b5;
 }
 body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min-height:100vh;overflow-x:hidden;}
 
-/* SETUP */
-#setup{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2.5rem 1.5rem;}
-#setup::before{content:'';position:fixed;top:0;left:50%;transform:translateX(-50%);width:700px;height:350px;background:radial-gradient(ellipse,rgba(201,169,110,.07) 0%,transparent 70%);pointer-events:none;}
-.brand{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2.75rem,7vw,4.5rem);letter-spacing:-.01em;line-height:1;text-align:center;margin-bottom:.375rem;animation:fu .5s ease both;}
+/* ─── INTRO ─── */
+#intro{position:fixed;inset:0;background:#000;z-index:100;display:flex;align-items:center;justify-content:center;flex-direction:column;}
+.beam{position:absolute;top:0;left:50%;transform:translateX(-50%);width:0;height:0;border-left:0 solid transparent;border-right:0 solid transparent;border-top:100vh solid rgba(201,169,110,.05);animation:beam 2s ease forwards;pointer-events:none;}
+@keyframes beam{0%{opacity:0;border-left-width:0;border-right-width:0;}40%{opacity:1;}100%{opacity:1;border-left-width:200px;border-right-width:200px;}}
+.ilogo{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2.5rem,8vw,5rem);letter-spacing:-.01em;text-align:center;opacity:0;animation:up 1s 1.1s ease forwards;position:relative;z-index:1;}
+.ilogo em{font-style:italic;color:var(--gold);}
+.isub{font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--muted);margin-top:.5rem;opacity:0;animation:up .8s 1.9s ease forwards;position:relative;z-index:1;}
+.iline{position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent);opacity:0;transform:scaleX(0);animation:line 1s 2.6s ease forwards;}
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes line{from{opacity:0;transform:scaleX(0)}to{opacity:1;transform:scaleX(1)}}
+
+/* ─── SETUP ─── */
+#setup{min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;padding:2.5rem 1.5rem;opacity:0;transition:opacity .6s;}
+#setup.vis{opacity:1;}
+#setup::before{content:'';position:fixed;top:0;left:50%;transform:translateX(-50%);width:700px;height:300px;background:radial-gradient(ellipse,rgba(201,169,110,.06) 0%,transparent 70%);pointer-events:none;}
+
+.brand{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2rem,5vw,3.5rem);letter-spacing:-.01em;line-height:1;text-align:center;margin-bottom:.3rem;}
 .brand em{font-style:italic;color:var(--gold);}
-.tagline{font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:3rem;animation:fu .5s .08s ease both;}
-@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.scard{width:100%;max-width:460px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;animation:fu .5s .16s ease both;}
-.csec{padding:1.375rem 1.5rem;border-bottom:1px solid var(--border);}
-.csec:last-of-type{border-bottom:none;}
-.slbl{font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem;display:block;}
-.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
-.dbtn{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:var(--r);padding:.75rem;cursor:pointer;text-align:left;color:var(--text);font-family:inherit;transition:all .12s;}
-.dbtn:hover{border-color:rgba(201,169,110,.3);background:rgba(201,169,110,.04);}
-.dbtn.on{background:var(--gold-dim);border-color:var(--gold);}
-.dbtn .dn{font-family:'Cormorant Garamond',serif;font-size:15px;display:block;margin-bottom:2px;}
-.dbtn .dp{font-size:9px;letter-spacing:.08em;color:var(--muted);}
-.wwrap{display:flex;flex-wrap:wrap;gap:5px;}
-.wbtn{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:2px;padding:5px 10px;font-size:10px;cursor:pointer;color:var(--text);font-family:inherit;transition:all .12s;}
-.wbtn:hover{border-color:rgba(201,169,110,.3);}
-.wbtn.on{background:var(--gold-dim);border-color:var(--gold);color:var(--gold);}
-.stbtn{width:100%;background:var(--gold);color:#080808;border:none;padding:1rem;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;cursor:pointer;transition:all .12s;}
-.stbtn:hover{background:#d4b47a;}
-.scred{margin-top:1.25rem;font-size:9px;letter-spacing:.1em;color:rgba(240,235,226,.15);text-align:center;animation:fu .5s .24s ease both;}
+.tagline{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:2.5rem;max-width:400px;line-height:1.8;}
 
-/* GAME */
+/* Nick + gatunek */
+.form-row{width:100%;max-width:700px;display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
+@media(max-width:600px){.form-row{grid-template-columns:1fr;}}
+
+.field-wrap{display:flex;flex-direction:column;gap:.5rem;}
+.field-label{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);}
+.field-sub{font-size:9px;color:var(--muted);letter-spacing:.05em;margin-top:-2px;}
+
+.nick-input{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;color:var(--text);font-family:'Cormorant Garamond',serif;font-size:1.15rem;width:100%;text-align:left;outline:none;transition:border-color .15s;letter-spacing:.04em;}
+.nick-input:focus{border-color:rgba(201,169,110,.4);}
+.nick-input::placeholder{color:var(--muted);font-style:italic;}
+
+.genre-select{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;color:var(--text);font-family:'Space Mono',monospace;font-size:11px;width:100%;outline:none;transition:border-color .15s;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23c9a96e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center;}
+.genre-select:focus{border-color:rgba(201,169,110,.4);}
+.genre-select option{background:#141414;color:var(--text);}
+
+/* Level cards — trzy obok */
+.levels-label{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:.875rem;align-self:flex-start;width:100%;max-width:700px;}
+.levels{width:100%;max-width:700px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem;}
+@media(max-width:600px){.levels{grid-template-columns:1fr;}}
+
+.lvl-card{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:var(--r);cursor:pointer;transition:all .15s;overflow:hidden;position:relative;display:flex;flex-direction:column;}
+.lvl-card:hover{border-color:rgba(201,169,122,.3);background:rgba(201,169,122,.04);}
+.lvl-card.active{background:var(--gold-dim);border-color:var(--gold);}
+
+.lvl-main{padding:1rem;flex:1;}
+.lvl-emoji{font-size:1.4rem;display:block;margin-bottom:.5rem;}
+.lvl-name{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:400;display:block;margin-bottom:.4rem;}
+.lvl-desc{font-size:9.5px;color:var(--muted);line-height:1.6;letter-spacing:.02em;}
+
+/* Spoiler — na klik */
+.lvl-spoiler-btn{
+  width:100%;background:transparent;border:none;border-top:1px solid rgba(255,255,255,.06);
+  padding:.5rem .75rem;font-family:'Space Mono',monospace;font-size:8px;
+  letter-spacing:.15em;text-transform:uppercase;color:rgba(201,169,122,.4);
+  cursor:pointer;text-align:center;transition:all .15s;
+}
+.lvl-spoiler-btn:hover{color:rgba(201,169,122,.7);background:rgba(201,169,122,.04);}
+.lvl-card.active .lvl-spoiler-btn{color:rgba(201,169,122,.6);}
+
+.lvl-spoiler-content{
+  max-height:0;overflow:hidden;
+  transition:max-height .35s ease,padding .35s ease;
+  border-top:0px solid transparent;
+}
+.lvl-spoiler-content.open{
+  max-height:150px;
+  padding:.75rem 1rem;
+  border-top:1px solid rgba(201,169,122,.12);
+}
+.spoiler-text{font-size:9.5px;line-height:1.65;color:rgba(201,169,122,.82);font-style:italic;letter-spacing:.02em;}
+
+/* Start btn */
+.start-btn{width:100%;max-width:700px;background:var(--gold);color:#080808;border:none;border-radius:var(--r);padding:1rem;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;cursor:pointer;transition:all .15s;}
+.start-btn:hover{background:#d4b47a;}
+.start-btn:disabled{opacity:.35;cursor:not-allowed;}
+.scred{margin-top:1.25rem;font-size:9px;letter-spacing:.1em;color:rgba(240,235,226,.13);text-align:center;}
+
+/* ─── GAME ─── */
 #game{display:none;min-height:100vh;position:relative;flex-direction:column;}
-
 .bgf{position:fixed;inset:0;z-index:0;}
 .bgf img{width:100%;height:100%;object-fit:cover;display:block;}
-.bgf::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,.42);}
-.bgf .vig{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.15) 0%,transparent 20%,transparent 45%,rgba(0,0,0,.65) 80%,rgba(0,0,0,.88) 100%);z-index:1;}
-
-.hud{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:.875rem 1.5rem;background:rgba(0,0,0,.32);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.06);}
-.hbrand{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300;font-style:italic;color:var(--gold);letter-spacing:.03em;}
-.hstats{display:flex;gap:1.5rem;font-size:10px;letter-spacing:.15em;color:var(--muted);}
+.bgf::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,.4);}
+.bgf .vig{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.12) 0%,transparent 20%,transparent 45%,rgba(0,0,0,.65) 80%,rgba(0,0,0,.9) 100%);z-index:1;}
+.hud{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:.875rem 1.5rem;background:rgba(0,0,0,.3);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.06);}
+.hbrand{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:300;font-style:italic;color:var(--gold);}
+.hright{display:flex;align-items:center;gap:1.25rem;}
+.hnick{font-size:10px;color:var(--gold);letter-spacing:.1em;}
+.hstats{display:flex;gap:1.25rem;font-size:10px;letter-spacing:.12em;color:var(--muted);}
 .hstats b{color:var(--text);}
-.hprog{position:fixed;top:44px;left:0;right:0;height:2px;background:rgba(255,255,255,.06);z-index:20;}
+.hprog{position:fixed;top:44px;left:0;right:0;height:2px;background:rgba(255,255,255,.05);z-index:20;}
 .hprogf{height:100%;background:var(--gold);transition:width .5s ease;}
-
 .floader{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;font-size:9px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;z-index:5;transition:opacity .3s;}
-
 .qpanel{position:fixed;bottom:0;left:0;right:0;z-index:10;padding:1.5rem 1.5rem 2rem;background:linear-gradient(to bottom,transparent,var(--glass) 28%);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,.06);max-height:72vh;overflow-y:auto;}
 .qinner{max-width:520px;margin:0 auto;}
-
-.qtxt{font-family:'Cormorant Garamond',serif;font-size:clamp(1.2rem,3vw,1.625rem);font-weight:300;line-height:1.3;margin-bottom:.875rem;letter-spacing:.01em;}
-
+.qtxt{font-family:'Cormorant Garamond',serif;font-size:clamp(1.2rem,3vw,1.625rem);font-weight:300;line-height:1.3;margin-bottom:.875rem;}
 .refl{display:inline-flex;align-items:center;gap:10px;margin-bottom:.875rem;}
-.rl{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-style:italic;color:var(--gold);background:rgba(201,169,110,.14);border:1px solid rgba(201,169,110,.35);border-radius:2px;padding:3px 14px;letter-spacing:5px;}
+.rl{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-style:italic;color:var(--gold);background:rgba(201,169,110,.13);border:1px solid rgba(201,169,110,.33);border-radius:2px;padding:3px 14px;letter-spacing:5px;}
 .rll{font-size:9px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;}
-
 .opts{display:grid;gap:6px;}
 .opt{background:rgba(6,6,6,.58);border:1px solid rgba(255,255,255,.1);border-radius:var(--r);padding:.75rem 1rem;text-align:left;cursor:pointer;color:var(--text);font-family:'Space Mono',monospace;font-size:12px;line-height:1.4;transition:all .12s;backdrop-filter:blur(4px);}
 .opt:hover:not(:disabled){border-color:rgba(201,169,110,.4);background:rgba(201,169,110,.1);}
 .opt.correct{background:var(--ok);border-color:rgba(100,180,120,.5);color:var(--ok-t);}
 .opt.wrong{background:var(--bad);border-color:rgba(180,90,90,.5);color:var(--bad-t);}
-
 .ti{background:rgba(6,6,6,.62);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;color:var(--text);font-family:'Space Mono',monospace;font-size:12px;width:100%;outline:none;transition:border-color .12s;margin-bottom:6px;backdrop-filter:blur(4px);}
-.ti:focus{border-color:rgba(201,169,110,.45);}
-.cb{width:100%;background:rgba(6,6,6,.62);border:1px solid rgba(201,169,110,.5);border-radius:var(--r);padding:.7rem;color:var(--gold);font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.25em;text-transform:uppercase;cursor:pointer;transition:all .12s;}
-.cb:hover{background:rgba(201,169,110,.14);}
-
+.ti:focus{border-color:rgba(201,169,110,.4);}
+.cb{width:100%;background:rgba(6,6,6,.6);border:1px solid rgba(201,169,110,.5);border-radius:var(--r);padding:.7rem;color:var(--gold);font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.25em;text-transform:uppercase;cursor:pointer;transition:all .12s;}
+.cb:hover{background:rgba(201,169,110,.13);}
 .rbox{margin-top:.875rem;padding:.75rem 1rem;border-radius:var(--r);font-size:12px;line-height:1.6;display:none;backdrop-filter:blur(4px);}
-.rbox.ok{background:var(--ok);border:1px solid rgba(100,180,120,.3);color:var(--ok-t);}
-.rbox.bad{background:var(--bad);border:1px solid rgba(180,90,90,.3);color:var(--bad-t);}
+.rbox.ok{background:var(--ok);border:1px solid rgba(100,180,120,.28);color:var(--ok-t);}
+.rbox.bad{background:var(--bad);border:1px solid rgba(180,90,90,.28);color:var(--bad-t);}
 .frev{margin-top:.75rem;padding:.75rem 1rem;background:rgba(6,6,6,.55);border:1px solid var(--border);border-radius:var(--r);display:none;backdrop-filter:blur(4px);}
 .frt{font-family:'Cormorant Garamond',serif;font-size:1rem;margin-bottom:2px;}
 .frm{font-size:10px;letter-spacing:.1em;color:var(--muted);}
 .nbtn{margin-top:.75rem;width:100%;background:transparent;border:1px solid rgba(255,255,255,.12);border-radius:var(--r);padding:.7rem;color:var(--muted);font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.25em;text-transform:uppercase;cursor:pointer;transition:all .12s;display:none;}
 .nbtn:hover{border-color:var(--gold);color:var(--gold);}
 
-/* END */
+/* ─── END ─── */
 #end{display:none;min-height:100vh;align-items:center;justify-content:center;flex-direction:column;padding:2rem;text-align:center;background:#080808;position:relative;}
-#end::before{content:'';position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(ellipse,rgba(201,169,110,.06) 0%,transparent 70%);pointer-events:none;}
+#end::before{content:'';position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(ellipse,rgba(201,169,110,.05) 0%,transparent 70%);pointer-events:none;}
 .esc{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:min(22vw,9rem);color:var(--gold);line-height:1;margin-bottom:.25rem;}
 .emx{font-size:10px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;margin-bottom:.5rem;}
-.evd{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-style:italic;opacity:.7;margin-bottom:2.5rem;}
+.enick-line{font-family:'Cormorant Garamond',serif;font-size:1rem;font-style:italic;color:rgba(201,169,110,.7);margin-bottom:.25rem;}
+.evd{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;opacity:.65;margin-bottom:2.5rem;}
 .erp{background:var(--gold);color:#080808;border:none;border-radius:var(--r);padding:.875rem 2.5rem;font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;cursor:pointer;transition:all .12s;}
 .erp:hover{background:#d4b47a;}
 .ecr{position:fixed;bottom:1.5rem;font-size:9px;letter-spacing:.1em;color:rgba(240,235,226,.12);max-width:360px;line-height:1.6;text-align:center;padding:0 1rem;}
@@ -101,51 +148,137 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 </head>
 <body>
 
+<!-- INTRO -->
+<div id="intro">
+  <div class="beam"></div>
+  <div class="ilogo">Name the <em>Frame</em></div>
+  <div class="isub">Sprawdź swój poziom filmotajemniczenia</div>
+  <div class="iline"></div>
+</div>
+
+<!-- SETUP -->
 <section id="setup">
-  <h1 class="brand">Name the <em>Frame</em></h1>
-  <p class="tagline">Rozpoznaj kadr · Udowodnij że byłeś uważny</p>
-  <div class="scard">
-    <div class="csec">
-      <span class="slbl">Poziom trudności</span>
-      <div class="dgrid">
-        <button class="dbtn on" data-d="test"><span class="dn">Test</span><span class="dp">4 opcje · +1 pkt</span></button>
-        <button class="dbtn" data-d="letter"><span class="dn">Litera</span><span class="dp">podpowiedź · +2 pkt</span></button>
-        <button class="dbtn" data-d="full"><span class="dn">Pełna</span><span class="dp">wpisujesz · +3 pkt</span></button>
-        <button class="dbtn" data-d="expert"><span class="dn">Ekspert</span><span class="dp">tytuł+reżyser+rok · +5 pkt</span></button>
-      </div>
+  <div class="brand">Name the <em>Frame</em></div>
+  <p class="tagline">Rozpoznaj kadr &nbsp;·&nbsp; Sprawdź swój poziom filmotajemniczenia</p>
+
+  <div class="form-row">
+    <div class="field-wrap">
+      <span class="field-label">Twój nick</span>
+      <span class="field-sub">Jak chcesz się zapisać w historii kinofili?</span>
+      <input class="nick-input" id="nick-input" type="text" placeholder="Wpisz swoje kinowe imię…" maxlength="22" autocomplete="off"/>
     </div>
-    <div class="csec" id="wsec">
-      <span class="slbl">Zgadujesz</span>
-      <div class="wwrap">
-        <button class="wbtn on" data-w="title">Tytuł</button>
-        <button class="wbtn" data-w="director">Reżyser</button>
-        <button class="wbtn" data-w="year">Rok</button>
-        <button class="wbtn" data-w="title_dir">Tytuł + reżyser</button>
-        <button class="wbtn" data-w="title_year">Tytuł + rok</button>
-      </div>
+    <div class="field-wrap">
+      <span class="field-label">Żywioł filmowy</span>
+      <span class="field-sub">Twój gatunek — pojawi się przy wyniku</span>
+      <select class="genre-select" id="genre-select">
+        <option value="">— wybierz żywioł —</option>
+        <optgroup label="Klasyczne gatunki">
+          <option value="horror">🩸 Horror</option>
+          <option value="thriller">🔪 Thriller</option>
+          <option value="noir">🕵️ Noir</option>
+          <option value="kryminał">🚬 Kryminał</option>
+          <option value="dramat">🎭 Dramat</option>
+          <option value="komedia">😂 Komedia</option>
+          <option value="romans">💔 Romans</option>
+          <option value="melodramat">🌧️ Melodramat</option>
+        </optgroup>
+        <optgroup label="Akcja i przygoda">
+          <option value="akcja">💥 Akcja</option>
+          <option value="przygodowy">🗺️ Przygodowy</option>
+          <option value="western">🤠 Western</option>
+          <option value="wojenny">⚔️ Wojenny</option>
+          <option value="szpiegowski">🕶️ Szpiegowski</option>
+          <option value="superbohaterski">🦸 Superbohaterski</option>
+        </optgroup>
+        <optgroup label="Wyobraźnia i fantastyka">
+          <option value="sci-fi">🚀 Sci-Fi</option>
+          <option value="fantasy">🧙 Fantasy</option>
+          <option value="animacja">✏️ Animacja</option>
+          <option value="baśń">🏰 Baśń</option>
+          <option value="surrealizm">🌀 Surrealizm</option>
+        </optgroup>
+        <optgroup label="Kino artystyczne">
+          <option value="art-house">🎞️ Art-house</option>
+          <option value="slow-cinema">🌿 Slow Cinema</option>
+          <option value="eksperyment">🔬 Eksperyment</option>
+          <option value="esej-filmowy">📖 Esej filmowy</option>
+          <option value="dokumentalny">📷 Dokumentalny</option>
+          <option value="mockumentary">🎤 Mockumentary</option>
+        </optgroup>
+        <optgroup label="Nastrój i klimat">
+          <option value="body-horror">🫀 Body Horror</option>
+          <option value="giallo">🔴 Giallo</option>
+          <option value="yakuza">🏯 Yakuza</option>
+          <option value="road-movie">🚗 Road Movie</option>
+          <option value="coming-of-age">🌱 Coming of Age</option>
+          <option value="mumblecore">☕ Mumblecore</option>
+          <option value="neon-noir">🌃 Neon Noir</option>
+          <option value="musical">🎵 Musical</option>
+        </optgroup>
+      </select>
     </div>
-    <button class="stbtn" id="stbtn" onclick="startGame()">▶ &nbsp;Zapal projektor</button>
   </div>
-  <p class="scred">Dane i obrazy: The Movie Database (TMDB) · nametheframe.app</p>
+
+  <div class="levels-label">Wybierz poziom</div>
+  <div class="levels">
+
+    <div class="lvl-card" data-lvl="popcorn" onclick="selectLevel(this)">
+      <div class="lvl-main">
+        <span class="lvl-emoji">🍿</span>
+        <span class="lvl-name">Akolita Popcornu</span>
+        <span class="lvl-desc">Film to Netflix, chrupanie i chill. Ekspert od sequeli, prequeli i spin-offów. Szybcy i Wściekli to saga życia, odlicza do premiery kolejnego Pieprzyć Mickiewicza.</span>
+      </div>
+      <button class="lvl-spoiler-btn" onclick="toggleSpoiler(event, this)">kliknij jeśli nie boisz się spoilerów</button>
+      <div class="lvl-spoiler-content">
+        <div class="spoiler-text">Najważniejszy jest film, zgadujesz tytuł — klasyczny test 4 opcje. Przygląda Ci się Hubert Urbański, który nieprzypadkowo jest aktorem. Prawie jak Milionerzy.</div>
+      </div>
+    </div>
+
+    <div class="lvl-card" data-lvl="kinoman" onclick="selectLevel(this)">
+      <div class="lvl-main">
+        <span class="lvl-emoji">🎬</span>
+        <span class="lvl-name">Samozwańczy Kinoman</span>
+        <span class="lvl-desc">Tłumaczy znajomym na imprezach różnicę między Davidami — Cronenbergiem, Fincherem a Lynchem. Szczytuje przy każdej wzmiance o Villeneuvie. Ukrywa miłość do Marvela.</span>
+      </div>
+      <button class="lvl-spoiler-btn" onclick="toggleSpoiler(event, this)">kliknij jeśli nie boisz się spoilerów</button>
+      <div class="lvl-spoiler-content">
+        <div class="spoiler-text">Testy są dla dzieci. Wprawiaj w ruch litery — jedna z nich zawsze odkryta przed Twoim gustem. Masz też opcję reżyserów za extra punkty, choć czy extra to już sam sobie odpowiedz...</div>
+      </div>
+    </div>
+
+    <div class="lvl-card" data-lvl="kineza" onclick="selectLevel(this)">
+      <div class="lvl-main">
+        <span class="lvl-emoji">🎞️</span>
+        <span class="lvl-name">Orędownik Wielkiej Kinezy</span>
+        <span class="lvl-desc">Zostaje na napisach. Nigdy nie wychodzi na siu siu. Płacze z dumą na Malicku. Do każdego outfitu ma inną torbę filmfestiwalową. Ze smutkiem akceptuje ludzi oceniających filmy na Filmwebie.</span>
+      </div>
+      <button class="lvl-spoiler-btn" onclick="toggleSpoiler(event, this)">kliknij jeśli nie boisz się spoilerów</button>
+      <div class="lvl-spoiler-content">
+        <div class="spoiler-text">Jakże można podawać tytuł filmu bez roku powstania? To jak podawanie ręki na przywitanie bez uściśnięcia. Bez podpowiedzi, bez taryf ulgowych. Let the madness begins.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <button class="start-btn" id="start-btn" onclick="startGame()" disabled>▶ &nbsp;Zapal projektor</button>
+  <p class="scred">Dane i obrazy: The Movie Database (TMDB) · nametheframe.com</p>
 </section>
 
+<!-- GAME -->
 <div id="game" style="display:none;flex-direction:column;min-height:100vh;">
-  <div class="bgf" id="bgf">
-    <img id="bgimg" src="" alt="" onload="imgOK()" onerror="imgErr()"/>
-    <div class="vig"></div>
-  </div>
+  <div class="bgf"><img id="bgimg" src="" alt="" onload="imgOK()" onerror="imgErr()"/><div class="vig"></div></div>
   <div class="floader" id="floader">ładowanie kadru…</div>
   <header class="hud">
     <span class="hbrand">Name the Frame</span>
-    <div class="hstats">
-      <span>RUNDA <b id="rnd">1</b> / <b id="mrnd">10</b></span>
-      <span>PUNKTY <b id="pts">0</b></span>
+    <div class="hright">
+      <span class="hnick" id="hnick"></span>
+      <div class="hstats"><span>RUNDA <b id="rnd">1</b>/<b id="mrnd">10</b></span><span>PUNKTY <b id="pts">0</b></span></div>
     </div>
   </header>
   <div class="hprog"><div class="hprogf" id="prog" style="width:10%"></div></div>
   <div class="qpanel">
     <div class="qinner">
-      <p class="qtxt" id="qtxt">Jaki to film?</p>
+      <p class="qtxt" id="qtxt"></p>
       <div id="rw" style="display:none"><div class="refl"><span class="rl" id="rl">?</span><span class="rll">litera z odpowiedzi</span></div></div>
       <div id="aa"></div>
       <div class="rbox" id="rb"></div>
@@ -155,16 +288,18 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   </div>
 </div>
 
+<!-- END -->
 <div id="end" style="display:none;min-height:100vh;align-items:center;justify-content:center;flex-direction:column;padding:2rem;text-align:center;">
   <div class="esc" id="esc">0</div>
-  <div class="emx" id="emx">z 10 możliwych punktów</div>
+  <div class="emx" id="emx"></div>
+  <div class="enick-line" id="enick-line"></div>
   <div class="evd" id="evd"></div>
   <button class="erp" onclick="resetGame()">Zagraj jeszcze raz</button>
   <div class="ecr">This product uses the TMDB API but is not endorsed or certified by TMDB.</div>
 </div>
 
 <script>
-const KEY='1c61618d5544a3d8f83110b7b8444d61',IMG='https://image.tmdb.org/t/p/w1280',API='https://api.themoviedb.org/3';
+const KEY='1c61618d5544a3d8f83110b7b8444d61',IMG='https://image.tmdb.org/t/p/w1280',APIBASE='https://api.themoviedb.org/3';
 const FILMS=[
   {id:797,   title:'Persona',         dir:'Bergman',        y:1966},
   {id:1398,  title:'Stalker',         dir:'Tarkowski',      y:1979},
@@ -177,56 +312,108 @@ const FILMS=[
   {id:758866,title:'Drive My Car',    dir:'Hamaguchi',      y:2021},
   {id:785398,title:'EO',              dir:'Skolimowski',    y:2022},
 ];
-let cache={},S={diff:'test',what:'title',round:0,score:0,used:[],cur:null};
 
-document.querySelectorAll('.dbtn').forEach(b=>b.addEventListener('click',()=>{
-  document.querySelectorAll('.dbtn').forEach(x=>x.classList.remove('on'));
-  b.classList.add('on');S.diff=b.dataset.d;
-  const ws=document.getElementById('wsec');
-  ws.style.opacity=S.diff==='expert'?'.35':'1';
-  ws.style.pointerEvents=S.diff==='expert'?'none':'auto';
-}));
-document.querySelectorAll('.wbtn').forEach(b=>b.addEventListener('click',()=>{
-  document.querySelectorAll('.wbtn').forEach(x=>x.classList.remove('on'));
-  b.classList.add('on');S.what=b.dataset.w;
-}));
+const LVL={
+  popcorn:{diff:'test',  what:'title'},
+  kinoman:{diff:'letter',what:'title_dir'},
+  kineza: {diff:'expert',what:'expert'},
+};
 
+const GENRE_LABELS={
+  'horror':'siekacz horrorów','thriller':'łowca thrillerów','noir':'czciciel mroku',
+  'kryminał':'detektyw kina','dramat':'dramaturg salonów','komedia':'kronikarz śmiechu',
+  'romans':'romantyk srebrnego ekranu','melodramat':'płakacz pierwszego rzędu',
+  'akcja':'żołnierz ekranu','przygodowy':'odkrywca nowych światów','western':'rewolwerowiec kina',
+  'wojenny':'kronikarz wojen','szpiegowski':'agent specjalny','superbohaterski':'obrońca galaktyki',
+  'sci-fi':'wizjoner przyszłości','fantasy':'strażnik magii','animacja':'dusza rysunku',
+  'baśń':'bajarz wieczorny','surrealizm':'budowniczy snów','art-house':'kapłan sztuki',
+  'slow-cinema':'kontemplator ciszy','eksperyment':'demolator formy','esej-filmowy':'myśliciel z projektora',
+  'dokumentalny':'łowca prawdy','mockumentary':'kłamca z kamerą','body-horror':'anatom ekranu',
+  'giallo':'kolekcjoner czerwieni','yakuza':'samuraj multipleksu','road-movie':'nomad asfaltu',
+  'coming-of-age':'strażnik niewinności','mumblecore':'szeptem o życiu','neon-noir':'nocny łowca neonów',
+  'musical':'śpiewak w ciemności'
+};
+
+let cache={},S={level:null,nick:'',genre:'',diff:'test',what:'title',round:0,score:0,used:[],cur:null};
+
+// INTRO
+setTimeout(()=>{
+  const i=document.getElementById('intro');
+  i.style.transition='opacity .8s';i.style.opacity='0';
+  setTimeout(()=>{
+    i.style.display='none';
+    const s=document.getElementById('setup');
+    s.style.display='flex';
+    setTimeout(()=>s.classList.add('vis'),50);
+  },800);
+},3400);
+
+// NICK + GENRE → enable start
+['nick-input','genre-select'].forEach(id=>{
+  document.getElementById(id).addEventListener('change',checkReady);
+  document.getElementById(id).addEventListener('input',checkReady);
+});
+function checkReady(){
+  const nick=document.getElementById('nick-input').value.trim();
+  const genre=document.getElementById('genre-select').value;
+  document.getElementById('start-btn').disabled=!(nick&&genre&&S.level);
+}
+
+// LEVEL
+function selectLevel(card){
+  document.querySelectorAll('.lvl-card').forEach(c=>c.classList.remove('active'));
+  card.classList.add('active');
+  S.level=card.dataset.lvl;
+  S.diff=LVL[S.level].diff;
+  S.what=LVL[S.level].what;
+  checkReady();
+}
+
+// SPOILER TOGGLE
+function toggleSpoiler(e,btn){
+  e.stopPropagation();
+  const content=btn.nextElementSibling;
+  const isOpen=content.classList.contains('open');
+  content.classList.toggle('open');
+  btn.textContent=isOpen?'kliknij jeśli nie boisz się spoilerów':'▲ schowaj spoiler';
+}
+
+// FETCH
 async function loadF(f){
   try{
-    const r=await fetch(`${API}/movie/${f.id}/images?api_key=${KEY}`);
+    const r=await fetch(`${APIBASE}/movie/${f.id}/images?api_key=${KEY}`);
     const d=await r.json();
     const bds=(d.backdrops||[]).filter(b=>!b.iso_639_1).sort((a,b)=>b.vote_average-a.vote_average).slice(0,8);
     cache[f.id]=bds.length?bds:(d.backdrops||[]).slice(0,3);
   }catch{cache[f.id]=[];}
 }
 
+// START
 async function startGame(){
-  const btn=document.getElementById('stbtn');
-  btn.textContent='⏳  Ładowanie…';btn.style.pointerEvents='none';
+  const nick=document.getElementById('nick-input').value.trim();
+  const genre=document.getElementById('genre-select').value;
+  if(!nick||!genre||!S.level)return;
+  S.nick=nick;S.genre=genre;
+  const btn=document.getElementById('start-btn');
+  btn.textContent='⏳  Ładowanie kadrów…';btn.disabled=true;
   await Promise.all(FILMS.map(loadF));
   S.round=0;S.score=0;S.used=[];
   document.getElementById('mrnd').textContent=FILMS.length;
+  document.getElementById('hnick').textContent=S.nick;
   document.getElementById('setup').style.display='none';
   document.getElementById('game').style.display='flex';
-  btn.textContent='▶  Zapal projektor';btn.style.pointerEvents='auto';
   nextRound();
 }
 
-function imgOK(){
-  const ld=document.getElementById('floader');
-  ld.style.opacity='0';setTimeout(()=>ld.style.display='none',300);
-}
-function imgErr(){
-  const ld=document.getElementById('floader');
-  ld.textContent='brak kadru';ld.style.opacity='0.35';
-}
+function imgOK(){const l=document.getElementById('floader');l.style.opacity='0';setTimeout(()=>l.style.display='none',300);}
+function imgErr(){const l=document.getElementById('floader');l.textContent='brak kadru';l.style.opacity='0.35';}
 
+// ROUND
 function nextRound(){
   if(S.round>=FILMS.length){endGame();return;}
   const av=FILMS.filter(f=>!S.used.includes(f.id));
   if(!av.length){endGame();return;}
-  S.cur=av[Math.floor(Math.random()*av.length)];
-  S.used.push(S.cur.id);S.round++;
+  S.cur=av[Math.floor(Math.random()*av.length)];S.used.push(S.cur.id);S.round++;
   document.getElementById('rnd').textContent=S.round;
   document.getElementById('pts').textContent=S.score;
   document.getElementById('prog').style.width=(S.round/FILMS.length*100)+'%';
@@ -235,22 +422,22 @@ function nextRound(){
   const img=document.getElementById('bgimg'),ld=document.getElementById('floader');
   img.style.opacity='0';ld.style.display='flex';ld.style.opacity='1';ld.textContent='ładowanie kadru…';
   if(bd?.file_path){img.src=IMG+bd.file_path;img.style.opacity='1';}
-  document.getElementById('rb').style.display='none';
+  ['rb','fr'].forEach(id=>{document.getElementById(id).style.display='none';});
   document.getElementById('rb').className='rbox';
-  document.getElementById('fr').style.display='none';
   document.getElementById('nb').style.display='none';
   document.getElementById('rw').style.display='none';
   renderQ();
 }
 
 function renderQ(){
-  const diff=S.diff,what=diff==='expert'?'expert':S.what,f=S.cur;
+  const diff=S.diff,what=S.what,f=S.cur;
   const lbl={title:'Jaki to film?',director:'Kto wyreżyserował?',year:'Z którego roku?',title_dir:'Tytuł i reżyser?',title_year:'Tytuł i rok?',expert:'Tytuł, reżyser i rok?'};
-  document.getElementById('qtxt').textContent=lbl[what]||'Jaki to film?';
+  const displayWhat=diff==='expert'?'expert':what;
+  document.getElementById('qtxt').textContent=lbl[displayWhat]||'Jaki to film?';
   const area=document.getElementById('aa');
   if(diff==='test'){
-    const c=ga(f,what);let opts=[c],tries=0;
-    while(opts.length<4&&tries++<40){const x=ga(FILMS[Math.floor(Math.random()*FILMS.length)],what);if(!opts.includes(x))opts.push(x);}
+    const c=ga(f,what);let opts=[c],t=0;
+    while(opts.length<4&&t++<40){const x=ga(FILMS[Math.floor(Math.random()*FILMS.length)],what);if(!opts.includes(x))opts.push(x);}
     opts.sort(()=>Math.random()-.5);
     area.innerHTML=`<div class="opts">${opts.map(o=>`<button class="opt" onclick="cOpt(this,'${es(c)}','${es(o)}')">${he(o)}</button>`).join('')}</div>`;
   }else if(diff==='letter'){
@@ -309,20 +496,24 @@ function sr(ok,ct,ex=''){
   document.getElementById('fr').style.display='block';
   document.getElementById('nb').style.display='block';
 }
+
 function endGame(){
   const max={test:1,letter:2,full:3,expert:5}[S.diff]*FILMS.length;
   const pct=Math.round(S.score/max*100);
-  const v=pct>=90?'Kinoman pierwszej kategorii.':pct>=70?'Solidna znajomość kina.':pct>=50?'Obiecujący kinofil.':pct>=30?'Więcej seansów, mniej scrollowania.':'Tarkowski czeka.';
+  const v=pct>=90?'Nie ma co tu robić. Idź napisz recenzję.':pct>=70?'Solidnie. Torba filmfestiwalowa zasłużona.':pct>=50?'Obiecująco. Więcej Kieślowskiego, mniej Netflixa.':pct>=30?'Popcorn był dobry?':'Tarkowski czeka. Zaczynaj od Stalkera.';
+  const genreLabel=GENRE_LABELS[S.genre]||S.genre;
   document.getElementById('game').style.display='none';
   document.getElementById('end').style.display='flex';
   document.getElementById('esc').textContent=S.score;
   document.getElementById('emx').textContent=`z ${max} możliwych punktów`;
+  document.getElementById('enick-line').textContent=`${S.nick} · żywioł: ${genreLabel}`;
   document.getElementById('evd').textContent=v;
 }
 function resetGame(){
-  S={diff:S.diff,what:S.what,round:0,score:0,used:[],cur:null};
+  S={...S,round:0,score:0,used:[],cur:null};
   document.getElementById('end').style.display='none';
   document.getElementById('setup').style.display='flex';
+  document.getElementById('setup').classList.add('vis');
 }
 </script>
 </body>
