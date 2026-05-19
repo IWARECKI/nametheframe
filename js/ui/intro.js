@@ -1,6 +1,7 @@
-// Intro: "Projector warms up" effect
-// During countdown: beam gradually brightens, logo slowly emerges
-// At 0: flash, full brightness, dust appears, click prompt
+// Intro: projector warm-up + typewriter logo + neon glow
+// During countdown: beam warms up
+// After countdown: typewriter types "Name the Frame" letter by letter
+// Each word gets its neon glow class. Cursor blinks at end.
 
 (function initIntro() {
   const intro   = document.getElementById('intro');
@@ -10,6 +11,11 @@
   const beam    = document.getElementById('projector-beam');
   const flash   = document.getElementById('projector-flash');
   const dust    = document.getElementById('dust-particles');
+  const cursor  = document.getElementById('logo-cursor');
+
+  const logoName  = document.getElementById('logo-name');
+  const logoThe   = document.getElementById('logo-the');
+  const logoFrame = document.getElementById('logo-frame');
 
   const TOTAL = 24;
   let ready = false;
@@ -79,11 +85,56 @@
     }
   }
 
+  // ── Typewriter effect ──────────────────────────────────────
+  function typeWriter(callback) {
+    const words = [
+      { el: logoName,  text: 'Name ' },
+      { el: logoThe,   text: 'the ' },
+      { el: logoFrame, text: 'Frame' }
+    ];
+
+    let wordIdx = 0;
+    let charIdx = 0;
+    const CHAR_DELAY = 90;    // ms per character
+    const WORD_PAUSE = 200;   // pause between words
+
+    function typeNext() {
+      if (wordIdx >= words.length) {
+        // Done typing — hide cursor after a moment
+        setTimeout(() => {
+          cursor.style.animation = 'cursor-blink .7s steps(1) infinite';
+        }, 300);
+        if (callback) callback();
+        return;
+      }
+
+      const word = words[wordIdx];
+      if (charIdx < word.text.length) {
+        word.el.textContent += word.text[charIdx];
+        charIdx++;
+        // Slight randomness in typing speed for realism
+        const jitter = CHAR_DELAY + (Math.random() - 0.5) * 40;
+        setTimeout(typeNext, jitter);
+      } else {
+        // Move to next word
+        wordIdx++;
+        charIdx = 0;
+        setTimeout(typeNext, WORD_PAUSE);
+      }
+    }
+
+    typeNext();
+  }
+
   // ── Initialize ─────────────────────────────────────────────
   logo.style.opacity = '0';
   beam.style.opacity = '0';
   flash.style.opacity = '0';
   dust.style.opacity = '0';
+  cursor.style.opacity = '0';
+  logoName.textContent = '';
+  logoThe.textContent = '';
+  logoFrame.textContent = '';
 
   // ── Phase 1: flicker 24/25 for ~500ms ─────────────────────
   let flickerCount = 0;
@@ -98,7 +149,7 @@
     }
   }, 85);
 
-  // ── Phase 2: count 24→0, beam warms up, logo emerges ──────
+  // ── Phase 2: count 24→0, beam warms up ────────────────────
   function startCountdown() {
     startProjectorSound();
     createDustParticles();
@@ -109,22 +160,14 @@
     const tick = setInterval(() => {
       count--;
       counter.textContent = count;
-      const progress = (TOTAL - count) / TOTAL; // 0→1
+      const progress = (TOTAL - count) / TOTAL;
 
-      // Beam gradually appears (ease-in curve for "warming up" feel)
-      const beamOpacity = Math.pow(progress, 2) * 0.7; // max 0.7 during countdown
-      beam.style.opacity = beamOpacity.toString();
+      // Beam gradually appears
+      beam.style.opacity = (Math.pow(progress, 2) * 0.6).toString();
 
-      // Logo starts appearing at 30% progress, reaches 0.5 opacity by end
-      if (progress > 0.3) {
-        const logoP = (progress - 0.3) / 0.7; // 0→1 within remaining range
-        logo.style.opacity = (logoP * 0.5).toString();
-      }
-
-      // Dust starts at 50% progress
-      if (progress > 0.5) {
-        const dustP = (progress - 0.5) / 0.5;
-        dust.style.opacity = (dustP * 0.4).toString();
+      // Dust starts at 60%
+      if (progress > 0.6) {
+        dust.style.opacity = ((progress - 0.6) / 0.4 * 0.3).toString();
       }
 
       // Audio fade
@@ -139,13 +182,13 @@
     }, STEP);
   }
 
-  // ── Phase 3: flash → full brightness ──────────────────────
+  // ── Phase 3: flash → typewriter → glow ────────────────────
   function onCountdownDone() {
     fadeOutSound();
     counter.style.opacity = '0';
     setTimeout(() => { counter.style.display = 'none'; }, 300);
 
-    // Flash!
+    // Flash
     flash.style.opacity = '1';
     setTimeout(() => {
       flash.style.transition = 'opacity .4s ease';
@@ -154,27 +197,28 @@
 
     // Beam to full
     setTimeout(() => {
-      beam.style.transition = 'opacity .6s ease';
+      beam.style.transition = 'opacity .8s ease';
       beam.style.opacity = '1';
     }, 150);
 
-    // Logo to full
+    // Show logo container + cursor, start typing
     setTimeout(() => {
-      logo.style.transition = 'opacity .6s ease';
+      logo.style.transition = 'opacity .3s ease';
       logo.style.opacity = '1';
-    }, 200);
+      cursor.style.opacity = '1';
 
-    // Dust to full
-    setTimeout(() => {
-      dust.style.transition = 'opacity .8s ease';
-      dust.style.opacity = '1';
-    }, 300);
+      typeWriter(function onTypingDone() {
+        // Dust to full
+        dust.style.transition = 'opacity .8s ease';
+        dust.style.opacity = '1';
 
-    // "Click to enter"
-    setTimeout(() => {
-      enter.classList.add('vis');
-      ready = true;
-    }, 800);
+        // Show "click to enter" after typing finishes
+        setTimeout(() => {
+          enter.classList.add('vis');
+          ready = true;
+        }, 500);
+      });
+    }, 400);
   }
 
   // ── Phase 4: click → fade out, show setup ──────────────────

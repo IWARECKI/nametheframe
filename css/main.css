@@ -78,9 +78,89 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   font-size:clamp(2rem,6vw,4rem);letter-spacing:-.01em;
   text-align:center;white-space:nowrap;
   color:var(--text);
-  text-shadow:0 0 30px rgba(201,169,110,.2),0 0 60px rgba(201,169,110,.08);
+  min-height:1.2em;
 }
 .frame-logo em{font-style:italic;color:var(--gold);}
+
+/* Typewriter cursor */
+.logo-cursor{
+  font-weight:100;color:var(--gold);
+  animation:cursor-blink .7s steps(1) infinite;
+  margin-left:2px;
+}
+@keyframes cursor-blink{0%,50%{opacity:1;}51%,100%{opacity:0;}}
+
+/* Neon glow words */
+.logo-word{display:inline;transition:text-shadow 0.3s;}
+
+/* "Name" — warm white glow */
+.logo-white{
+  color:#f0ebe2;
+  text-shadow:
+    0 0 4px rgba(240,235,226,.6),
+    0 0 11px rgba(240,235,226,.35),
+    0 0 22px rgba(240,235,226,.2),
+    0 0 44px rgba(220,210,190,.1);
+  animation:flicker-white 4s ease-in-out infinite;
+}
+
+/* "the" — smaller white glow */
+.logo-white-sm{
+  color:#f0ebe2;
+  font-size:0.65em;
+  vertical-align:middle;
+  text-shadow:
+    0 0 3px rgba(240,235,226,.5),
+    0 0 8px rgba(240,235,226,.25),
+    0 0 16px rgba(240,235,226,.12);
+  animation:flicker-the 3.5s ease-in-out infinite;
+}
+
+/* "Frame" — golden glow */
+.logo-gold{
+  color:var(--gold);
+  font-style:italic;
+  text-shadow:
+    0 0 4px rgba(201,169,110,.7),
+    0 0 12px rgba(201,169,110,.4),
+    0 0 28px rgba(201,169,110,.25),
+    0 0 50px rgba(201,169,110,.12);
+  animation:flicker-gold 5s ease-in-out infinite;
+}
+
+/* Flicker animations — irregular, subtle brightness changes like real neon */
+@keyframes flicker-white{
+  0%,100%{opacity:1;}
+  4%{opacity:0.92;}
+  8%{opacity:1;}
+  42%{opacity:0.97;}
+  44%{opacity:0.9;}
+  46%{opacity:1;}
+  72%{opacity:0.95;}
+  74%{opacity:1;}
+}
+@keyframes flicker-the{
+  0%,100%{opacity:1;}
+  12%{opacity:0.88;}
+  14%{opacity:1;}
+  55%{opacity:0.93;}
+  57%{opacity:0.85;}
+  59%{opacity:1;}
+  82%{opacity:0.94;}
+  84%{opacity:1;}
+}
+@keyframes flicker-gold{
+  0%,100%{opacity:1;}
+  6%{opacity:0.94;}
+  8%{opacity:1;}
+  35%{opacity:0.96;}
+  37%{opacity:0.88;}
+  39%{opacity:1;}
+  65%{opacity:0.92;}
+  67%{opacity:1;}
+  88%{opacity:0.95;}
+  90%{opacity:1;}
+}
 
 /* "click to enter" prompt */
 .frame-enter{
