@@ -1,17 +1,18 @@
-// Intro animation: dual curtains converge from edges to center
-// Top curtain starts off-screen above, slides DOWN to cover top half.
-// Bottom curtain starts off-screen below, slides UP to cover bottom half.
-// They meet in the middle — logo appears at the seam.
-// On click: curtains slide back out (top up, bottom down), revealing setup.
+// Intro: "Projector turns on" effect
+// 1. Black screen, counter flickers 25/24 then counts 24→0
+// 2. At 0: white flash (projector lamp ignites)
+// 3. Logo appears lit by a golden beam from above, dust particles float
+// 4. "Click to enter" fades in
+// 5. On click: beam fades, transition to setup
 
 (function initIntro() {
-  const intro      = document.getElementById('intro');
-  const topCurtain = document.getElementById('curtain-top');
-  const btmCurtain = document.getElementById('curtain-bottom');
-  const counter    = document.getElementById('film-counter');
-  const enter      = document.getElementById('frame-enter');
-  const logo       = document.getElementById('intro-logo');
-  const seamLine   = document.getElementById('seam-line');
+  const intro   = document.getElementById('intro');
+  const counter = document.getElementById('film-counter');
+  const enter   = document.getElementById('frame-enter');
+  const logo    = document.getElementById('intro-logo');
+  const beam    = document.getElementById('projector-beam');
+  const flash   = document.getElementById('projector-flash');
+  const dust    = document.getElementById('dust-particles');
 
   const TOTAL = 24;
   let ready = false;
@@ -65,44 +66,28 @@
     gainNode.gain.linearRampToValueAtTime(0, now + 0.5);
   }
 
-  // ── Curtain control ────────────────────────────────────────
-  // Curtains converge: progress 0 = off-screen, 1 = meeting at center
-  function setCurtainClose(progress) {
-    const p = Math.max(0, Math.min(1, progress));
-    // Top: starts at translateY(-100%) → ends at translateY(0)
-    topCurtain.style.transform = 'translateY(' + (-100 + p * 100) + '%)';
-    // Bottom: starts at translateY(100%) → ends at translateY(0)
-    btmCurtain.style.transform = 'translateY(' + (100 - p * 100) + '%)';
-  }
-
-  // Curtains diverge (exit): progress 0 = at center, 1 = off-screen
-  function setCurtainOpen(progress) {
-    const p = Math.max(0, Math.min(1, progress));
-    topCurtain.style.transform = 'translateY(' + (-p * 100) + '%)';
-    btmCurtain.style.transform = 'translateY(' + (p * 100) + '%)';
-  }
-
-  // ── Film grain: animate feTurbulence seed ──────────────────
-  let grainAnimId = null;
-  function animateGrain() {
-    const turb = document.querySelector('#grain-filter feTurbulence');
-    if (!turb) return;
-    let seed = 0;
-    (function tick() {
-      seed = (seed + 1) % 100;
-      turb.setAttribute('seed', seed);
-      grainAnimId = requestAnimationFrame(tick);
-    })();
-  }
-  function stopGrain() {
-    if (grainAnimId) { cancelAnimationFrame(grainAnimId); grainAnimId = null; }
+  // ── Dust particles ─────────────────────────────────────────
+  function createDustParticles() {
+    if (!dust) return;
+    dust.innerHTML = '';
+    for (let i = 0; i < 18; i++) {
+      const p = document.createElement('div');
+      p.className = 'dust-dot';
+      p.style.left = (20 + Math.random() * 60) + '%';
+      p.style.top = (10 + Math.random() * 70) + '%';
+      p.style.animationDelay = (Math.random() * 4) + 's';
+      p.style.animationDuration = (3 + Math.random() * 3) + 's';
+      p.style.width = p.style.height = (1 + Math.random() * 2) + 'px';
+      p.style.opacity = (0.2 + Math.random() * 0.5).toString();
+      dust.appendChild(p);
+    }
   }
 
   // ── Initialize ─────────────────────────────────────────────
-  setCurtainClose(0); // curtains off-screen
   logo.style.opacity = '0';
-  if (seamLine) seamLine.style.opacity = '0';
-  animateGrain();
+  beam.style.opacity = '0';
+  flash.style.opacity = '0';
+  dust.style.opacity = '0';
 
   // ── Phase 1: flicker 24/25 for ~500ms ─────────────────────
   let flickerCount = 0;
@@ -117,7 +102,7 @@
     }
   }, 85);
 
-  // ── Phase 2: count 24→0, curtains converge to center ───────
+  // ── Phase 2: count 24→0 ───────────────────────────────────
   function startCountdown() {
     startProjectorSound();
 
@@ -127,17 +112,11 @@
     const tick = setInterval(() => {
       count--;
       counter.textContent = count;
-      const progress = (TOTAL - count) / TOTAL;
-      setCurtainClose(progress);
-
-      // Show logo when curtains are ~70% closed
-      if (progress > 0.7 && logo.style.opacity === '0') {
-        logo.style.opacity = '1';
-      }
 
       // Gradually reduce audio gain
       if (gainNode && audioCtx) {
-        gainNode.gain.setValueAtTime(0.05 * (1 - progress * 0.7), audioCtx.currentTime);
+        const progress = (TOTAL - count) / TOTAL;
+        gainNode.gain.setValueAtTime(0.05 * (1 - progress * 0.6), audioCtx.currentTime);
       }
 
       if (count <= 0) {
@@ -147,46 +126,71 @@
     }, STEP);
   }
 
-  // ── Phase 3: done — show seam line + "click to enter" ──────
+  // ── Phase 3: flash → beam → logo → dust ───────────────────
   function onCountdownDone() {
     fadeOutSound();
     counter.style.opacity = '0';
     setTimeout(() => { counter.style.display = 'none'; }, 300);
-    if (seamLine) seamLine.style.opacity = '1';
-    enter.classList.add('vis');
-    ready = true;
+
+    // Flash!
+    flash.style.opacity = '1';
+    setTimeout(() => {
+      flash.style.transition = 'opacity .3s ease';
+      flash.style.opacity = '0';
+    }, 100);
+
+    // Beam appears
+    setTimeout(() => {
+      beam.style.transition = 'opacity 1s ease';
+      beam.style.opacity = '1';
+    }, 200);
+
+    // Logo fades in
+    setTimeout(() => {
+      logo.style.transition = 'opacity .8s ease';
+      logo.style.opacity = '1';
+    }, 400);
+
+    // Dust particles
+    setTimeout(() => {
+      createDustParticles();
+      dust.style.transition = 'opacity 1.2s ease';
+      dust.style.opacity = '1';
+    }, 600);
+
+    // "Click to enter"
+    setTimeout(() => {
+      enter.classList.add('vis');
+      ready = true;
+    }, 1200);
   }
 
-  // ── Phase 4: click → curtains retract, show setup ──────────
+  // ── Phase 4: click → fade out, show setup ──────────────────
   function enterSite() {
     if (!ready) return;
     ready = false;
 
-    enter.style.opacity = '0';
-    logo.style.transition = 'opacity .3s ease';
+    // Fade everything out
+    beam.style.transition = 'opacity .6s ease';
+    beam.style.opacity = '0';
+    logo.style.transition = 'opacity .5s ease';
     logo.style.opacity = '0';
-    if (seamLine) { seamLine.style.transition = 'opacity .3s'; seamLine.style.opacity = '0'; }
-    stopGrain();
+    dust.style.transition = 'opacity .4s ease';
+    dust.style.opacity = '0';
+    enter.style.transition = 'opacity .3s ease';
+    enter.style.opacity = '0';
 
-    const DURATION = 800;
-    const start = performance.now();
+    setTimeout(() => {
+      intro.style.transition = 'opacity .5s ease';
+      intro.style.opacity = '0';
+    }, 400);
 
-    function animate(now) {
-      const elapsed = now - start;
-      const p = Math.min(elapsed / DURATION, 1);
-      const eased = 1 - Math.pow(1 - p, 3);
-      setCurtainOpen(eased);
-
-      if (p < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        intro.style.display = 'none';
-        const setup = document.getElementById('setup');
-        setup.style.display = 'flex';
-        setTimeout(() => setup.classList.add('vis'), 50);
-      }
-    }
-    requestAnimationFrame(animate);
+    setTimeout(() => {
+      intro.style.display = 'none';
+      const setup = document.getElementById('setup');
+      setup.style.display = 'flex';
+      setTimeout(() => setup.classList.add('vis'), 50);
+    }, 900);
   }
 
   intro.addEventListener('click', enterSite);

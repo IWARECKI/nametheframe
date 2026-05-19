@@ -14,64 +14,63 @@
 }
 body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min-height:100vh;overflow-x:hidden;}
 
-/* ── INTRO — dual curtain opening effect ───────────────────── */
+/* ── INTRO — projector ignition effect ─────────────────────── */
 #intro{
-  position:fixed;inset:0;background:#080808;z-index:100;
+  position:fixed;inset:0;background:#000;z-index:100;
   display:flex;align-items:center;justify-content:center;
   cursor:pointer;overflow:hidden;
 }
 
-/* Curtains — each covers exactly half the viewport */
-.curtain{
-  position:absolute;left:0;right:0;
-  height:50vh;
-  background:#000;
-  z-index:2;
-  filter:url(#grain-filter);
-}
-#curtain-top{
-  top:0;
-  transform:translateY(-100%); /* starts off-screen above */
-  border-bottom:1px solid rgba(201,169,110,.2);
-}
-#curtain-bottom{
-  bottom:0;
-  transform:translateY(100%); /* starts off-screen below */
-  border-top:1px solid rgba(201,169,110,.2);
+/* White flash when projector "ignites" */
+#projector-flash{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 30%,rgba(255,255,255,.9) 0%,rgba(255,255,255,.3) 40%,transparent 70%);
+  opacity:0;pointer-events:none;z-index:5;
 }
 
-/* Animated grain flicker */
-@keyframes grain-shift{
-  0%{filter:url(#grain-filter) brightness(1);}
-  25%{filter:url(#grain-filter) brightness(0.97);}
-  50%{filter:url(#grain-filter) brightness(1.02);}
-  75%{filter:url(#grain-filter) brightness(0.98);}
-  100%{filter:url(#grain-filter) brightness(1);}
+/* Golden beam cone from above */
+#projector-beam{
+  position:absolute;
+  top:-5%;left:50%;transform:translateX(-50%);
+  width:0;height:0;
+  border-left:120px solid transparent;
+  border-right:120px solid transparent;
+  border-top:65vh solid rgba(201,169,110,.06);
+  opacity:0;z-index:1;
+  filter:blur(8px);
+  animation:beam-sway 6s ease-in-out infinite;
 }
-.curtain{animation:grain-shift .25s steps(4) infinite;}
+@keyframes beam-sway{
+  0%,100%{transform:translateX(-50%) rotate(-0.5deg);}
+  50%{transform:translateX(-50%) rotate(0.5deg);}
+}
 
-/* Golden seam line where curtains meet — breathing glow */
-#seam-line{
-  position:absolute;left:0;right:0;top:50%;
-  height:1px;z-index:3;
-  background:linear-gradient(90deg,transparent 5%,var(--gold) 30%,var(--gold) 70%,transparent 95%);
-  box-shadow:0 0 8px rgba(201,169,110,.4),0 0 20px rgba(201,169,110,.15);
+/* Dust particles floating in the beam */
+#dust-particles{
+  position:absolute;inset:0;
+  pointer-events:none;z-index:3;
   opacity:0;
-  transition:opacity .6s ease;
-  animation:seam-breathe 2.5s ease-in-out infinite;
 }
-@keyframes seam-breathe{
-  0%,100%{opacity:0.7;box-shadow:0 0 8px rgba(201,169,110,.3),0 0 16px rgba(201,169,110,.1);}
-  50%{opacity:1;box-shadow:0 0 12px rgba(201,169,110,.5),0 0 28px rgba(201,169,110,.2);}
+.dust-dot{
+  position:absolute;
+  background:var(--gold);
+  border-radius:50%;
+  animation:dust-float linear infinite;
+}
+@keyframes dust-float{
+  0%{transform:translateY(0) translateX(0);opacity:0;}
+  10%{opacity:1;}
+  90%{opacity:1;}
+  100%{transform:translateY(-40px) translateX(15px);opacity:0;}
 }
 
-/* Logo centered — visible between/on top of curtains */
+/* Logo centered */
 #intro-logo{
   position:relative;z-index:4;
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
   gap:.75rem;
-  transition:opacity .6s ease;
+  opacity:0;
 }
 
 .frame-logo{
@@ -79,6 +78,7 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   font-size:clamp(2rem,6vw,4rem);letter-spacing:-.01em;
   text-align:center;white-space:nowrap;
   color:var(--text);
+  text-shadow:0 0 30px rgba(201,169,110,.2),0 0 60px rgba(201,169,110,.08);
 }
 .frame-logo em{font-style:italic;color:var(--gold);}
 
