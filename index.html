@@ -13,8 +13,24 @@
 
 <!-- Django equivalent: {% block intro %}{% include "partials/intro.html" %}{% endblock %} -->
 <div id="intro">
+  <!-- SVG filter for film grain noise -->
+  <svg style="position:absolute;width:0;height:0;">
+    <defs>
+      <filter id="grain-filter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" seed="0" stitchTiles="stitch" result="noise"/>
+        <feColorMatrix type="saturate" values="0" in="noise" result="mono"/>
+        <feBlend in="SourceGraphic" in2="mono" mode="overlay" result="blend"/>
+        <feComponentTransfer in="blend">
+          <feFuncA type="linear" slope="1"/>
+        </feComponentTransfer>
+      </filter>
+    </defs>
+  </svg>
+
   <div id="film-counter">24</div>
-  <div id="film-frame">
+  <div id="curtain-top" class="curtain"></div>
+  <div id="curtain-bottom" class="curtain"></div>
+  <div id="intro-logo">
     <div class="frame-logo">Name the <em>Frame</em></div>
     <div class="frame-enter" id="frame-enter">— kliknij aby wejść —</div>
   </div>

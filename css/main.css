@@ -14,28 +14,49 @@
 }
 body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min-height:100vh;overflow-x:hidden;}
 
-/* ── INTRO — film frame opening effect ─────────────────────── */
+/* ── INTRO — dual curtain opening effect ───────────────────── */
 #intro{
-  position:fixed;inset:0;background:#000;z-index:100;
+  position:fixed;inset:0;background:#080808;z-index:100;
   display:flex;align-items:center;justify-content:center;
-  cursor:pointer;
+  cursor:pointer;overflow:hidden;
 }
 
-/* Expanding horizontal film-frame bar */
-#film-frame{
-  position:absolute;
-  left:0;right:0;
-  /* top/height set by JS; starts at ~8vh centered */
-  overflow:hidden;
+/* Curtains — top anchored to top, bottom anchored to bottom */
+.curtain{
+  position:absolute;left:0;right:0;
   background:#000;
-  border-top:1px solid rgba(201,169,110,.25);
+  z-index:2;
+  filter:url(#grain-filter);
+  border:none;
+}
+#curtain-top{
+  top:0;height:50vh;
   border-bottom:1px solid rgba(201,169,110,.25);
+}
+#curtain-bottom{
+  bottom:0;height:50vh;
+  border-top:1px solid rgba(201,169,110,.25);
+}
+
+/* Animated grain seed via CSS animation on the SVG filter */
+@keyframes grain-shift{
+  0%{filter:url(#grain-filter) brightness(1);}
+  25%{filter:url(#grain-filter) brightness(0.98);}
+  50%{filter:url(#grain-filter) brightness(1.01);}
+  75%{filter:url(#grain-filter) brightness(0.99);}
+  100%{filter:url(#grain-filter) brightness(1);}
+}
+.curtain{animation:grain-shift .3s steps(4) infinite;}
+
+/* Logo centered between curtains */
+#intro-logo{
+  position:relative;z-index:1;
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
   gap:.75rem;
+  transition:opacity .6s ease;
 }
 
-/* Logo inside the bar */
 .frame-logo{
   font-family:'Cormorant Garamond',serif;font-weight:300;
   font-size:clamp(2rem,6vw,4rem);letter-spacing:-.01em;
@@ -60,6 +81,7 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   color:var(--gold);letter-spacing:.08em;
   transition:opacity .3s;
   user-select:none;
+  z-index:10;
 }
 
 @keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
