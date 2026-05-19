@@ -1,9 +1,6 @@
-// Intro: "Projector turns on" effect
-// 1. Black screen, counter flickers 25/24 then counts 24→0
-// 2. At 0: white flash (projector lamp ignites)
-// 3. Logo appears lit by a golden beam from above, dust particles float
-// 4. "Click to enter" fades in
-// 5. On click: beam fades, transition to setup
+// Intro: "Projector warms up" effect
+// During countdown: beam gradually brightens, logo slowly emerges
+// At 0: flash, full brightness, dust appears, click prompt
 
 (function initIntro() {
   const intro   = document.getElementById('intro');
@@ -78,7 +75,6 @@
       p.style.animationDelay = (Math.random() * 4) + 's';
       p.style.animationDuration = (3 + Math.random() * 3) + 's';
       p.style.width = p.style.height = (1 + Math.random() * 2) + 'px';
-      p.style.opacity = (0.2 + Math.random() * 0.5).toString();
       dust.appendChild(p);
     }
   }
@@ -102,9 +98,10 @@
     }
   }, 85);
 
-  // ── Phase 2: count 24→0 ───────────────────────────────────
+  // ── Phase 2: count 24→0, beam warms up, logo emerges ──────
   function startCountdown() {
     startProjectorSound();
+    createDustParticles();
 
     let count = TOTAL;
     const STEP = 4000 / TOTAL;
@@ -112,11 +109,27 @@
     const tick = setInterval(() => {
       count--;
       counter.textContent = count;
+      const progress = (TOTAL - count) / TOTAL; // 0→1
 
-      // Gradually reduce audio gain
+      // Beam gradually appears (ease-in curve for "warming up" feel)
+      const beamOpacity = Math.pow(progress, 2) * 0.7; // max 0.7 during countdown
+      beam.style.opacity = beamOpacity.toString();
+
+      // Logo starts appearing at 30% progress, reaches 0.5 opacity by end
+      if (progress > 0.3) {
+        const logoP = (progress - 0.3) / 0.7; // 0→1 within remaining range
+        logo.style.opacity = (logoP * 0.5).toString();
+      }
+
+      // Dust starts at 50% progress
+      if (progress > 0.5) {
+        const dustP = (progress - 0.5) / 0.5;
+        dust.style.opacity = (dustP * 0.4).toString();
+      }
+
+      // Audio fade
       if (gainNode && audioCtx) {
-        const progress = (TOTAL - count) / TOTAL;
-        gainNode.gain.setValueAtTime(0.05 * (1 - progress * 0.6), audioCtx.currentTime);
+        gainNode.gain.setValueAtTime(0.05 * (1 - progress * 0.5), audioCtx.currentTime);
       }
 
       if (count <= 0) {
@@ -126,7 +139,7 @@
     }, STEP);
   }
 
-  // ── Phase 3: flash → beam → logo → dust ───────────────────
+  // ── Phase 3: flash → full brightness ──────────────────────
   function onCountdownDone() {
     fadeOutSound();
     counter.style.opacity = '0';
@@ -135,34 +148,33 @@
     // Flash!
     flash.style.opacity = '1';
     setTimeout(() => {
-      flash.style.transition = 'opacity .3s ease';
+      flash.style.transition = 'opacity .4s ease';
       flash.style.opacity = '0';
-    }, 100);
+    }, 120);
 
-    // Beam appears
+    // Beam to full
     setTimeout(() => {
-      beam.style.transition = 'opacity 1s ease';
+      beam.style.transition = 'opacity .6s ease';
       beam.style.opacity = '1';
+    }, 150);
+
+    // Logo to full
+    setTimeout(() => {
+      logo.style.transition = 'opacity .6s ease';
+      logo.style.opacity = '1';
     }, 200);
 
-    // Logo fades in
+    // Dust to full
     setTimeout(() => {
-      logo.style.transition = 'opacity .8s ease';
-      logo.style.opacity = '1';
-    }, 400);
-
-    // Dust particles
-    setTimeout(() => {
-      createDustParticles();
-      dust.style.transition = 'opacity 1.2s ease';
+      dust.style.transition = 'opacity .8s ease';
       dust.style.opacity = '1';
-    }, 600);
+    }, 300);
 
     // "Click to enter"
     setTimeout(() => {
       enter.classList.add('vis');
       ready = true;
-    }, 1200);
+    }, 800);
   }
 
   // ── Phase 4: click → fade out, show setup ──────────────────
@@ -170,7 +182,6 @@
     if (!ready) return;
     ready = false;
 
-    // Fade everything out
     beam.style.transition = 'opacity .6s ease';
     beam.style.opacity = '0';
     logo.style.transition = 'opacity .5s ease';
