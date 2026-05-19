@@ -21,36 +21,53 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   cursor:pointer;overflow:hidden;
 }
 
-/* Curtains — top anchored to top, bottom anchored to bottom */
+/* Curtains — each covers exactly half the viewport */
 .curtain{
   position:absolute;left:0;right:0;
+  height:50vh;
   background:#000;
   z-index:2;
   filter:url(#grain-filter);
-  border:none;
 }
 #curtain-top{
-  top:0;height:50vh;
-  border-bottom:1px solid rgba(201,169,110,.25);
+  top:0;
+  transform:translateY(-100%); /* starts off-screen above */
+  border-bottom:1px solid rgba(201,169,110,.2);
 }
 #curtain-bottom{
-  bottom:0;height:50vh;
-  border-top:1px solid rgba(201,169,110,.25);
+  bottom:0;
+  transform:translateY(100%); /* starts off-screen below */
+  border-top:1px solid rgba(201,169,110,.2);
 }
 
-/* Animated grain seed via CSS animation on the SVG filter */
+/* Animated grain flicker */
 @keyframes grain-shift{
   0%{filter:url(#grain-filter) brightness(1);}
-  25%{filter:url(#grain-filter) brightness(0.98);}
-  50%{filter:url(#grain-filter) brightness(1.01);}
-  75%{filter:url(#grain-filter) brightness(0.99);}
+  25%{filter:url(#grain-filter) brightness(0.97);}
+  50%{filter:url(#grain-filter) brightness(1.02);}
+  75%{filter:url(#grain-filter) brightness(0.98);}
   100%{filter:url(#grain-filter) brightness(1);}
 }
-.curtain{animation:grain-shift .3s steps(4) infinite;}
+.curtain{animation:grain-shift .25s steps(4) infinite;}
 
-/* Logo centered between curtains */
+/* Golden seam line where curtains meet — breathing glow */
+#seam-line{
+  position:absolute;left:0;right:0;top:50%;
+  height:1px;z-index:3;
+  background:linear-gradient(90deg,transparent 5%,var(--gold) 30%,var(--gold) 70%,transparent 95%);
+  box-shadow:0 0 8px rgba(201,169,110,.4),0 0 20px rgba(201,169,110,.15);
+  opacity:0;
+  transition:opacity .6s ease;
+  animation:seam-breathe 2.5s ease-in-out infinite;
+}
+@keyframes seam-breathe{
+  0%,100%{opacity:0.7;box-shadow:0 0 8px rgba(201,169,110,.3),0 0 16px rgba(201,169,110,.1);}
+  50%{opacity:1;box-shadow:0 0 12px rgba(201,169,110,.5),0 0 28px rgba(201,169,110,.2);}
+}
+
+/* Logo centered — visible between/on top of curtains */
 #intro-logo{
-  position:relative;z-index:1;
+  position:relative;z-index:4;
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
   gap:.75rem;

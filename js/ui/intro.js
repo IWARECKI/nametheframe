@@ -1,7 +1,8 @@
-// Intro animation: dual curtains + film grain + projector sound
-// Top curtain anchored at top, bottom at bottom. Both start at 50vh (fully closed).
-// During countdown 24→0 they shrink toward their edges, revealing logo in the gap.
-// On click: curtains retract to 0vh, setup appears.
+// Intro animation: dual curtains converge from edges to center
+// Top curtain starts off-screen above, slides DOWN to cover top half.
+// Bottom curtain starts off-screen below, slides UP to cover bottom half.
+// They meet in the middle — logo appears at the seam.
+// On click: curtains slide back out (top up, bottom down), revealing setup.
 
 (function initIntro() {
   const intro      = document.getElementById('intro');
@@ -10,6 +11,7 @@
   const counter    = document.getElementById('film-counter');
   const enter      = document.getElementById('frame-enter');
   const logo       = document.getElementById('intro-logo');
+  const seamLine   = document.getElementById('seam-line');
 
   const TOTAL = 24;
   let ready = false;
@@ -52,8 +54,7 @@
 
   function startProjectorSound() {
     if (!audioCtx) return;
-    const CLICK_INTERVAL = 4000 / TOTAL;
-    clickInterval = setInterval(playClick, CLICK_INTERVAL);
+    clickInterval = setInterval(playClick, 4000 / TOTAL);
   }
 
   function fadeOutSound() {
@@ -65,20 +66,20 @@
   }
 
   // ── Curtain control ────────────────────────────────────────
-  function setCurtainReveal(progress) {
-    // 0 = fully closed (50vh each, no gap), 1 = open (24vh each, 52vh gap)
+  // Curtains converge: progress 0 = off-screen, 1 = meeting at center
+  function setCurtainClose(progress) {
     const p = Math.max(0, Math.min(1, progress));
-    const h = 50 - 26 * p;
-    topCurtain.style.height = h + 'vh';
-    btmCurtain.style.height = h + 'vh';
+    // Top: starts at translateY(-100%) → ends at translateY(0)
+    topCurtain.style.transform = 'translateY(' + (-100 + p * 100) + '%)';
+    // Bottom: starts at translateY(100%) → ends at translateY(0)
+    btmCurtain.style.transform = 'translateY(' + (100 - p * 100) + '%)';
   }
 
-  function setCurtainExit(progress) {
-    // 0 = at 24vh, 1 = gone (0vh)
+  // Curtains diverge (exit): progress 0 = at center, 1 = off-screen
+  function setCurtainOpen(progress) {
     const p = Math.max(0, Math.min(1, progress));
-    const h = 24 * (1 - p);
-    topCurtain.style.height = h + 'vh';
-    btmCurtain.style.height = h + 'vh';
+    topCurtain.style.transform = 'translateY(' + (-p * 100) + '%)';
+    btmCurtain.style.transform = 'translateY(' + (p * 100) + '%)';
   }
 
   // ── Film grain: animate feTurbulence seed ──────────────────
@@ -98,8 +99,9 @@
   }
 
   // ── Initialize ─────────────────────────────────────────────
-  setCurtainReveal(0);
+  setCurtainClose(0); // curtains off-screen
   logo.style.opacity = '0';
+  if (seamLine) seamLine.style.opacity = '0';
   animateGrain();
 
   // ── Phase 1: flicker 24/25 for ~500ms ─────────────────────
@@ -115,10 +117,9 @@
     }
   }, 85);
 
-  // ── Phase 2: count 24→0, open curtains ─────────────────────
+  // ── Phase 2: count 24→0, curtains converge to center ───────
   function startCountdown() {
     startProjectorSound();
-    setTimeout(() => { logo.style.opacity = '1'; }, 300);
 
     let count = TOTAL;
     const STEP = 4000 / TOTAL;
@@ -127,8 +128,14 @@
       count--;
       counter.textContent = count;
       const progress = (TOTAL - count) / TOTAL;
-      setCurtainReveal(progress);
+      setCurtainClose(progress);
 
+      // Show logo when curtains are ~70% closed
+      if (progress > 0.7 && logo.style.opacity === '0') {
+        logo.style.opacity = '1';
+      }
+
+      // Gradually reduce audio gain
       if (gainNode && audioCtx) {
         gainNode.gain.setValueAtTime(0.05 * (1 - progress * 0.7), audioCtx.currentTime);
       }
@@ -140,11 +147,12 @@
     }, STEP);
   }
 
-  // ── Phase 3: done — show "click to enter" ──────────────────
+  // ── Phase 3: done — show seam line + "click to enter" ──────
   function onCountdownDone() {
     fadeOutSound();
     counter.style.opacity = '0';
     setTimeout(() => { counter.style.display = 'none'; }, 300);
+    if (seamLine) seamLine.style.opacity = '1';
     enter.classList.add('vis');
     ready = true;
   }
@@ -155,18 +163,19 @@
     ready = false;
 
     enter.style.opacity = '0';
-    logo.style.transition = 'opacity .4s ease';
+    logo.style.transition = 'opacity .3s ease';
     logo.style.opacity = '0';
+    if (seamLine) { seamLine.style.transition = 'opacity .3s'; seamLine.style.opacity = '0'; }
     stopGrain();
 
-    const DURATION = 700;
+    const DURATION = 800;
     const start = performance.now();
 
     function animate(now) {
       const elapsed = now - start;
       const p = Math.min(elapsed / DURATION, 1);
-      const eased = 1 - Math.pow(1 - p, 3); // ease-out cubic
-      setCurtainExit(eased);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setCurtainOpen(eased);
 
       if (p < 1) {
         requestAnimationFrame(animate);
