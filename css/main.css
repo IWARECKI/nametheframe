@@ -23,17 +23,28 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 /* Two black curtains — top falls down, bottom rises up */
 .curtain{
   position:absolute;left:0;right:0;
-  background:#000;overflow:hidden;
-  /* grain rendered on canvas inside */
+  background:#080808;overflow:hidden;
 }
 #curtain-top   { top:0;    height:0; }   /* grows downward  */
 #curtain-bottom{ bottom:0; height:0; }   /* grows upward    */
 
-/* Grain canvas fills the curtain panel */
-.grain-canvas{
+/* Film grain — pure CSS, zero JS, zero GC pressure.
+   SVG feTurbulence tile (150×150) shifted each step → animated noise. */
+.curtain::after{
+  content:'';
   position:absolute;inset:0;
-  width:100%;height:100%;
-  opacity:.13;pointer-events:none;display:block;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.80' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='150' height='150' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
+  background-size:150px 150px;
+  opacity:.11;
+  animation:filmGrain .28s steps(1) infinite;
+  pointer-events:none;
+}
+@keyframes filmGrain{
+  0%  {background-position:  0px   0px;}
+  20% {background-position:-35px  20px;}
+  40% {background-position: 20px -40px;}
+  60% {background-position:-45px  35px;}
+  80% {background-position: 30px -25px;}
 }
 
 /* Logo centered in gap between curtains */
