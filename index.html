@@ -13,10 +13,11 @@
 
 <!-- Django equivalent: {% block intro %}{% include "partials/intro.html" %}{% endblock %} -->
 <div id="intro">
-  <div class="beam"></div>
-  <div class="ilogo">Name the <em>Frame</em></div>
-  <div class="isub">Sprawdź swój poziom filmowtajemniczenia</div>
-  <div class="iline"></div>
+  <div id="film-counter">24</div>
+  <div id="film-frame">
+    <div class="frame-logo">Name the <em>Frame</em></div>
+    <div class="frame-enter" id="frame-enter">— kliknij aby wejść —</div>
+  </div>
 </div>
 
 <!-- Django equivalent: {% block setup %}{% include "partials/setup.html" %}{% endblock %} -->
@@ -191,6 +192,9 @@
 
 <!-- App bootstrap -->
 <script src="js/app.js"></script>
+
+<!-- Global footer — covered by intro (z-index:100) during animation -->
+<div id="site-footer">© 2026 iwarecki</div>
 
 </body>
 </html>
