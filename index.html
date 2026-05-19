@@ -14,10 +14,11 @@
   --glass:rgba(6,6,6,.8);--r:4px;
   --ok:rgba(100,180,120,.18);--ok-t:#a8dab5;
   --bad:rgba(180,90,90,.18);--bad-t:#dab5b5;
+  --warn:rgba(200,160,60,.18);--warn-t:#d4b870;
 }
 body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min-height:100vh;overflow-x:hidden;}
 
-/* ─── INTRO ─── */
+/* INTRO */
 #intro{position:fixed;inset:0;background:#000;z-index:100;display:flex;align-items:center;justify-content:center;flex-direction:column;}
 .beam{position:absolute;top:0;left:50%;transform:translateX(-50%);width:0;height:0;border-left:0 solid transparent;border-right:0 solid transparent;border-top:100vh solid rgba(201,169,110,.05);animation:beam 2s ease forwards;pointer-events:none;}
 @keyframes beam{0%{opacity:0;border-left-width:0;border-right-width:0;}40%{opacity:1;}100%{opacity:1;border-left-width:200px;border-right-width:200px;}}
@@ -28,32 +29,26 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 @keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes line{from{opacity:0;transform:scaleX(0)}to{opacity:1;transform:scaleX(1)}}
 
-/* ─── SETUP ─── */
+/* SETUP */
 #setup{min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;padding:2.5rem 1.5rem;opacity:0;transition:opacity .6s;}
 #setup.vis{opacity:1;}
 #setup::before{content:'';position:fixed;top:0;left:50%;transform:translateX(-50%);width:700px;height:300px;background:radial-gradient(ellipse,rgba(201,169,110,.06) 0%,transparent 70%);pointer-events:none;}
-
 .brand{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2rem,5vw,3.5rem);letter-spacing:-.01em;line-height:1;text-align:center;margin-bottom:.3rem;}
 .brand em{font-style:italic;color:var(--gold);}
-.tagline{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:2.5rem;max-width:400px;line-height:1.8;}
+.tagline{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:2.5rem;max-width:420px;line-height:1.8;}
 
-/* Nick + gatunek */
 .form-row{width:100%;max-width:700px;display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
 @media(max-width:600px){.form-row{grid-template-columns:1fr;}}
-
-.field-wrap{display:flex;flex-direction:column;gap:.5rem;}
+.field-wrap{display:flex;flex-direction:column;gap:.4rem;}
 .field-label{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);}
-.field-sub{font-size:9px;color:var(--muted);letter-spacing:.05em;margin-top:-2px;}
-
-.nick-input{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;color:var(--text);font-family:'Cormorant Garamond',serif;font-size:1.15rem;width:100%;text-align:left;outline:none;transition:border-color .15s;letter-spacing:.04em;}
+.field-sub{font-size:9px;color:var(--muted);letter-spacing:.04em;}
+.nick-input{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;color:var(--text);font-family:'Cormorant Garamond',serif;font-size:1.15rem;width:100%;outline:none;transition:border-color .15s;letter-spacing:.04em;}
 .nick-input:focus{border-color:rgba(201,169,110,.4);}
 .nick-input::placeholder{color:var(--muted);font-style:italic;}
-
 .genre-select{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;color:var(--text);font-family:'Space Mono',monospace;font-size:11px;width:100%;outline:none;transition:border-color .15s;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23c9a96e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center;}
 .genre-select:focus{border-color:rgba(201,169,110,.4);}
 .genre-select option{background:#141414;color:var(--text);}
 
-/* Level cards — trzy obok */
 .levels-label{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:.875rem;align-self:flex-start;width:100%;max-width:700px;}
 .levels{width:100%;max-width:700px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem;}
 @media(max-width:600px){.levels{grid-template-columns:1fr;}}
@@ -61,41 +56,23 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .lvl-card{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:var(--r);cursor:pointer;transition:all .15s;overflow:hidden;position:relative;display:flex;flex-direction:column;}
 .lvl-card:hover{border-color:rgba(201,169,122,.3);background:rgba(201,169,122,.04);}
 .lvl-card.active{background:var(--gold-dim);border-color:var(--gold);}
-
 .lvl-main{padding:1rem;flex:1;}
 .lvl-emoji{font-size:1.4rem;display:block;margin-bottom:.5rem;}
 .lvl-name{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:400;display:block;margin-bottom:.4rem;}
 .lvl-desc{font-size:9.5px;color:var(--muted);line-height:1.6;letter-spacing:.02em;}
 
-/* Spoiler — na klik */
-.lvl-spoiler-btn{
-  width:100%;background:transparent;border:none;border-top:1px solid rgba(255,255,255,.06);
-  padding:.5rem .75rem;font-family:'Space Mono',monospace;font-size:8px;
-  letter-spacing:.15em;text-transform:uppercase;color:rgba(201,169,122,.4);
-  cursor:pointer;text-align:center;transition:all .15s;
-}
+.lvl-spoiler-btn{width:100%;background:transparent;border:none;border-top:1px solid rgba(255,255,255,.06);padding:.5rem .75rem;font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:rgba(201,169,122,.38);cursor:pointer;text-align:center;transition:all .15s;}
 .lvl-spoiler-btn:hover{color:rgba(201,169,122,.7);background:rgba(201,169,122,.04);}
-.lvl-card.active .lvl-spoiler-btn{color:rgba(201,169,122,.6);}
-
-.lvl-spoiler-content{
-  max-height:0;overflow:hidden;
-  transition:max-height .35s ease,padding .35s ease;
-  border-top:0px solid transparent;
-}
-.lvl-spoiler-content.open{
-  max-height:150px;
-  padding:.75rem 1rem;
-  border-top:1px solid rgba(201,169,122,.12);
-}
+.lvl-spoiler-content{max-height:0;overflow:hidden;transition:max-height .35s ease,padding .35s ease;}
+.lvl-spoiler-content.open{max-height:160px;padding:.75rem 1rem;border-top:1px solid rgba(201,169,122,.12);}
 .spoiler-text{font-size:9.5px;line-height:1.65;color:rgba(201,169,122,.82);font-style:italic;letter-spacing:.02em;}
 
-/* Start btn */
 .start-btn{width:100%;max-width:700px;background:var(--gold);color:#080808;border:none;border-radius:var(--r);padding:1rem;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;cursor:pointer;transition:all .15s;}
 .start-btn:hover{background:#d4b47a;}
 .start-btn:disabled{opacity:.35;cursor:not-allowed;}
 .scred{margin-top:1.25rem;font-size:9px;letter-spacing:.1em;color:rgba(240,235,226,.13);text-align:center;}
 
-/* ─── GAME ─── */
+/* GAME */
 #game{display:none;min-height:100vh;position:relative;flex-direction:column;}
 .bgf{position:fixed;inset:0;z-index:0;}
 .bgf img{width:100%;height:100%;object-fit:cover;display:block;}
@@ -110,31 +87,61 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .hprog{position:fixed;top:44px;left:0;right:0;height:2px;background:rgba(255,255,255,.05);z-index:20;}
 .hprogf{height:100%;background:var(--gold);transition:width .5s ease;}
 .floader{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;font-size:9px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;z-index:5;transition:opacity .3s;}
-.qpanel{position:fixed;bottom:0;left:0;right:0;z-index:10;padding:1.5rem 1.5rem 2rem;background:linear-gradient(to bottom,transparent,var(--glass) 28%);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,.06);max-height:72vh;overflow-y:auto;}
+.qpanel{position:fixed;bottom:0;left:0;right:0;z-index:10;padding:1.5rem 1.5rem 2rem;background:linear-gradient(to bottom,transparent,var(--glass) 28%);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,.06);max-height:75vh;overflow-y:auto;}
 .qinner{max-width:520px;margin:0 auto;}
 .qtxt{font-family:'Cormorant Garamond',serif;font-size:clamp(1.2rem,3vw,1.625rem);font-weight:300;line-height:1.3;margin-bottom:.875rem;}
-.refl{display:inline-flex;align-items:center;gap:10px;margin-bottom:.875rem;}
-.rl{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-style:italic;color:var(--gold);background:rgba(201,169,110,.13);border:1px solid rgba(201,169,110,.33);border-radius:2px;padding:3px 14px;letter-spacing:5px;}
-.rll{font-size:9px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;}
+
+/* Wisielec / okienka liter */
+.hangman-wrap{margin-bottom:1rem;}
+.hangman-label{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;}
+.hangman-boxes{display:flex;flex-wrap:wrap;gap:4px;}
+.hbox{
+  width:28px;height:34px;
+  border-bottom:2px solid rgba(201,169,110,.5);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:400;
+  color:var(--gold);letter-spacing:0;
+  transition:all .2s;
+}
+.hbox.revealed{
+  background:rgba(201,169,110,.1);
+  border:1px solid rgba(201,169,110,.4);
+  border-radius:2px;
+  color:var(--gold);
+}
+.hbox.space{border:none;width:10px;}
+
 .opts{display:grid;gap:6px;}
 .opt{background:rgba(6,6,6,.58);border:1px solid rgba(255,255,255,.1);border-radius:var(--r);padding:.75rem 1rem;text-align:left;cursor:pointer;color:var(--text);font-family:'Space Mono',monospace;font-size:12px;line-height:1.4;transition:all .12s;backdrop-filter:blur(4px);}
 .opt:hover:not(:disabled){border-color:rgba(201,169,110,.4);background:rgba(201,169,110,.1);}
 .opt.correct{background:var(--ok);border-color:rgba(100,180,120,.5);color:var(--ok-t);}
 .opt.wrong{background:var(--bad);border-color:rgba(180,90,90,.5);color:var(--bad-t);}
+
 .ti{background:rgba(6,6,6,.62);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;color:var(--text);font-family:'Space Mono',monospace;font-size:12px;width:100%;outline:none;transition:border-color .12s;margin-bottom:6px;backdrop-filter:blur(4px);}
 .ti:focus{border-color:rgba(201,169,110,.4);}
-.cb{width:100%;background:rgba(6,6,6,.6);border:1px solid rgba(201,169,110,.5);border-radius:var(--r);padding:.7rem;color:var(--gold);font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.25em;text-transform:uppercase;cursor:pointer;transition:all .12s;}
+
+.dir-bonus-wrap{margin-top:8px;padding:.75rem 1rem;background:rgba(201,169,110,.05);border:1px solid rgba(201,169,110,.15);border-radius:var(--r);}
+.dir-bonus-label{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(201,169,122,.6);margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;}
+.dir-bonus-pts{font-size:10px;color:var(--gold);}
+.dir-input{background:rgba(6,6,6,.5);border:1px solid rgba(201,169,110,.2);border-radius:var(--r);padding:.6rem .875rem;color:var(--text);font-family:'Space Mono',monospace;font-size:11px;width:100%;outline:none;transition:border-color .12s;}
+.dir-input:focus{border-color:rgba(201,169,110,.5);}
+.dir-input::placeholder{color:rgba(240,235,226,.25);font-style:italic;}
+
+.cb{width:100%;background:rgba(6,6,6,.6);border:1px solid rgba(201,169,110,.5);border-radius:var(--r);padding:.7rem;color:var(--gold);font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.25em;text-transform:uppercase;cursor:pointer;transition:all .12s;margin-top:6px;}
 .cb:hover{background:rgba(201,169,110,.13);}
-.rbox{margin-top:.875rem;padding:.75rem 1rem;border-radius:var(--r);font-size:12px;line-height:1.6;display:none;backdrop-filter:blur(4px);}
+
+.rbox{margin-top:.875rem;padding:.75rem 1rem;border-radius:var(--r);font-size:12px;line-height:1.7;display:none;backdrop-filter:blur(4px);}
 .rbox.ok{background:var(--ok);border:1px solid rgba(100,180,120,.28);color:var(--ok-t);}
 .rbox.bad{background:var(--bad);border:1px solid rgba(180,90,90,.28);color:var(--bad-t);}
+.rbox.partial{background:var(--warn);border:1px solid rgba(200,160,60,.28);color:var(--warn-t);}
+
 .frev{margin-top:.75rem;padding:.75rem 1rem;background:rgba(6,6,6,.55);border:1px solid var(--border);border-radius:var(--r);display:none;backdrop-filter:blur(4px);}
 .frt{font-family:'Cormorant Garamond',serif;font-size:1rem;margin-bottom:2px;}
 .frm{font-size:10px;letter-spacing:.1em;color:var(--muted);}
 .nbtn{margin-top:.75rem;width:100%;background:transparent;border:1px solid rgba(255,255,255,.12);border-radius:var(--r);padding:.7rem;color:var(--muted);font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.25em;text-transform:uppercase;cursor:pointer;transition:all .12s;display:none;}
 .nbtn:hover{border-color:var(--gold);color:var(--gold);}
 
-/* ─── END ─── */
+/* END */
 #end{display:none;min-height:100vh;align-items:center;justify-content:center;flex-direction:column;padding:2rem;text-align:center;background:#080808;position:relative;}
 #end::before{content:'';position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(ellipse,rgba(201,169,110,.05) 0%,transparent 70%);pointer-events:none;}
 .esc{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:min(22vw,9rem);color:var(--gold);line-height:1;margin-bottom:.25rem;}
@@ -152,24 +159,24 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 <div id="intro">
   <div class="beam"></div>
   <div class="ilogo">Name the <em>Frame</em></div>
-  <div class="isub">Sprawdź swój poziom filmotajemniczenia</div>
+  <div class="isub">Sprawdź swój poziom filmowtajemniczenia</div>
   <div class="iline"></div>
 </div>
 
 <!-- SETUP -->
 <section id="setup">
   <div class="brand">Name the <em>Frame</em></div>
-  <p class="tagline">Rozpoznaj kadr &nbsp;·&nbsp; Sprawdź swój poziom filmotajemniczenia</p>
+  <p class="tagline">Rozpoznaj kadr &nbsp;·&nbsp; Sprawdź swój poziom filmowtajemniczenia</p>
 
   <div class="form-row">
     <div class="field-wrap">
       <span class="field-label">Twój nick</span>
-      <span class="field-sub">Jak chcesz się zapisać w historii kinofili?</span>
+      <span class="field-sub">Jak chcesz się zapisać w historii...?</span>
       <input class="nick-input" id="nick-input" type="text" placeholder="Wpisz swoje kinowe imię…" maxlength="22" autocomplete="off"/>
     </div>
     <div class="field-wrap">
       <span class="field-label">Żywioł filmowy</span>
-      <span class="field-sub">Twój gatunek — pojawi się przy wyniku</span>
+      <span class="field-sub">Czyli Twój gatunek (wpłynie na wynik!)</span>
       <select class="genre-select" id="genre-select">
         <option value="">— wybierz żywioł —</option>
         <optgroup label="Klasyczne gatunki">
@@ -221,43 +228,39 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 
   <div class="levels-label">Wybierz poziom</div>
   <div class="levels">
-
     <div class="lvl-card" data-lvl="popcorn" onclick="selectLevel(this)">
       <div class="lvl-main">
         <span class="lvl-emoji">🍿</span>
         <span class="lvl-name">Akolita Popcornu</span>
         <span class="lvl-desc">Film to Netflix, chrupanie i chill. Ekspert od sequeli, prequeli i spin-offów. Szybcy i Wściekli to saga życia, odlicza do premiery kolejnego Pieprzyć Mickiewicza.</span>
       </div>
-      <button class="lvl-spoiler-btn" onclick="toggleSpoiler(event, this)">kliknij jeśli nie boisz się spoilerów</button>
+      <button class="lvl-spoiler-btn" onclick="toggleSpoiler(event,this)">kliknij jeśli nie boisz się spoilerów</button>
       <div class="lvl-spoiler-content">
-        <div class="spoiler-text">Najważniejszy jest film, zgadujesz tytuł — klasyczny test 4 opcje. Przygląda Ci się Hubert Urbański, który nieprzypadkowo jest aktorem. Prawie jak Milionerzy.</div>
+        <div class="spoiler-text">Najważniejszy jest film — zgadujesz tytuł, klasyczny test 4 opcje. Przygląda Ci się Hubert Urbański, który nieprzypadkowo jest aktorem. Prawie jak Milionerzy.</div>
       </div>
     </div>
-
     <div class="lvl-card" data-lvl="kinoman" onclick="selectLevel(this)">
       <div class="lvl-main">
         <span class="lvl-emoji">🎬</span>
         <span class="lvl-name">Samozwańczy Kinoman</span>
         <span class="lvl-desc">Tłumaczy znajomym na imprezach różnicę między Davidami — Cronenbergiem, Fincherem a Lynchem. Szczytuje przy każdej wzmiance o Villeneuvie. Ukrywa miłość do Marvela.</span>
       </div>
-      <button class="lvl-spoiler-btn" onclick="toggleSpoiler(event, this)">kliknij jeśli nie boisz się spoilerów</button>
+      <button class="lvl-spoiler-btn" onclick="toggleSpoiler(event,this)">kliknij jeśli nie boisz się spoilerów</button>
       <div class="lvl-spoiler-content">
-        <div class="spoiler-text">Testy są dla dzieci. Wprawiaj w ruch litery — jedna z nich zawsze odkryta przed Twoim gustem. Masz też opcję reżyserów za extra punkty, choć czy extra to już sam sobie odpowiedz...</div>
+        <div class="spoiler-text">Testy są dla dzieci. Wprawiaj w ruch litery — jedna z nich zawsze odkryta przed Twoim gustem. Masz też opcję reżysera za extra punkty (+3) — ale pomyłka kosztuje (-1). Choć czy extra to już sam sobie odpowiedz...</div>
       </div>
     </div>
-
     <div class="lvl-card" data-lvl="kineza" onclick="selectLevel(this)">
       <div class="lvl-main">
         <span class="lvl-emoji">🎞️</span>
         <span class="lvl-name">Orędownik Wielkiej Kinezy</span>
         <span class="lvl-desc">Zostaje na napisach. Nigdy nie wychodzi na siu siu. Płacze z dumą na Malicku. Do każdego outfitu ma inną torbę filmfestiwalową. Ze smutkiem akceptuje ludzi oceniających filmy na Filmwebie.</span>
       </div>
-      <button class="lvl-spoiler-btn" onclick="toggleSpoiler(event, this)">kliknij jeśli nie boisz się spoilerów</button>
+      <button class="lvl-spoiler-btn" onclick="toggleSpoiler(event,this)">kliknij jeśli nie boisz się spoilerów</button>
       <div class="lvl-spoiler-content">
-        <div class="spoiler-text">Jakże można podawać tytuł filmu bez roku powstania? To jak podawanie ręki na przywitanie bez uściśnięcia. Bez podpowiedzi, bez taryf ulgowych. Let the madness begins.</div>
+        <div class="spoiler-text">Jakże można podawać tytuł bez roku? To jak podanie ręki bez uścisku. Reżyser też opcjonalny, ale stawki te same: +3 lub -1. Bez podpowiedzi, bez taryf ulgowych. „Wróg sztuki to brak ograniczeń." — Orson Welles</div>
       </div>
     </div>
-
   </div>
 
   <button class="start-btn" id="start-btn" onclick="startGame()" disabled>▶ &nbsp;Zapal projektor</button>
@@ -279,7 +282,7 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   <div class="qpanel">
     <div class="qinner">
       <p class="qtxt" id="qtxt"></p>
-      <div id="rw" style="display:none"><div class="refl"><span class="rl" id="rl">?</span><span class="rll">litera z odpowiedzi</span></div></div>
+      <div id="hangman-area"></div>
       <div id="aa"></div>
       <div class="rbox" id="rb"></div>
       <div class="frev" id="fr"><div class="frt" id="frt"></div><div class="frm" id="frm"></div></div>
@@ -313,12 +316,6 @@ const FILMS=[
   {id:785398,title:'EO',              dir:'Skolimowski',    y:2022},
 ];
 
-const LVL={
-  popcorn:{diff:'test',  what:'title'},
-  kinoman:{diff:'letter',what:'title_dir'},
-  kineza: {diff:'expert',what:'expert'},
-};
-
 const GENRE_LABELS={
   'horror':'siekacz horrorów','thriller':'łowca thrillerów','noir':'czciciel mroku',
   'kryminał':'detektyw kina','dramat':'dramaturg salonów','komedia':'kronikarz śmiechu',
@@ -334,7 +331,7 @@ const GENRE_LABELS={
   'musical':'śpiewak w ciemności'
 };
 
-let cache={},S={level:null,nick:'',genre:'',diff:'test',what:'title',round:0,score:0,used:[],cur:null};
+let cache={},S={level:null,nick:'',genre:'',diff:'test',round:0,score:0,used:[],cur:null,revealedIdx:0};
 
 // INTRO
 setTimeout(()=>{
@@ -348,7 +345,6 @@ setTimeout(()=>{
   },800);
 },3400);
 
-// NICK + GENRE → enable start
 ['nick-input','genre-select'].forEach(id=>{
   document.getElementById(id).addEventListener('change',checkReady);
   document.getElementById(id).addEventListener('input',checkReady);
@@ -359,17 +355,14 @@ function checkReady(){
   document.getElementById('start-btn').disabled=!(nick&&genre&&S.level);
 }
 
-// LEVEL
 function selectLevel(card){
   document.querySelectorAll('.lvl-card').forEach(c=>c.classList.remove('active'));
   card.classList.add('active');
   S.level=card.dataset.lvl;
-  S.diff=LVL[S.level].diff;
-  S.what=LVL[S.level].what;
+  S.diff=S.level==='popcorn'?'test':S.level==='kinoman'?'letter':'expert';
   checkReady();
 }
 
-// SPOILER TOGGLE
 function toggleSpoiler(e,btn){
   e.stopPropagation();
   const content=btn.nextElementSibling;
@@ -378,7 +371,6 @@ function toggleSpoiler(e,btn){
   btn.textContent=isOpen?'kliknij jeśli nie boisz się spoilerów':'▲ schowaj spoiler';
 }
 
-// FETCH
 async function loadF(f){
   try{
     const r=await fetch(`${APIBASE}/movie/${f.id}/images?api_key=${KEY}`);
@@ -388,7 +380,6 @@ async function loadF(f){
   }catch{cache[f.id]=[];}
 }
 
-// START
 async function startGame(){
   const nick=document.getElementById('nick-input').value.trim();
   const genre=document.getElementById('genre-select').value;
@@ -408,7 +399,6 @@ async function startGame(){
 function imgOK(){const l=document.getElementById('floader');l.style.opacity='0';setTimeout(()=>l.style.display='none',300);}
 function imgErr(){const l=document.getElementById('floader');l.textContent='brak kadru';l.style.opacity='0.35';}
 
-// ROUND
 function nextRound(){
   if(S.round>=FILMS.length){endGame();return;}
   const av=FILMS.filter(f=>!S.used.includes(f.id));
@@ -422,70 +412,192 @@ function nextRound(){
   const img=document.getElementById('bgimg'),ld=document.getElementById('floader');
   img.style.opacity='0';ld.style.display='flex';ld.style.opacity='1';ld.textContent='ładowanie kadru…';
   if(bd?.file_path){img.src=IMG+bd.file_path;img.style.opacity='1';}
-  ['rb','fr'].forEach(id=>{document.getElementById(id).style.display='none';});
+  document.getElementById('rb').style.display='none';
   document.getElementById('rb').className='rbox';
+  document.getElementById('fr').style.display='none';
   document.getElementById('nb').style.display='none';
-  document.getElementById('rw').style.display='none';
+  document.getElementById('hangman-area').innerHTML='';
   renderQ();
 }
 
-function renderQ(){
-  const diff=S.diff,what=S.what,f=S.cur;
-  const lbl={title:'Jaki to film?',director:'Kto wyreżyserował?',year:'Z którego roku?',title_dir:'Tytuł i reżyser?',title_year:'Tytuł i rok?',expert:'Tytuł, reżyser i rok?'};
-  const displayWhat=diff==='expert'?'expert':what;
-  document.getElementById('qtxt').textContent=lbl[displayWhat]||'Jaki to film?';
-  const area=document.getElementById('aa');
-  if(diff==='test'){
-    const c=ga(f,what);let opts=[c],t=0;
-    while(opts.length<4&&t++<40){const x=ga(FILMS[Math.floor(Math.random()*FILMS.length)],what);if(!opts.includes(x))opts.push(x);}
-    opts.sort(()=>Math.random()-.5);
-    area.innerHTML=`<div class="opts">${opts.map(o=>`<button class="opt" onclick="cOpt(this,'${es(c)}','${es(o)}')">${he(o)}</button>`).join('')}</div>`;
-  }else if(diff==='letter'){
-    const tgt=what==='director'?f.dir:what==='year'?String(f.y):f.title;
-    const cl=tgt.replace(/[^a-zA-Z0-9\u00C0-\u024F]/g,'');
-    document.getElementById('rl').textContent=cl.length?cl[Math.floor(Math.random()*cl.length)].toUpperCase():'?';
-    document.getElementById('rw').style.display='block';
-    area.innerHTML=bti(what,f);
-  }else if(diff==='full'){
-    area.innerHTML=bti(what,f);
-  }else{
-    area.innerHTML=`<input class="ti" id="et" placeholder="Tytuł…" autocomplete="off"><input class="ti" id="ed" placeholder="Reżyser…" autocomplete="off"><input class="ti" id="ey" placeholder="Rok…" autocomplete="off" style="margin-bottom:6px"><button class="cb" onclick="cExp()">Sprawdź</button>`;
+// ── WISIELEC ─────────────────────────────────────────────
+function buildHangman(word, revealedIdx){
+  // word = tytuł, revealIdx = indeks odkrytej litery (tylko litery/cyfry)
+  const letters=[];
+  let letterCount=0;
+  for(let i=0;i<word.length;i++){
+    const ch=word[i];
+    if(ch===' '||ch==='-'||ch===':'){
+      letters.push({ch,type:'space'});
+    } else {
+      letters.push({ch,type:'letter',idx:letterCount,revealed:letterCount===revealedIdx});
+      letterCount++;
+    }
   }
+  return letters;
 }
 
-function bti(w,f){const c=es(ga(f,w));return`<input class="ti" id="mi" placeholder="Odpowiedź…" autocomplete="off" onkeydown="if(event.key==='Enter')cTxt('${c}',this.value,'${es(w)}')"><button class="cb" onclick="cTxt('${c}',document.getElementById('mi').value,'${es(w)}')">Sprawdź</button>`;}
-function ga(f,w){if(w==='title')return f.title;if(w==='director')return f.dir;if(w==='year')return String(f.y);if(w==='title_dir')return`${f.title} — ${f.dir}`;if(w==='title_year')return`${f.title} (${f.y})`;return f.title;}
-function nm(s){return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,'').trim();}
-function es(s){return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;');}
-function he(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function renderHangman(word, revealedIdx){
+  const area=document.getElementById('hangman-area');
+  const letters=buildHangman(word, revealedIdx);
+  const boxes=letters.map(l=>{
+    if(l.type==='space') return `<div class="hbox space"></div>`;
+    if(l.revealed) return `<div class="hbox revealed">${he(l.ch.toUpperCase())}</div>`;
+    return `<div class="hbox"></div>`;
+  }).join('');
+  area.innerHTML=`<div class="hangman-wrap"><div class="hangman-label">Podpowiedź — jedna litera odkryta</div><div class="hangman-boxes">${boxes}</div></div>`;
+}
+
+// ── LEVENSHTEIN ───────────────────────────────────────────
+function levenshtein(a,b){
+  const m=a.length,n=b.length;
+  const dp=Array.from({length:m+1},(_,i)=>Array.from({length:n+1},(_,j)=>i===0?j:j===0?i:0));
+  for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)
+    dp[i][j]=a[i-1]===b[j-1]?dp[i-1][j-1]:1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+  return dp[m][n];
+}
+
+function fuzzyMatch(guess, correct){
+  const g=nm(guess), c=nm(correct);
+  if(g===c) return true;
+  if(levenshtein(g,c)<=1) return true;
+  return false;
+}
+
+// ── YEAR SCORING ──────────────────────────────────────────
+function yearScore(guess, correct, basePts){
+  const diff=Math.abs(parseInt(guess)-correct);
+  if(diff===0) return {pts:basePts,label:'✓ Dokładnie!'};
+  if(diff===1) return {pts:Math.round(basePts*.5),label:`⚡ Blisko! (±1 rok) +${Math.round(basePts*.5)} pkt`};
+  if(diff===2) return {pts:Math.round(basePts*.25),label:`⚡ Prawie (±2 lata) +${Math.round(basePts*.25)} pkt`};
+  return {pts:0,label:'✗ Rok daleki od prawdy'};
+}
+
+// ── RENDER QUESTION ───────────────────────────────────────
+function renderQ(){
+  const diff=S.diff, f=S.cur;
+  const area=document.getElementById('aa');
+  document.getElementById('hangman-area').innerHTML='';
+
+  if(diff==='test'){
+    document.getElementById('qtxt').textContent='Jaki to film?';
+    const c=f.title;
+    let opts=[c],t=0;
+    while(opts.length<4&&t++<40){const x=FILMS[Math.floor(Math.random()*FILMS.length)].title;if(!opts.includes(x))opts.push(x);}
+    opts.sort(()=>Math.random()-.5);
+    area.innerHTML=`<div class="opts">${opts.map(o=>`<button class="opt" onclick="cOpt(this,'${es(c)}','${es(o)}')">${he(o)}</button>`).join('')}</div>`;
+
+  } else if(diff==='letter'){
+    document.getElementById('qtxt').textContent='Jaki to film?';
+    // Pick random revealed letter index
+    const word=f.title;
+    const letterChars=word.replace(/[^a-zA-Z0-9\u00C0-\u024F]/g,'');
+    const revIdx=letterChars.length>0?Math.floor(Math.random()*letterChars.length):0;
+    S.revealedIdx=revIdx;
+    renderHangman(word, revIdx);
+    area.innerHTML=`
+      <input class="ti" id="mi" placeholder="Wpisz tytuł…" autocomplete="off" onkeydown="if(event.key==='Enter')cLetter()">
+      <div class="dir-bonus-wrap">
+        <div class="dir-bonus-label"><span>Reżyser? (opcjonalnie)</span><span class="dir-bonus-pts">+3 pkt / -1 pkt za błąd</span></div>
+        <input class="dir-input" id="di" placeholder="Wpisz reżysera lub zostaw puste…" autocomplete="off">
+      </div>
+      <button class="cb" onclick="cLetter()">Sprawdź</button>`;
+
+  } else {
+    // EXPERT
+    document.getElementById('qtxt').textContent='Tytuł, reżyser i rok?';
+    area.innerHTML=`
+      <input class="ti" id="et" placeholder="Tytuł…" autocomplete="off">
+      <input class="ti" id="ey" placeholder="Rok…" autocomplete="off">
+      <div class="dir-bonus-wrap">
+        <div class="dir-bonus-label"><span>Reżyser? (opcjonalnie)</span><span class="dir-bonus-pts">+3 pkt / -1 pkt za błąd</span></div>
+        <input class="dir-input" id="ed" placeholder="Wpisz reżysera lub zostaw puste…" autocomplete="off">
+      </div>
+      <button class="cb" onclick="cExpert()">Sprawdź</button>`;
+  }
+}
 
 function cOpt(btn,correct,picked){
   document.querySelectorAll('.opt').forEach(b=>{b.disabled=true;if(b.textContent.trim()===correct)b.classList.add('correct');});
   if(picked!==correct)btn.classList.add('wrong');
-  sr(picked===correct,correct);
+  sr(picked===correct,1,correct,'');
 }
-function cTxt(correct,guess,what){
-  const f=S.cur;let ok=false;
-  if(what==='year')ok=guess.trim()===String(f.y);
-  else if(what==='director')ok=nm(guess).includes(nm(f.dir).split(' ').pop());
-  else if(what==='title_dir')ok=nm(guess).includes(nm(f.title))&&nm(guess).includes(nm(f.dir).split(' ').pop());
-  else if(what==='title_year')ok=nm(guess).includes(nm(f.title))&&guess.includes(String(f.y));
-  else ok=nm(guess)===nm(correct)||(nm(correct).includes(nm(guess))&&nm(guess).length>3);
-  document.querySelectorAll('.ti,.cb').forEach(el=>el.disabled=true);
-  sr(ok,correct);
+
+function cLetter(){
+  const f=S.cur;
+  const title=document.getElementById('mi').value.trim();
+  const dir=(document.getElementById('di')||{value:''}).value.trim();
+  disableInputs();
+
+  const titleOK=fuzzyMatch(title,f.title);
+  let pts=0, lines=[];
+
+  // Title: 2 pts base for letter mode
+  if(titleOK){pts+=2;lines.push(`✓ Tytuł: <strong>${he(f.title)}</strong> +2 pkt`);}
+  else{lines.push(`✗ Tytuł: <strong>${he(f.title)}</strong>`);}
+
+  // Director bonus
+  if(dir){
+    const dirOK=nm(dir).includes(nm(f.dir).split(' ').pop());
+    if(dirOK){pts+=3;lines.push(`✓ Reżyser: <strong>${he(f.dir)}</strong> +3 pkt`);}
+    else{pts=Math.max(0,pts-1);lines.push(`✗ Reżyser: <strong>${he(f.dir)}</strong> -1 pkt`);}
+  }
+
+  S.score+=pts;
+  showResult(pts>0?'ok':'bad', lines.join('<br>'));
 }
-function cExp(){
-  const f=S.cur,t=document.getElementById('et').value,d=document.getElementById('ed').value,y=document.getElementById('ey').value;
-  const tOK=nm(t)===nm(f.title)||(nm(f.title).includes(nm(t))&&nm(t).length>2);
-  const dOK=nm(d).includes(nm(f.dir).split(' ').pop());
-  const yOK=y.trim()===String(f.y);
-  const ok=tOK&&dOK&&yOK;
-  document.querySelectorAll('.ti,.cb').forEach(el=>el.disabled=true);
-  sr(ok,`${f.title} — ${f.dir} (${f.y})`,ok?'':` · Tytuł ${tOK?'✓':'✗'} Reżyser ${dOK?'✓':'✗'} Rok ${yOK?'✓':'✗'}`);
+
+function cExpert(){
+  const f=S.cur;
+  const title=document.getElementById('et').value.trim();
+  const year=document.getElementById('ey').value.trim();
+  const dir=(document.getElementById('ed')||{value:''}).value.trim();
+  disableInputs();
+
+  let pts=0, lines=[], partial=false;
+
+  // Title: 3 pts
+  const titleOK=fuzzyMatch(title,f.title);
+  if(titleOK){pts+=3;lines.push(`✓ Tytuł: <strong>${he(f.title)}</strong> +3 pkt`);}
+  else{lines.push(`✗ Tytuł: <strong>${he(f.title)}</strong>`);}
+
+  // Year: 2 pts with partial
+  const ys=yearScore(year,f.y,2);
+  pts+=ys.pts;
+  if(ys.pts>0&&ys.pts<2)partial=true;
+  lines.push(`${ys.pts>0?'✓':'✗'} Rok: <strong>${f.y}</strong> ${ys.label}`);
+
+  // Director bonus
+  if(dir){
+    const dirOK=nm(dir).includes(nm(f.dir).split(' ').pop());
+    if(dirOK){pts+=3;lines.push(`✓ Reżyser: <strong>${he(f.dir)}</strong> +3 pkt`);}
+    else{pts=Math.max(0,pts-1);lines.push(`✗ Reżyser: <strong>${he(f.dir)}</strong> -1 pkt`);}
+  }
+
+  S.score+=pts;
+  const cls=pts===0?'bad':partial||pts<5?'partial':'ok';
+  showResult(cls, lines.join('<br>'));
 }
-function sr(ok,ct,ex=''){
-  const pts={test:1,letter:2,full:3,expert:5}[S.diff];
-  if(ok)S.score+=pts;
+
+function disableInputs(){
+  document.querySelectorAll('.ti,.dir-input,.cb').forEach(el=>el.disabled=true);
+}
+
+function showResult(cls, html){
+  document.getElementById('pts').textContent=S.score;
+  const rb=document.getElementById('rb');
+  rb.className='rbox '+cls;
+  rb.innerHTML=html;
+  rb.style.display='block';
+  document.getElementById('frt').textContent=S.cur.title;
+  document.getElementById('frm').textContent=`${S.cur.dir} · ${S.cur.y}`;
+  document.getElementById('fr').style.display='block';
+  document.getElementById('nb').style.display='block';
+}
+
+// sr kept for test mode compatibility
+function sr(ok, pts, ct, ex){
+  if(ok) S.score+=pts;
   document.getElementById('pts').textContent=S.score;
   const rb=document.getElementById('rb');
   rb.className='rbox '+(ok?'ok':'bad');
@@ -497,18 +609,23 @@ function sr(ok,ct,ex=''){
   document.getElementById('nb').style.display='block';
 }
 
+function nm(s){return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,'').trim();}
+function es(s){return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;');}
+function he(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
 function endGame(){
-  const max={test:1,letter:2,full:3,expert:5}[S.diff]*FILMS.length;
-  const pct=Math.round(S.score/max*100);
-  const v=pct>=90?'Nie ma co tu robić. Idź napisz recenzję.':pct>=70?'Solidnie. Torba filmfestiwalowa zasłużona.':pct>=50?'Obiecująco. Więcej Kieślowskiego, mniej Netflixa.':pct>=30?'Popcorn był dobry?':'Tarkowski czeka. Zaczynaj od Stalkera.';
+  const maxPts=S.diff==='popcorn'?10:S.diff==='letter'?50:80;
+  const pct=Math.round(S.score/maxPts*100);
+  const v=pct>=85?'Nie ma co tu robić. Idź napisz recenzję.':pct>=65?'Solidnie. Torba filmfestiwalowa zasłużona.':pct>=45?'Obiecująco. Więcej Kieślowskiego, mniej Netflixa.':pct>=25?'Popcorn był dobry?':'Tarkowski czeka. Zaczynaj od Stalkera.';
   const genreLabel=GENRE_LABELS[S.genre]||S.genre;
   document.getElementById('game').style.display='none';
   document.getElementById('end').style.display='flex';
   document.getElementById('esc').textContent=S.score;
-  document.getElementById('emx').textContent=`z ${max} możliwych punktów`;
+  document.getElementById('emx').textContent=`punktów · poziom: ${S.level==='popcorn'?'Akolita Popcornu':S.level==='kinoman'?'Samozwańczy Kinoman':'Orędownik Wielkiej Kinezy'}`;
   document.getElementById('enick-line').textContent=`${S.nick} · żywioł: ${genreLabel}`;
   document.getElementById('evd').textContent=v;
 }
+
 function resetGame(){
   S={...S,round:0,score:0,used:[],cur:null};
   document.getElementById('end').style.display='none';
