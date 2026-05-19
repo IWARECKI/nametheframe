@@ -14,33 +14,39 @@
 }
 body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min-height:100vh;overflow-x:hidden;}
 
-/* ── INTRO — film frame opening effect ─────────────────────── */
+/* ── INTRO — converging curtains effect ─────────────────────── */
 #intro{
-  position:fixed;inset:0;background:#000;z-index:100;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;
+  position:fixed;inset:0;background:#080808;z-index:100;
+  overflow:hidden;cursor:pointer;
 }
 
-/* Expanding horizontal film-frame bar */
-#film-frame{
-  position:absolute;
-  left:0;right:0;
-  /* top/height set by JS; starts at ~8vh centered */
-  overflow:hidden;
-  background:#000;
-  border-top:1px solid rgba(201,169,110,.25);
-  border-bottom:1px solid rgba(201,169,110,.25);
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  gap:.75rem;
+/* Two black curtains — top falls down, bottom rises up */
+.curtain{
+  position:absolute;left:0;right:0;
+  background:#000;overflow:hidden;
+  /* grain rendered on canvas inside */
+}
+#curtain-top   { top:0;    height:0; }   /* grows downward  */
+#curtain-bottom{ bottom:0; height:0; }   /* grows upward    */
+
+/* Grain canvas fills the curtain panel */
+.grain-canvas{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  opacity:.13;pointer-events:none;display:block;
 }
 
-/* Logo inside the bar */
+/* Logo centered in gap between curtains */
+.frame-center{
+  position:absolute;top:50%;left:0;right:0;
+  transform:translateY(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:.75rem;
+  z-index:2;pointer-events:none;
+}
 .frame-logo{
   font-family:'Cormorant Garamond',serif;font-weight:300;
   font-size:clamp(2rem,6vw,4rem);letter-spacing:-.01em;
-  text-align:center;white-space:nowrap;
-  color:var(--text);
+  text-align:center;white-space:nowrap;color:var(--text);
 }
 .frame-logo em{font-style:italic;color:var(--gold);}
 
@@ -48,18 +54,16 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .frame-enter{
   font-family:'Space Mono',monospace;font-size:9px;
   letter-spacing:.35em;text-transform:uppercase;
-  color:var(--muted);opacity:0;
-  transition:opacity .6s ease;
+  color:var(--muted);opacity:0;transition:opacity .7s ease;
 }
 .frame-enter.vis{opacity:1;}
 
-/* Film frame counter — top-left */
+/* Film-frame counter — top-left, above curtains */
 #film-counter{
   position:absolute;top:1.25rem;left:1.5rem;
   font-family:'Space Mono',monospace;font-size:11px;
   color:var(--gold);letter-spacing:.08em;
-  transition:opacity .3s;
-  user-select:none;
+  transition:opacity .3s;user-select:none;z-index:3;
 }
 
 @keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}

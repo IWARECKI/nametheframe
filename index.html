@@ -13,11 +13,16 @@
 
 <!-- Django equivalent: {% block intro %}{% include "partials/intro.html" %}{% endblock %} -->
 <div id="intro">
-  <div id="film-counter">24</div>
-  <div id="film-frame">
+  <!-- Two curtains converging from screen edges toward center -->
+  <div id="curtain-top"    class="curtain"><canvas class="grain-canvas"></canvas></div>
+  <div id="curtain-bottom" class="curtain"><canvas class="grain-canvas"></canvas></div>
+  <!-- Logo sits in the center gap between curtains -->
+  <div class="frame-center">
     <div class="frame-logo">Name the <em>Frame</em></div>
     <div class="frame-enter" id="frame-enter">— kliknij aby wejść —</div>
   </div>
+  <!-- Film frame counter top-left -->
+  <div id="film-counter">24</div>
 </div>
 
 <!-- Django equivalent: {% block setup %}{% include "partials/setup.html" %}{% endblock %} -->
