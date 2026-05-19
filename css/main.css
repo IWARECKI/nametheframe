@@ -76,15 +76,16 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 @media(max-width:600px){.form-row{grid-template-columns:1fr;}}
 .field-wrap{display:flex;flex-direction:column;gap:.4rem;}
 .field-label{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);}
-.field-sub{font-size:9px;color:var(--muted);letter-spacing:.04em;}
+.field-sub{font-size:9px;color:var(--muted);letter-spacing:.04em;display:none;}
+.field-wrap:hover .field-sub{display:block;}
 .nick-input{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;color:var(--text);font-family:'Cormorant Garamond',serif;font-size:1.15rem;width:100%;outline:none;transition:border-color .15s;letter-spacing:.04em;}
 .nick-input:focus{border-color:rgba(201,169,110,.4);}
 .nick-input::placeholder{color:var(--muted);font-style:italic;}
 .genre-select{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;color:var(--text);font-family:'Space Mono',monospace;font-size:11px;width:100%;outline:none;transition:border-color .15s;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23c9a96e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center;}
 .genre-select:focus{border-color:rgba(201,169,110,.4);}
-.genre-select option{background:#141414;color:var(--text);}
+.genre-select option,.genre-select optgroup{background:#141414;color:var(--text);}
 
-.levels-label{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:.875rem;align-self:flex-start;width:100%;max-width:700px;}
+.levels-label{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:.875rem;width:100%;max-width:700px;text-align:center;margin-left:auto;margin-right:auto;}
 .levels{width:100%;max-width:700px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem;}
 @media(max-width:600px){.levels{grid-template-columns:1fr;}}
 

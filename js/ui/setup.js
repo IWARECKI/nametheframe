@@ -37,8 +37,15 @@ function toggleSpoiler(e, btn) {
   e.stopPropagation();
   const content = btn.nextElementSibling;
   const isOpen  = content.classList.contains('open');
-  content.classList.toggle('open');
-  btn.textContent = isOpen ? 'kliknij jeśli nie boisz się spoilerów' : '▲ schowaj spoiler';
+  // Close any other open spoilers first
+  document.querySelectorAll('.lvl-spoiler-content.open').forEach(el => {
+    el.classList.remove('open');
+    el.previousElementSibling.textContent = 'kliknij jeśli nie boisz się spoilerów';
+  });
+  if (!isOpen) {
+    content.classList.add('open');
+    btn.textContent = '▲ schowaj spoiler';
+  }
 }
 
 // Validate setup, preload all film images, then transition to the game.
