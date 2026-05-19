@@ -13,14 +13,16 @@
 
 (function initIntro() {
 
-  const intro      = document.getElementById('intro');
-  const curtainTop = document.getElementById('curtain-top');
-  const curtainBot = document.getElementById('curtain-bottom');
-  const counterEl  = document.getElementById('film-counter');
-  const enterEl    = document.getElementById('frame-enter');
+  const intro       = document.getElementById('intro');
+  const curtainTop  = document.getElementById('curtain-top');
+  const curtainBot  = document.getElementById('curtain-bottom');
+  const curtainLeft = document.getElementById('curtain-left');
+  const curtainRight= document.getElementById('curtain-right');
+  const counterEl   = document.getElementById('film-counter');
+  const enterEl     = document.getElementById('frame-enter');
 
   // Bail out gracefully if HTML doesn't match (e.g. stale cache)
-  if (!intro || !curtainTop || !curtainBot || !counterEl || !enterEl) return;
+  if (!intro || !curtainTop || !curtainBot || !curtainLeft || !curtainRight || !counterEl || !enterEl) return;
 
   // Each curtain grows to MAX_VH from its edge toward center.
   // 42vh keeps the logo (~4rem tall) in the uncovered center strip.
@@ -32,12 +34,20 @@
   let ready = false;
 
   // ── Curtain position helper ─────────────────────────────────
-  // progress 0 → curtains invisible at edges
-  // progress 1 → curtains at MAX_VH, logo framed in center strip
+  // progress 0 → all curtains invisible at their edges
+  // progress 1 → vertical curtains at MAX_VH, horizontal at MAX_VW
+  // Vertical (top/bottom) use vh; horizontal (left/right) use vw.
+  // Both reach their max simultaneously → aperture close/open.
+  const MAX_VW = 42; // matches MAX_VH for a balanced aperture
+
   function setCurtains(progress) {
-    const h = (MAX_VH * Math.min(Math.max(progress, 0), 1)).toFixed(2);
-    curtainTop.style.height = h + 'vh';
-    curtainBot.style.height = h + 'vh';
+    const p = Math.min(Math.max(progress, 0), 1);
+    const h = (MAX_VH * p).toFixed(2);
+    const w = (MAX_VW * p).toFixed(2);
+    curtainTop.style.height   = h + 'vh';
+    curtainBot.style.height   = h + 'vh';
+    curtainLeft.style.width   = w + 'vw';
+    curtainRight.style.width  = w + 'vw';
   }
 
   setCurtains(0);

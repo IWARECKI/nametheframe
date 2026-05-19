@@ -25,8 +25,10 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   position:absolute;left:0;right:0;
   background:#080808;overflow:hidden;
 }
-#curtain-top   { top:0;    height:0; }   /* grows downward  */
-#curtain-bottom{ bottom:0; height:0; }   /* grows upward    */
+#curtain-top   { top:0;    left:0; right:0;  height:0; }  /* grows downward  */
+#curtain-bottom{ bottom:0; left:0; right:0;  height:0; }  /* grows upward    */
+#curtain-left  { left:0;   top:0;  bottom:0; width:0;  }  /* grows rightward */
+#curtain-right { right:0;  top:0;  bottom:0; width:0;  }  /* grows leftward  */
 
 /* Film grain — pure CSS, zero JS, zero GC pressure.
    SVG feTurbulence tile (150×150) shifted each step → animated noise. */
