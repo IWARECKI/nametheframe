@@ -68,7 +68,7 @@ async function startGame() {
   S.score = 0;
   S.used  = [];
 
-  document.getElementById('mrnd').textContent  = FILMS.length;
+  document.getElementById('mrnd').textContent  = ROUNDS_PER_GAME;
   document.getElementById('hnick').textContent = S.nick;
   document.getElementById('setup').style.display = 'none';
   document.getElementById('game').style.display  = 'flex';

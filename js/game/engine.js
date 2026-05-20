@@ -23,10 +23,13 @@ let S = {
   revealedIdx: 0,      // index of the pre-revealed letter in hangman mode
 };
 
-// Advance to the next round or end the game if all films are exhausted.
+// Number of rounds per game session
+const ROUNDS_PER_GAME = 10;
+
+// Advance to the next round or end the game if limit reached.
 // Django equivalent: a view that increments session state and redirects.
 function nextRound() {
-  if (S.round >= FILMS.length) { endGame(); return; }
+  if (S.round >= ROUNDS_PER_GAME) { endGame(); return; }
   const available = FILMS.filter(f => !S.used.includes(f.id));
   if (!available.length) { endGame(); return; }
 
@@ -37,7 +40,7 @@ function nextRound() {
   // Update HUD
   document.getElementById('rnd').textContent  = S.round;
   document.getElementById('pts').textContent  = S.score;
-  document.getElementById('prog').style.width = (S.round / FILMS.length * 100) + '%';
+  document.getElementById('prog').style.width = (S.round / ROUNDS_PER_GAME * 100) + '%';
 
   // Load backdrop
   const backdrop = getRandomBackdrop(S.cur.id);
@@ -68,7 +71,7 @@ function endGame() {
       ? 'Samozwańczy Kinoman'
       : 'Orędownik Wielkiej Kinezy';
 
-  const maxPts = S.diff === 'test' ? 10 : S.diff === 'letter' ? 50 : 80;
+  const maxPts = S.diff === 'test' ? ROUNDS_PER_GAME : S.diff === 'letter' ? ROUNDS_PER_GAME * 5 : ROUNDS_PER_GAME * 8;
   const pct    = Math.round(S.score / maxPts * 100);
   const verdict =
     pct >= 85 ? 'Nie ma co tu robić. Idź napisz recenzję.'
