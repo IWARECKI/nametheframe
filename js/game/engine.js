@@ -30,7 +30,7 @@ const ROUNDS_PER_GAME = 10;
 // Django equivalent: a view that increments session state and redirects.
 function nextRound() {
   if (S.round >= ROUNDS_PER_GAME) { endGame(); return; }
-  const available = FILMS.filter(f => !S.used.includes(f.id));
+  const available = FILMS.filter(f => !S.used.includes(f.id) && !isPermaBroken(f.id));
   if (!available.length) { endGame(); return; }
 
   S.cur = available[Math.floor(Math.random() * available.length)];
@@ -92,6 +92,9 @@ function endGame() {
   document.getElementById('emx').textContent       = `punktów · poziom: ${levelName}`;
   document.getElementById('enick-line').textContent = `${S.nick} · żywioł: ${genreLabel}`;
   document.getElementById('evd').textContent        = verdict;
+
+  // Render leaderboard
+  renderLeaderboard();
 }
 
 // Reset state and return to setup screen.

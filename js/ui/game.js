@@ -10,11 +10,53 @@ function imgOK() {
   setTimeout(() => loader.style.display = 'none', 300);
 }
 
+// Track broken films in localStorage
+const BROKEN_KEY = 'ntf_broken_films';
+function getBrokenFilms() {
+  try { return JSON.parse(localStorage.getItem(BROKEN_KEY)) || {}; } catch { return {}; }
+}
+function markBroken(filmId) {
+  const broken = getBrokenFilms();
+  broken[filmId] = (broken[filmId] || 0) + 1;
+  localStorage.setItem(BROKEN_KEY, JSON.stringify(broken));
+  return broken[filmId];
+}
+function isPermaBroken(filmId) {
+  const broken = getBrokenFilms();
+  return (broken[filmId] || 0) >= 3;
+}
+
 // Called by the <img> onerror event if the backdrop fails to load.
 function imgErr() {
   const loader = document.getElementById('floader');
-  loader.textContent   = 'brak kadru';
-  loader.style.opacity = '0.35';
+  loader.innerHTML = `
+    <div style="text-align:center;">
+      <div style="margin-bottom:.75rem;font-size:10px;letter-spacing:.2em;color:var(--muted);">BRAK KADRU</div>
+      <div style="font-size:9px;color:var(--muted);margin-bottom:1rem;max-width:280px;line-height:1.6;">
+        Obraz nie załadował się. Potwierdź brak — po 3 zgłoszeniach film zostanie usunięty z puli.
+      </div>
+      <button onclick="confirmBrokenAndSkip()" style="background:var(--gold);color:#080808;border:none;border-radius:var(--r);padding:.6rem 1.5rem;font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;margin-right:8px;">Potwierdź brak</button>
+      <button onclick="skipBrokenRound()" style="background:transparent;border:1px solid var(--border);border-radius:var(--r);padding:.6rem 1.5rem;color:var(--muted);font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;">Pomiń</button>
+    </div>`;
+  loader.style.opacity = '1';
+}
+
+// User confirms the image is broken
+function confirmBrokenAndSkip() {
+  if (S.cur) {
+    const count = markBroken(S.cur.id);
+    if (count >= 3) {
+      console.log(`Film ${S.cur.id} (${S.cur.title}) permanently removed from pool.`);
+    }
+  }
+  skipBrokenRound();
+}
+
+// Skip this round and move to next (don't count as a played round)
+function skipBrokenRound() {
+  S.round--; // don't count this round
+  S.used.push(S.cur.id); // but don't show it again this session
+  nextRound();
 }
 
 // Handle a multiple-choice option click (Akolita Popcornu mode).

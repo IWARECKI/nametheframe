@@ -342,6 +342,17 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .erp:hover{background:#d4b47a;}
 .ecr{position:fixed;bottom:1.5rem;font-size:9px;letter-spacing:.1em;color:rgba(240,235,226,.12);max-width:360px;line-height:1.6;text-align:center;padding:0 1rem;}
 
+/* Leaderboard */
+.lb-wrap{margin-top:2rem;width:100%;max-width:360px;text-align:left;}
+.lb-title{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem;text-align:center;}
+.lb-row{display:flex;align-items:center;gap:.5rem;padding:.4rem .5rem;border-bottom:1px solid var(--border);font-size:11px;}
+.lb-row:last-child{border-bottom:none;}
+.lb-pos{width:24px;text-align:center;font-size:12px;}
+.lb-nick{flex:1;color:var(--text);font-family:'Cormorant Garamond',serif;font-size:13px;}
+.lb-lvl{font-size:12px;}
+.lb-score{font-family:'Space Mono',monospace;font-size:11px;color:var(--gold);font-weight:700;min-width:28px;text-align:right;}
+.lb-date{font-size:9px;color:var(--muted);min-width:44px;text-align:right;}
+
 /* ── Global footer — visible on setup / game / end ─────────── */
 #site-footer{
   position:fixed;bottom:.9rem;right:1.25rem;
