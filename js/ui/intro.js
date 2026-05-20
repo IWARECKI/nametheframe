@@ -66,14 +66,14 @@
   function createDustParticles() {
     if (!dust) return;
     dust.innerHTML = '';
-    for (let i = 0; i < 18; i++) {
+    for (let i = 0; i < 35; i++) {
       const p = document.createElement('div');
       p.className = 'dust-dot';
-      p.style.left = (20 + Math.random() * 60) + '%';
-      p.style.top = (10 + Math.random() * 70) + '%';
-      p.style.animationDelay = (Math.random() * 4) + 's';
-      p.style.animationDuration = (3 + Math.random() * 3) + 's';
-      p.style.width = p.style.height = (1 + Math.random() * 2) + 'px';
+      p.style.left = (15 + Math.random() * 70) + '%';
+      p.style.top = (5 + Math.random() * 80) + '%';
+      p.style.animationDelay = (Math.random() * 5) + 's';
+      p.style.animationDuration = (2.5 + Math.random() * 4) + 's';
+      p.style.width = p.style.height = (1 + Math.random() * 2.5) + 'px';
       dust.appendChild(p);
     }
   }
