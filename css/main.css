@@ -28,21 +28,56 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   opacity:0;pointer-events:none;z-index:5;
 }
 
-/* Golden beam cone from above */
+/* Main ambient projector beam (large, behind word beams) */
 #projector-beam{
   position:absolute;
   top:-5%;left:50%;transform:translateX(-50%);
   width:0;height:0;
-  border-left:120px solid transparent;
-  border-right:120px solid transparent;
-  border-top:65vh solid rgba(201,169,110,.06);
+  border-left:100px solid transparent;
+  border-right:100px solid transparent;
+  border-top:65vh solid rgba(201,169,110,.04);
   opacity:0;z-index:1;
-  filter:blur(8px);
-  animation:beam-sway 6s ease-in-out infinite;
+  filter:blur(12px);
+  animation:beam-sway-a 6s ease-in-out infinite;
 }
-@keyframes beam-sway{
-  0%,100%{transform:translateX(-50%) rotate(-0.5deg);}
-  50%{transform:translateX(-50%) rotate(0.5deg);}
+
+/* Three individual light cones — one per word */
+.word-beam{
+  position:absolute;
+  top:-10%;
+  width:0;height:0;
+  border-left:45px solid transparent;
+  border-right:45px solid transparent;
+  border-top:55vh solid rgba(240,235,226,.035);
+  opacity:0;z-index:1;
+  filter:blur(6px);
+  pointer-events:none;
+}
+.word-beam.beam-sm{
+  border-left-width:30px;
+  border-right-width:30px;
+  border-top-color:rgba(240,235,226,.025);
+}
+.word-beam.beam-gold{
+  border-left-width:50px;
+  border-right-width:50px;
+  border-top-color:rgba(201,169,110,.04);
+}
+#beam-name{left:calc(50% - 90px);animation:beam-sway-a 7s ease-in-out infinite;}
+#beam-the{left:calc(50% - 10px);animation:beam-sway-b 6s ease-in-out infinite;}
+#beam-frame{left:calc(50% + 50px);animation:beam-sway-c 8s ease-in-out infinite;}
+
+@keyframes beam-sway-a{
+  0%,100%{transform:rotate(-0.3deg);}
+  50%{transform:rotate(0.4deg);}
+}
+@keyframes beam-sway-b{
+  0%,100%{transform:rotate(0.2deg);}
+  50%{transform:rotate(-0.3deg);}
+}
+@keyframes beam-sway-c{
+  0%,100%{transform:rotate(0.3deg);}
+  50%{transform:rotate(-0.2deg);}
 }
 
 /* Dust particles floating in the beam */
@@ -90,10 +125,9 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 }
 @keyframes cursor-blink{0%,50%{opacity:1;}51%,100%{opacity:0;}}
 
-/* "Name" — warm white neon glow + light cone from above */
+/* "Name" — warm white neon glow */
 .glow-name{
   color:#f0ebe2;
-  position:relative;
   display:inline-block;
   text-shadow:
     0 0 4px rgba(240,235,226,.6),
@@ -102,20 +136,11 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
     0 0 44px rgba(220,210,190,.1);
   animation:flicker-white 4s ease-in-out infinite;
 }
-.glow-name::before{
-  content:'';position:absolute;
-  top:-60px;left:50%;transform:translateX(-50%);
-  width:80px;height:70px;
-  background:radial-gradient(ellipse at 50% 100%,rgba(240,235,226,.12) 0%,rgba(240,235,226,.04) 40%,transparent 70%);
-  pointer-events:none;
-  animation:flicker-white 4s ease-in-out infinite;
-}
 
-/* "the" — smaller white glow + light cone */
+/* "the" — smaller white glow */
 .glow-the{
   color:#f0ebe2;
   font-size:0.6em;
-  position:relative;
   display:inline-block;
   text-shadow:
     0 0 3px rgba(240,235,226,.5),
@@ -123,20 +148,11 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
     0 0 16px rgba(240,235,226,.12);
   animation:flicker-the 3.5s ease-in-out infinite;
 }
-.glow-the::before{
-  content:'';position:absolute;
-  top:-45px;left:50%;transform:translateX(-50%);
-  width:50px;height:50px;
-  background:radial-gradient(ellipse at 50% 100%,rgba(240,235,226,.1) 0%,rgba(240,235,226,.03) 40%,transparent 70%);
-  pointer-events:none;
-  animation:flicker-the 3.5s ease-in-out infinite;
-}
 
-/* "Frame" — golden neon glow + golden light cone */
+/* "Frame" — golden neon glow */
 .glow-frame{
   color:var(--gold);
   font-style:italic;
-  position:relative;
   display:inline-block;
   text-shadow:
     0 0 4px rgba(201,169,110,.7),
@@ -144,23 +160,6 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
     0 0 28px rgba(201,169,110,.25),
     0 0 50px rgba(201,169,110,.12);
   animation:flicker-gold 5s ease-in-out infinite;
-}
-.glow-frame::before{
-  content:'';position:absolute;
-  top:-60px;left:50%;transform:translateX(-50%);
-  width:100px;height:70px;
-  background:radial-gradient(ellipse at 50% 100%,rgba(201,169,110,.14) 0%,rgba(201,169,110,.05) 40%,transparent 70%);
-  pointer-events:none;
-  animation:flicker-gold 5s ease-in-out infinite;
-}
-
-/* Cones rush toward viewer on exit */
-.cones-rush .glow-name::before,
-.cones-rush .glow-the::before,
-.cones-rush .glow-frame::before{
-  transition:transform .7s ease-in, opacity .7s ease-in;
-  transform:translateX(-50%) scaleY(3) scaleX(2.5);
-  opacity:0;
 }
 
 /* Flicker — irregular brightness like real neon tubes */

@@ -11,6 +11,10 @@
   const beam    = document.getElementById('projector-beam');
   const flash   = document.getElementById('projector-flash');
   const dust    = document.getElementById('dust-particles');
+  const beamName  = document.getElementById('beam-name');
+  const beamThe   = document.getElementById('beam-the');
+  const beamFrame = document.getElementById('beam-frame');
+  const wordBeams = [beamName, beamThe, beamFrame];
 
   const TOTAL = 24; // countdown from 23 to 0 (24 ticks)
   let ready = false;
@@ -136,6 +140,7 @@
   beam.style.opacity = '0';
   flash.style.opacity = '0';
   dust.style.opacity = '0';
+  wordBeams.forEach(b => { if(b) b.style.opacity = '0'; });
   typed.textContent = '';
 
   // ── Phase 1: show "25/24" for 400ms then start countdown ──
@@ -162,6 +167,12 @@
 
       // Beam gradually appears
       beam.style.opacity = (Math.pow(progress, 2) * 0.5).toString();
+
+      // Word beams warm up from 50% progress
+      if (progress > 0.5) {
+        const bp = (progress - 0.5) / 0.5;
+        wordBeams.forEach(b => { if(b) b.style.opacity = (bp * 0.6).toString(); });
+      }
 
       // Dust from 60%
       if (progress > 0.6) {
@@ -198,6 +209,9 @@
     setTimeout(() => {
       beam.style.transition = 'opacity .8s ease';
       beam.style.opacity = '1';
+      wordBeams.forEach(b => {
+        if(b) { b.style.transition = 'opacity .8s ease'; b.style.opacity = '1'; }
+      });
     }, 120);
 
     // Show logo area and start typing
@@ -232,6 +246,15 @@
     beam.style.transform = 'translateX(-50%) scale(4)';
     beam.style.opacity = '0';
 
+    // Word beams rush toward viewer
+    wordBeams.forEach(b => {
+      if(b) {
+        b.style.transition = 'transform .7s ease-in, opacity .6s ease-in';
+        b.style.transform = 'scaleX(3) scaleY(1.5) translateY(20vh)';
+        b.style.opacity = '0';
+      }
+    });
+
     // Brief flash — blinding effect
     flash.style.transition = 'opacity .12s ease-in';
     flash.style.opacity = '0.25';
@@ -247,15 +270,6 @@
     // Logo rises toward top (where .brand sits on setup screen)
     logo.style.transition = 'transform .9s cubic-bezier(.4,0,.2,1)';
     logo.style.transform = 'translateY(-35vh) scale(0.82)';
-
-    // Glow cones rush toward viewer (scale up the pseudo-element parents)
-    const glowSpans = typed.querySelectorAll('.glow-name, .glow-the, .glow-frame');
-    glowSpans.forEach(span => {
-      span.style.transition = 'text-shadow .6s ease-out';
-      span.style.textShadow = 'none';
-    });
-    // Add a style to scale up ::before via a class
-    typed.classList.add('cones-rush');
 
     // Fade logo at the end of rise
     setTimeout(() => {
