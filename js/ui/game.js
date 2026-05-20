@@ -165,3 +165,20 @@ function sr(ok, pts, ct, ex) {
   document.getElementById('fr').style.display = 'block';
   document.getElementById('nb').style.display = 'block';
 }
+
+// Report wrong frame — player says the image doesn't match the film
+function reportWrongFrame() {
+  if (!S.cur) return;
+  const count = markBroken(S.cur.id);
+  const btn = document.querySelector('.report-btn');
+  if (btn) {
+    btn.textContent = count >= 3
+      ? '✓ Usunięto z puli (3 zgłoszenia)'
+      : `✓ Zgłoszono (${count}/3)`;
+    btn.disabled = true;
+    btn.style.color = 'rgba(180,90,90,.6)';
+  }
+  // Skip round without penalty
+  S.round--;
+  setTimeout(() => nextRound(), 1200);
+}
