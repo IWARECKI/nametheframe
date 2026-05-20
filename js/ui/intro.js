@@ -86,9 +86,9 @@
   function typeWriter(callback) {
     // Structure: [{text, glowClass}]
     const segments = [
-      { text: 'Name', cls: 'glow-name' },
-      { text: ' the ', cls: 'glow-the' },
-      { text: 'Frame', cls: 'glow-frame' }
+      { text: 'Name', cls: 'glow-name', space: true },
+      { text: 'the', cls: 'glow-the', space: true },
+      { text: 'Frame', cls: 'glow-frame', space: false }
     ];
 
     typed.innerHTML = '<span class="logo-cursor">|</span>';
@@ -125,6 +125,12 @@
         const delay = 80 + (Math.random() - 0.5) * 40;
         setTimeout(typeNext, delay);
       } else {
+        // Add space after word if needed
+        if (seg.space) {
+          const spaceNode = document.createTextNode(' ');
+          const cur = typed.querySelector('.logo-cursor');
+          typed.insertBefore(spaceNode, cur);
+        }
         // Next segment
         segIdx++;
         charIdx = 0;
