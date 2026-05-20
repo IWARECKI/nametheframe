@@ -50,7 +50,13 @@ function nextRound() {
   loader.style.display = 'flex';
   loader.style.opacity = '1';
   loader.textContent = 'ładowanie kadru…';
-  if (backdrop) { img.src = backdrop; img.style.opacity = '1'; }
+  if (backdrop) {
+    img.src = backdrop;
+    img.style.opacity = '1';
+  } else {
+    // No backdrop available — trigger error handling
+    imgErr();
+  }
 
   // Reset result area
   document.getElementById('rb').style.display  = 'none';

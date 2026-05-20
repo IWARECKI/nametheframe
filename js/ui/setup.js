@@ -75,3 +75,31 @@ async function startGame() {
 
   nextRound();
 }
+
+// Toggle scores panel on setup screen
+function toggleScores() {
+  const panel = document.getElementById('scores-panel');
+  const isOpen = panel.classList.contains('open');
+
+  if (isOpen) {
+    panel.classList.remove('open');
+    return;
+  }
+
+  // Render scores
+  const scores = getScores();
+  if (!scores.length) {
+    panel.innerHTML = '<div class="sp-title">Tabela wyników</div><div class="sp-empty">Brak wyników — zagraj pierwszą grę!</div>';
+  } else {
+    const top = scores.sort((a, b) => b.score - a.score).slice(0, 50);
+    const rows = top.map((s, i) => {
+      const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1) + '.';
+      const lvl = s.level === 'popcorn' ? '🍿' : s.level === 'kinoman' ? '🎬' : '🎞️';
+      const date = new Date(s.ts).toLocaleDateString('pl-PL', {day:'numeric', month:'short'});
+      return `<div class="sp-row"><span class="sp-pos">${medal}</span><span class="sp-nick">${s.nick}</span><span class="sp-lvl">${lvl}</span><span class="sp-score">${s.score}</span><span class="sp-date">${date}</span></div>`;
+    }).join('');
+    panel.innerHTML = `<div class="sp-title">Tabela wyników</div>${rows}`;
+  }
+
+  panel.classList.add('open');
+}
