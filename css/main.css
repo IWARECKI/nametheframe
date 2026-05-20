@@ -28,56 +28,60 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   opacity:0;pointer-events:none;z-index:5;
 }
 
-/* Main ambient projector beam (large, behind word beams) */
+/* Main ambient projector beam — hidden, replaced by 3 word beams */
 #projector-beam{
   position:absolute;
   top:-5%;left:50%;transform:translateX(-50%);
   width:0;height:0;
-  border-left:100px solid transparent;
-  border-right:100px solid transparent;
+  border-left:120px solid transparent;
+  border-right:120px solid transparent;
   border-top:65vh solid rgba(201,169,110,.03);
   opacity:0;z-index:1;
   filter:blur(12px);
-  animation:beam-sway-a 6s ease-in-out infinite;
+  display:none;
 }
 
-/* Three individual light cones — same size as original beam, one per word */
+/* Three light cones — same size as original beam, centered over each word */
 .word-beam{
   position:absolute;
   top:-5%;
   width:0;height:0;
-  border-left:100px solid transparent;
-  border-right:100px solid transparent;
+  border-left:120px solid transparent;
+  border-right:120px solid transparent;
   border-top:65vh solid rgba(240,235,226,.04);
   opacity:0;z-index:1;
   filter:blur(10px);
   pointer-events:none;
+  transform:translateX(-50%);
 }
 .word-beam.beam-sm{
-  border-left-width:80px;
-  border-right-width:80px;
-  border-top-color:rgba(240,235,226,.03);
+  border-left-width:90px;
+  border-right-width:90px;
+  border-top-color:rgba(240,235,226,.035);
 }
 .word-beam.beam-gold{
-  border-left-width:110px;
-  border-right-width:110px;
+  border-left-width:120px;
+  border-right-width:120px;
   border-top-color:rgba(201,169,110,.045);
 }
-#beam-name{left:calc(50% - 160px);animation:beam-sway-a 7s ease-in-out infinite;}
-#beam-the{left:calc(50% - 30px);animation:beam-sway-b 6s ease-in-out infinite;}
-#beam-frame{left:calc(50% + 80px);animation:beam-sway-c 8s ease-in-out infinite;}
+/* "Name" is ~25% from left of the logo text */
+#beam-name{left:30%;animation:beam-sway-a 7s ease-in-out infinite;}
+/* "the" is center */
+#beam-the{left:50%;animation:beam-sway-b 6s ease-in-out infinite;}
+/* "Frame" is ~75% from left */
+#beam-frame{left:70%;animation:beam-sway-c 8s ease-in-out infinite;}
 
 @keyframes beam-sway-a{
-  0%,100%{transform:rotate(-0.3deg);}
-  50%{transform:rotate(0.4deg);}
+  0%,100%{transform:translateX(-50%) rotate(-0.4deg);}
+  50%{transform:translateX(-50%) rotate(0.4deg);}
 }
 @keyframes beam-sway-b{
-  0%,100%{transform:rotate(0.2deg);}
-  50%{transform:rotate(-0.3deg);}
+  0%,100%{transform:translateX(-50%) rotate(0.3deg);}
+  50%{transform:translateX(-50%) rotate(-0.3deg);}
 }
 @keyframes beam-sway-c{
-  0%,100%{transform:rotate(0.3deg);}
-  50%{transform:rotate(-0.2deg);}
+  0%,100%{transform:translateX(-50%) rotate(0.3deg);}
+  50%{transform:translateX(-50%) rotate(-0.4deg);}
 }
 
 /* Dust particles floating in the beam */

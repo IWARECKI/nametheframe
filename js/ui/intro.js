@@ -177,7 +177,7 @@
       // Word beams warm up from 50% progress
       if (progress > 0.5) {
         const bp = (progress - 0.5) / 0.5;
-        wordBeams.forEach(b => { if(b) b.style.opacity = (bp * 0.6).toString(); });
+        wordBeams.forEach(b => { if(b) b.style.opacity = (bp * 0.8).toString(); });
       }
 
       // Dust from 60%
