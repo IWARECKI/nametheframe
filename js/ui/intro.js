@@ -218,31 +218,58 @@
     }, 300);
   }
 
-  // ── Phase 4: click → exit ──────────────────────────────────
+  // ── Phase 4: click → beams rush toward viewer, logo rises ──
   function enterSite() {
     if (!ready) return;
     ready = false;
 
-    beam.style.transition = 'opacity .6s ease';
-    beam.style.opacity = '0';
-    logo.style.transition = 'opacity .5s ease';
-    logo.style.opacity = '0';
-    dust.style.transition = 'opacity .4s ease';
-    dust.style.opacity = '0';
+    // Hide enter prompt
     enter.style.transition = 'opacity .3s ease';
     enter.style.opacity = '0';
 
-    setTimeout(() => {
-      intro.style.transition = 'opacity .5s ease';
-      intro.style.opacity = '0';
-    }, 400);
+    // Beam rushes toward viewer: scale up + fade (like looking into projector)
+    beam.style.transition = 'transform .8s ease-in, opacity .7s ease-in';
+    beam.style.transform = 'translateX(-50%) scale(4)';
+    beam.style.opacity = '0';
 
+    // Brief flash — blinding effect
+    flash.style.transition = 'opacity .12s ease-in';
+    flash.style.opacity = '0.25';
+    setTimeout(() => {
+      flash.style.transition = 'opacity .6s ease-out';
+      flash.style.opacity = '0';
+    }, 120);
+
+    // Dust fades
+    dust.style.transition = 'opacity .4s ease';
+    dust.style.opacity = '0';
+
+    // Logo rises toward top (where .brand sits on setup screen)
+    logo.style.transition = 'transform .9s cubic-bezier(.4,0,.2,1)';
+    logo.style.transform = 'translateY(-35vh) scale(0.82)';
+
+    // Glow cones rush toward viewer (scale up the pseudo-element parents)
+    const glowSpans = typed.querySelectorAll('.glow-name, .glow-the, .glow-frame');
+    glowSpans.forEach(span => {
+      span.style.transition = 'text-shadow .6s ease-out';
+      span.style.textShadow = 'none';
+    });
+    // Add a style to scale up ::before via a class
+    typed.classList.add('cones-rush');
+
+    // Fade logo at the end of rise
+    setTimeout(() => {
+      logo.style.transition = 'opacity .3s ease';
+      logo.style.opacity = '0';
+    }, 650);
+
+    // Swap to setup
     setTimeout(() => {
       intro.style.display = 'none';
       const setup = document.getElementById('setup');
       setup.style.display = 'flex';
-      setTimeout(() => setup.classList.add('vis'), 50);
-    }, 900);
+      setTimeout(() => setup.classList.add('vis'), 30);
+    }, 950);
   }
 
   intro.addEventListener('click', enterSite);
