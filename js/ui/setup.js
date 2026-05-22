@@ -85,7 +85,7 @@ function spawnSetupDust() {
   const container = document.getElementById('setup-dust');
   if (!container) return;
   container.innerHTML = '';
-  for (let i = 0; i < 55; i++) {
+  for (let i = 0; i < 90; i++) {
     const d = document.createElement('div');
     d.className = 'setup-dust-dot';
     const size = Math.random() < 0.65

@@ -404,15 +404,15 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 }
 .lvl-main{padding:1.25rem 1.25rem 1rem;flex:1;}
 
-/* Corner emoji row — two emojis at ends with dashed beam between */
+/* Corner emoji row — two emojis at far ends with dashed beam between */
 .lvl-emoji-row{
-  display:flex;align-items:center;gap:0;margin-bottom:.875rem;
+  display:flex;align-items:center;width:100%;margin-bottom:.875rem;
 }
-.lvl-emoji{font-size:1.25rem;line-height:1;flex:0 0 auto;}
+.lvl-emoji{font-size:1.2rem;line-height:1;flex:0 0 auto;}
 .lvl-emoji-beam{
-  flex:1;height:1px;
-  background:repeating-linear-gradient(90deg,rgba(201,169,110,.35) 0px,rgba(201,169,110,.35) 4px,transparent 4px,transparent 9px);
-  margin:0 .6rem;
+  flex:1;height:1px;min-width:0;
+  background:repeating-linear-gradient(90deg,rgba(201,169,110,.42) 0px,rgba(201,169,110,.42) 5px,transparent 5px,transparent 11px);
+  margin:0 .75rem;
 }
 
 .lvl-name{
@@ -427,7 +427,7 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .lvl-card--kinoman .lvl-name{background:linear-gradient(135deg,#802020 0%,#c05050 30%,#f09898 50%,#c05050 70%,#802020 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
 .lvl-card--kineza .lvl-name{background:linear-gradient(135deg,#3a2870 0%,#8070c8 30%,#c0b0f0 50%,#8070c8 70%,#3a2870 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
 .lvl-name-divider{
-  height:1px;background:rgba(255,255,255,.08);margin:.6rem 0 .75rem;
+  height:1px;background:rgba(255,255,255,.13);margin:.65rem 0 .8rem;
 }
 .lvl-desc{font-size:10px;color:var(--muted);line-height:1.7;letter-spacing:.02em;}
 
