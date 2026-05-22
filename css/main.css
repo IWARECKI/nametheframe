@@ -297,7 +297,7 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .genre-select:focus{border-color:rgba(201,169,110,.4);}
 .genre-select option,.genre-select optgroup{background:#141414;color:var(--text);}
 
-.levels-label{font-size:11px;letter-spacing:2em;text-transform:uppercase;color:var(--gold);margin-bottom:.875rem;width:100%;max-width:860px;text-align:center;margin-left:auto;margin-right:auto;font-family:'Cinzel',serif;}
+.levels-label{font-size:11px;letter-spacing:2em;padding-left:2em;text-transform:uppercase;color:var(--gold);margin-bottom:.875rem;width:100%;max-width:860px;text-align:center;margin-left:auto;margin-right:auto;font-family:'Cinzel',serif;}
 
 /* ── Level carousel ─────────────────────────────────────────────────────────
    JS-driven circular carousel. carouselTo(idx) translates #levels-track
