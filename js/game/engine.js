@@ -26,6 +26,28 @@ let S = {
 // Number of rounds per game session
 const ROUNDS_PER_GAME = 10;
 
+// Tier weights per difficulty level.
+// 't' field on each film: 'c' = classic, 'a' = ambitious, 'r' = arthouse
+const TIER_WEIGHTS = {
+  popcorn: { c: 0.80, a: 0.18, r: 0.02 },
+  kinoman: { c: 0.50, a: 0.38, r: 0.12 },
+  kineza:  { c: 0.20, a: 0.38, r: 0.42 },
+};
+
+// Weighted random pick from a pool of films using tier weights.
+function pickWeighted(pool, level) {
+  const w = TIER_WEIGHTS[level] || { c: 1/3, a: 1/3, r: 1/3 };
+  // Assign a weight to each film, then do a weighted draw
+  const weighted = pool.map(f => ({ f, weight: w[f.t] || 0.1 }));
+  const total = weighted.reduce((s, x) => s + x.weight, 0);
+  let r = Math.random() * total;
+  for (const { f, weight } of weighted) {
+    r -= weight;
+    if (r <= 0) return f;
+  }
+  return weighted[weighted.length - 1].f;
+}
+
 // Advance to the next round or end the game if limit reached.
 // Django equivalent: a view that increments session state and redirects.
 function nextRound() {
@@ -33,7 +55,7 @@ function nextRound() {
   const available = FILMS.filter(f => !S.used.includes(f.id) && !isPermaBroken(f.id));
   if (!available.length) { endGame(); return; }
 
-  S.cur = available[Math.floor(Math.random() * available.length)];
+  S.cur = pickWeighted(available, S.level);
   S.used.push(S.cur.id);
   S.round++;
 
