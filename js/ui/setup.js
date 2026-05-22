@@ -56,13 +56,11 @@ function carouselTo(idx) {
   // Active class drives CSS accent colour + no blur
   cards.forEach((c, i) => c.classList.toggle('active', i === _carouselIdx));
 
-  // Dynamic nav labels — show what's adjacent (circular)
-  const prevIdx = ((_carouselIdx - 1) + n) % n;
-  const nextIdx = (_carouselIdx + 1) % n;
+  // Dynamic nav labels — generic prev/next
   const prevEl  = document.getElementById('carousel-prev-label');
   const nextEl  = document.getElementById('carousel-next-label');
-  if (prevEl) prevEl.textContent = _CARD_LABELS[prevIdx] || '';
-  if (nextEl) nextEl.textContent = _CARD_LABELS[nextIdx] || '';
+  if (prevEl) prevEl.textContent = 'poprzedni';
+  if (nextEl) nextEl.textContent = 'następny';
 
   // Game state — auth card has no data-lvl, clears the level selection
   const lvl = cards[_carouselIdx].dataset.lvl || null;

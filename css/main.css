@@ -280,9 +280,9 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 #setup{min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;padding:2.5rem 1.5rem;opacity:0;transition:opacity .6s;}
 #setup.vis{opacity:1;}
 #setup::before{content:'';position:fixed;top:0;left:50%;transform:translateX(-50%);width:700px;height:300px;background:radial-gradient(ellipse,rgba(201,169,110,.06) 0%,transparent 70%);pointer-events:none;}
-.brand{font-family:'Cinzel',serif;font-weight:400;font-size:clamp(1.6rem,4.5vw,3rem);letter-spacing:.12em;line-height:1;text-align:center;margin-bottom:.3rem;}
+.brand{font-family:'Cinzel',serif;font-weight:400;font-size:clamp(2.4rem,6vw,4.5rem);letter-spacing:.14em;line-height:1;text-align:center;margin-bottom:.4rem;}
 .brand em{font-style:normal;color:var(--gold);}
-.tagline{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:2.5rem;max-width:420px;line-height:1.8;}
+.tagline{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:2rem;max-width:520px;line-height:1.8;}
 
 .form-row{width:100%;max-width:860px;display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
 @media(max-width:600px){.form-row{grid-template-columns:1fr;}}
@@ -297,7 +297,7 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .genre-select:focus{border-color:rgba(201,169,110,.4);}
 .genre-select option,.genre-select optgroup{background:#141414;color:var(--text);}
 
-.levels-label{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:.875rem;width:100%;max-width:860px;text-align:center;margin-left:auto;margin-right:auto;}
+.levels-label{font-size:11px;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);margin-bottom:.875rem;width:100%;max-width:860px;text-align:center;margin-left:auto;margin-right:auto;font-family:'Cinzel',serif;}
 
 /* ── Level carousel ─────────────────────────────────────────────────────────
    JS-driven circular carousel. carouselTo(idx) translates #levels-track
@@ -327,9 +327,9 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 }
 .carousel-label{
   font-family:'Space Mono',monospace;
-  font-size:6px;letter-spacing:.14em;
+  font-size:8px;letter-spacing:.12em;
   text-transform:uppercase;
-  color:rgba(201,169,110,.38);
+  color:rgba(201,169,110,.5);
   text-align:center;line-height:1.5;
   max-width:72px;
   word-break:break-word;
@@ -403,7 +403,18 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   color:rgba(201,169,110,.58);
 }
 .lvl-main{padding:1.25rem 1.25rem 1rem;flex:1;}
-.lvl-emoji{font-size:1.5rem;display:block;margin-bottom:.6rem;letter-spacing:.25em;}
+
+/* Corner emoji row — two emojis at ends with dashed beam between */
+.lvl-emoji-row{
+  display:flex;align-items:center;gap:0;margin-bottom:.875rem;
+}
+.lvl-emoji{font-size:1.25rem;line-height:1;flex:0 0 auto;}
+.lvl-emoji-beam{
+  flex:1;height:1px;
+  background:repeating-linear-gradient(90deg,rgba(201,169,110,.35) 0px,rgba(201,169,110,.35) 4px,transparent 4px,transparent 9px);
+  margin:0 .6rem;
+}
+
 .lvl-name{
   font-family:'Cinzel',serif;font-size:.94rem;font-weight:600;
   letter-spacing:.1em;display:block;margin-bottom:.6rem;
@@ -415,6 +426,9 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .lvl-card--auth .lvl-name{background:linear-gradient(135deg,#507090 0%,#90b8d8 35%,#c8e4ff 50%,#90b8d8 65%,#507090 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
 .lvl-card--kinoman .lvl-name{background:linear-gradient(135deg,#802020 0%,#c05050 30%,#f09898 50%,#c05050 70%,#802020 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
 .lvl-card--kineza .lvl-name{background:linear-gradient(135deg,#3a2870 0%,#8070c8 30%,#c0b0f0 50%,#8070c8 70%,#3a2870 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.lvl-name-divider{
+  height:1px;background:rgba(255,255,255,.08);margin:.6rem 0 .75rem;
+}
 .lvl-desc{font-size:10px;color:var(--muted);line-height:1.7;letter-spacing:.02em;}
 
 .lvl-spoiler-btn{
@@ -437,7 +451,7 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .start-btn{
   flex:1;
   background:var(--gold);color:#080808;border:none;border-radius:var(--r);
-  padding:1.2rem 1.5rem;
+  padding:1rem 1.5rem;
   font-family:'Space Mono',monospace;font-size:12px;font-weight:700;
   letter-spacing:.35em;text-transform:uppercase;cursor:pointer;
   animation:lamp-pulse 3.8s ease-in-out infinite;
@@ -481,10 +495,10 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 /* ── WYNIKI — visible secondary ── */
 .scores-btn{
   flex:0 0 auto;
-  background:transparent;
-  color:rgba(201,169,110,.75);
-  border:1px solid rgba(201,169,110,.35);border-radius:var(--r);
-  padding:.9rem 1.25rem;
+  background:rgba(201,169,110,.06);
+  color:rgba(201,169,110,.85);
+  border:1px solid rgba(201,169,110,.45);border-radius:var(--r);
+  padding:1rem 1.5rem;
   font-family:'Space Mono',monospace;font-size:9px;font-weight:700;
   letter-spacing:.22em;text-transform:uppercase;cursor:pointer;
   transition:border-color .15s,color .15s,background .15s;
