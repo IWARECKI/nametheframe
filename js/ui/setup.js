@@ -77,8 +77,33 @@ function carouselSelect(card) {
   carouselTo(cards.indexOf(card));
 }
 
-// Initialise: show Akolita (idx 1) after first paint
-window.addEventListener('load', () => { carouselTo(1); });
+// Initialise: show Akolita (idx 1) after first paint, spawn setup dust
+window.addEventListener('load', () => {
+  carouselTo(1);
+  spawnSetupDust();
+});
+
+function spawnSetupDust() {
+  const container = document.getElementById('setup-dust');
+  if (!container) return;
+  container.innerHTML = '';
+  for (let i = 0; i < 55; i++) {
+    const d = document.createElement('div');
+    d.className = 'setup-dust-dot';
+    const size = Math.random() < 0.65
+      ? (0.9 + Math.random() * 1.4)   // small 0.9–2.3px
+      : (2.3 + Math.random() * 1.8);  // larger 2.3–4.1px
+    d.style.width  = size + 'px';
+    d.style.height = size + 'px';
+    d.style.left   = (Math.random() * 100) + '%';
+    d.style.top    = (10 + Math.random() * 85) + '%';
+    d.style.animationDuration = (6 + Math.random() * 12) + 's';
+    d.style.animationDelay   = (Math.random() * 10) + 's';
+    // ~30% silver/white, rest gold
+    if (Math.random() < 0.3) d.style.background = 'rgba(240,235,226,.7)';
+    container.appendChild(d);
+  }
+}
 
 // Toggle the spoiler section on a level card.
 // Isolated click event — does not bubble up to carouselSelect().

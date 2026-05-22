@@ -27,6 +27,7 @@
 </div>
 
 <!-- Django equivalent: {% block setup %}{% include "partials/setup.html" %}{% endblock %} -->
+<div id="setup-dust"></div>
 <section id="setup">
   <div class="brand">Name the <em>Frame</em></div>
   <p class="tagline">Rozpoznaj kadr &nbsp;·&nbsp; Sprawdź swój poziom filmowtajemniczenia</p>
@@ -92,10 +93,10 @@
   <div class="levels-label">Wybierz seans</div>
   <div class="carousel-wrapper">
 
-    <div class="carousel-side carousel-side--left">
-      <button class="carousel-arrow" onclick="carouselTo(_carouselIdx - 1)">←</button>
+    <button class="carousel-side carousel-side--left" onclick="carouselTo(_carouselIdx - 1)">
+      <span class="carousel-arrow-icon">←←</span>
       <span class="carousel-label" id="carousel-prev-label"></span>
-    </div>
+    </button>
 
     <div class="levels-carousel" id="levels-carousel">
       <div class="levels" id="levels-track">
@@ -103,7 +104,7 @@
         <!-- Karta 0: Kasa biletowa — logowanie placeholder -->
         <div class="lvl-card lvl-card--auth" onclick="carouselTo(0)">
           <div class="lvl-main">
-            <span class="lvl-emoji">🎟️</span>
+            <span class="lvl-emoji">🎟️ 🗝️</span>
             <span class="lvl-name">Kasa Biletowa</span>
             <span class="lvl-desc">Zapisz wyniki, śledź postępy, dołącz do rankingów kinomanów z całej Polski. Globalna tabela, achievementy, daily challenge.</span>
           </div>
@@ -113,7 +114,7 @@
         <!-- Karta 1: Akolita Popcornu -->
         <div class="lvl-card lvl-card--popcorn" data-lvl="popcorn" onclick="carouselSelect(this)">
           <div class="lvl-main">
-            <span class="lvl-emoji">🍿</span>
+            <span class="lvl-emoji">🍿 🛋️</span>
             <span class="lvl-name">Akolita Popcornu</span>
             <span class="lvl-desc">Film to Netflix, chrupanie i chill. Ekspert od sequeli, prequeli i spin-offów. Szybcy i Wściekli to saga życia, odlicza do premiery kolejnego Pieprzyć Mickiewicza.</span>
             <div class="lvl-quote">
@@ -130,7 +131,7 @@
         <!-- Karta 2: Samozwańczy Kinoman -->
         <div class="lvl-card lvl-card--kinoman" data-lvl="kinoman" onclick="carouselSelect(this)">
           <div class="lvl-main">
-            <span class="lvl-emoji">🎬</span>
+            <span class="lvl-emoji">🎬 🍷</span>
             <span class="lvl-name">Samozwańczy Kinoman</span>
             <span class="lvl-desc">Tłumaczy znajomym na imprezach różnicę między Davidami — Cronenbergiem, Fincherem a Lynchem. Szczytuje przy każdej wzmiance o Villeneuvie. Ukrywa miłość do Marvela.</span>
             <div class="lvl-quote">
@@ -147,7 +148,7 @@
         <!-- Karta 3: Orędownik Wielkiej Kinezy -->
         <div class="lvl-card lvl-card--kineza" data-lvl="kineza" onclick="carouselSelect(this)">
           <div class="lvl-main">
-            <span class="lvl-emoji">🎞️</span>
+            <span class="lvl-emoji">🎞️ 🪐</span>
             <span class="lvl-name">Orędownik Wielkiej Kinezy</span>
             <span class="lvl-desc">Zostaje na napisach. Nigdy nie wychodzi na siu siu. Płacze z dumą na Malicku. Do każdego outfitu ma inną torbę filmfestiwalową. Ze smutkiem akceptuje ludzi oceniających filmy na Filmwebie.</span>
             <div class="lvl-quote">
@@ -164,10 +165,10 @@
       </div>
     </div>
 
-    <div class="carousel-side carousel-side--right">
-      <button class="carousel-arrow" onclick="carouselTo(_carouselIdx + 1)">→</button>
+    <button class="carousel-side carousel-side--right" onclick="carouselTo(_carouselIdx + 1)">
+      <span class="carousel-arrow-icon">→→</span>
       <span class="carousel-label" id="carousel-next-label"></span>
-    </div>
+    </button>
 
   </div>
 

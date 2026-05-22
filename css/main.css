@@ -284,7 +284,7 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .brand em{font-style:normal;color:var(--gold);}
 .tagline{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:2.5rem;max-width:420px;line-height:1.8;}
 
-.form-row{width:100%;max-width:700px;display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
+.form-row{width:100%;max-width:860px;display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
 @media(max-width:600px){.form-row{grid-template-columns:1fr;}}
 .field-wrap{display:flex;flex-direction:column;gap:.4rem;}
 .field-label{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);}
@@ -297,7 +297,7 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .genre-select:focus{border-color:rgba(201,169,110,.4);}
 .genre-select option,.genre-select optgroup{background:#141414;color:var(--text);}
 
-.levels-label{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:.875rem;width:100%;max-width:700px;text-align:center;margin-left:auto;margin-right:auto;}
+.levels-label{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:.875rem;width:100%;max-width:860px;text-align:center;margin-left:auto;margin-right:auto;}
 
 /* ── Level carousel ─────────────────────────────────────────────────────────
    JS-driven circular carousel. carouselTo(idx) translates #levels-track
@@ -311,33 +311,27 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   margin:0 auto 1.5rem;
 }
 .carousel-side{
-  flex:0 0 72px;
+  flex:0 0 80px;
   display:flex;flex-direction:column;
-  align-items:center;gap:.6rem;
+  align-items:center;justify-content:center;gap:.5rem;
+  background:transparent;border:none;padding:.5rem .25rem;
+  cursor:pointer;border-radius:8px;
+  color:rgba(201,169,110,.55);
+  transition:color .2s,background .2s;
 }
-.carousel-arrow{
-  width:38px;height:38px;
-  background:transparent;
-  border:1px solid rgba(201,169,110,.3);
-  border-radius:50%;
-  color:rgba(201,169,110,.65);
-  font-size:15px;line-height:1;
-  cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:border-color .2s,color .2s,background .2s;
+.carousel-side:hover{color:var(--gold);background:rgba(201,169,110,.04);}
+.carousel-arrow-icon{
   font-family:'Space Mono',monospace;
-}
-.carousel-arrow:hover{
-  border-color:var(--gold);color:var(--gold);
-  background:rgba(201,169,110,.07);
+  font-size:14px;line-height:1;letter-spacing:-.15em;
+  display:block;
 }
 .carousel-label{
   font-family:'Space Mono',monospace;
-  font-size:6.5px;letter-spacing:.16em;
+  font-size:6px;letter-spacing:.14em;
   text-transform:uppercase;
   color:rgba(201,169,110,.38);
   text-align:center;line-height:1.5;
-  max-width:68px;
+  max-width:72px;
   word-break:break-word;
 }
 
@@ -345,6 +339,8 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   flex:1;min-width:0;
   overflow:hidden;
   position:relative;
+  mask-image:linear-gradient(to right,transparent 0%,black 14%,black 86%,transparent 100%);
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,black 14%,black 86%,transparent 100%);
 }
 .levels{
   display:flex;
@@ -392,24 +388,34 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .lvl-quote{
   margin-top:.875rem;
   padding-top:.75rem;
-  border-top:1px solid rgba(255,255,255,.06);
+  border-top:1px solid rgba(255,255,255,.07);
   font-family:'Cormorant Garamond',serif;
   font-style:italic;
-  font-size:9px;
-  color:rgba(240,235,226,.42);
-  line-height:1.65;
+  font-size:12px;
+  color:rgba(240,235,226,.52);
+  line-height:1.7;
 }
 .lvl-quote-attr{
-  display:block;margin-top:.4rem;
+  display:block;margin-top:.45rem;
   font-style:normal;
   font-family:'Space Mono',monospace;
-  font-size:7px;letter-spacing:.14em;
-  color:rgba(201,169,110,.48);
+  font-size:9px;letter-spacing:.12em;
+  color:rgba(201,169,110,.58);
 }
-.lvl-main{padding:1rem;flex:1;}
-.lvl-emoji{font-size:1.4rem;display:block;margin-bottom:.5rem;}
-.lvl-name{font-family:'Cinzel',serif;font-size:.88rem;font-weight:400;letter-spacing:.08em;display:block;margin-bottom:.4rem;}
-.lvl-desc{font-size:9.5px;color:var(--muted);line-height:1.6;letter-spacing:.02em;}
+.lvl-main{padding:1.25rem 1.25rem 1rem;flex:1;}
+.lvl-emoji{font-size:1.5rem;display:block;margin-bottom:.6rem;letter-spacing:.25em;}
+.lvl-name{
+  font-family:'Cinzel',serif;font-size:.94rem;font-weight:600;
+  letter-spacing:.1em;display:block;margin-bottom:.6rem;
+  background:linear-gradient(135deg,#8a6a20 0%,#c9a96e 30%,#f0d090 50%,#c9a96e 70%,#8a6a20 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+/* Per-card metallic tint */
+.lvl-card--auth .lvl-name{background:linear-gradient(135deg,#507090 0%,#90b8d8 35%,#c8e4ff 50%,#90b8d8 65%,#507090 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.lvl-card--kinoman .lvl-name{background:linear-gradient(135deg,#802020 0%,#c05050 30%,#f09898 50%,#c05050 70%,#802020 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.lvl-card--kineza .lvl-name{background:linear-gradient(135deg,#3a2870 0%,#8070c8 30%,#c0b0f0 50%,#8070c8 70%,#3a2870 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.lvl-desc{font-size:10px;color:var(--muted);line-height:1.7;letter-spacing:.02em;}
 
 .lvl-spoiler-btn{
   width:100%;background:transparent;border:none;
@@ -425,7 +431,7 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .lvl-spoiler-content.open{max-height:160px;padding:.75rem 1rem;border-top:1px solid rgba(201,169,122,.12);}
 .spoiler-text{font-size:9.5px;line-height:1.65;color:rgba(201,169,122,.82);font-style:italic;letter-spacing:.02em;}
 
-.start-row{width:100%;max-width:700px;display:flex;gap:.625rem;align-items:stretch;}
+.start-row{width:100%;max-width:860px;display:flex;gap:.625rem;align-items:stretch;}
 
 /* ── ZAPAL PROJEKTOR — pulsing projector lamp ── */
 .start-btn{
@@ -486,7 +492,7 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 }
 .scores-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,169,110,.06);}
 
-.scores-panel{width:100%;max-width:700px;max-height:0;overflow:hidden;transition:max-height .4s ease,padding .4s ease;padding:0 1rem;}
+.scores-panel{width:100%;max-width:860px;max-height:0;overflow:hidden;transition:max-height .4s ease,padding .4s ease;padding:0 1rem;}
 .scores-panel.open{max-height:600px;padding:1rem;border:1px solid var(--border);border-radius:var(--r);margin-top:8px;background:rgba(6,6,6,.6);backdrop-filter:blur(8px);}
 .scores-panel .sp-title{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem;text-align:center;}
 .scores-panel .sp-empty{font-size:10px;color:var(--muted);text-align:center;font-style:italic;}
@@ -600,4 +606,36 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   color:var(--muted);letter-spacing:.06em;
   z-index:50;pointer-events:none;
   opacity:.38;
+}
+
+/* ── Setup gold dust ─────────────────────────────────────────── */
+#setup-dust{
+  position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;
+}
+.setup-dust-dot{
+  position:absolute;border-radius:50%;
+  background:var(--gold);opacity:0;
+  animation:setup-dust-drift linear infinite;
+}
+@keyframes setup-dust-drift{
+  0%  {transform:translateY(0) translateX(0);opacity:0;}
+  10% {opacity:.28;}
+  80% {opacity:.16;}
+  100%{transform:translateY(-60px) translateX(12px);opacity:0;}
+}
+
+/* ── Mobile carousel fix ─────────────────────────────────────── */
+@media(max-width:600px){
+  .carousel-wrapper{gap:0;position:relative;}
+  .carousel-side{
+    position:absolute;top:50%;transform:translateY(-50%);
+    z-index:10;flex:none;width:44px;padding:.25rem;
+    background:rgba(8,8,8,.55);backdrop-filter:blur(6px);
+    border-radius:8px;
+  }
+  .carousel-side--left{left:2px;}
+  .carousel-side--right{right:2px;}
+  .carousel-label{display:none;}
+  .levels-carousel{width:100%;flex:none;}
+  .lvl-card{flex:0 0 78vw;}
 }
