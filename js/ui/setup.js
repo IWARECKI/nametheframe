@@ -21,46 +21,63 @@ function checkReady() {
   document.getElementById('start-btn').disabled = !(nick && genre && S.level);
 }
 
-// ── Carousel ──────────────────────────────────────────────────────────────
-// JS-driven: translateX on #levels-track so active card is centred in
-// #levels-carousel (overflow:hidden). Cards 1-3 are playable levels;
-// card 0 is the auth placeholder.
+// ── Circular Carousel ─────────────────────────────────────────────────────
+// 4 cards: 0=Kasa, 1=Akolita, 2=Kinoman, 3=Kineza.
+// Circular: wraps with modulo so Kineza→right→Kasa and Kasa→left→Kineza.
+// Navigation labels update dynamically to show what's adjacent.
 
 let _carouselIdx = 1; // start on Akolita Popcornu
+
+const _CARD_LABELS = [
+  'KASA BILETOWA',
+  'AKOLITA POPCORNU',
+  'KINOMAN',
+  'WIELKA KINEZA',
+];
 
 function carouselTo(idx) {
   const carousel = document.getElementById('levels-carousel');
   const track    = document.getElementById('levels-track');
   if (!carousel || !track) return;
   const cards = [...track.querySelectorAll('.lvl-card')];
-  if (!cards.length) return;
+  const n = cards.length;
+  if (!n) return;
 
-  _carouselIdx = Math.max(0, Math.min(idx, cards.length - 1));
+  // Circular wrap
+  _carouselIdx = ((idx % n) + n) % n;
 
-  // Centre the active card: offset = half of (container - card) from the left
+  // Centre the active card
   const cw    = carousel.offsetWidth;
   const cardW = cards[0].offsetWidth;
   const gap   = parseFloat(getComputedStyle(track).gap) || 20;
   const tx    = (cw - cardW) / 2 - _carouselIdx * (cardW + gap);
   track.style.transform = `translateX(${tx}px)`;
 
-  // Active class drives CSS: no blur, gold border
+  // Active class drives CSS accent colour + no blur
   cards.forEach((c, i) => c.classList.toggle('active', i === _carouselIdx));
 
-  // Update game state — auth card (no data-lvl) clears the level
+  // Dynamic nav labels — show what's adjacent (circular)
+  const prevIdx = ((_carouselIdx - 1) + n) % n;
+  const nextIdx = (_carouselIdx + 1) % n;
+  const prevEl  = document.getElementById('carousel-prev-label');
+  const nextEl  = document.getElementById('carousel-next-label');
+  if (prevEl) prevEl.textContent = _CARD_LABELS[prevIdx] || '';
+  if (nextEl) nextEl.textContent = _CARD_LABELS[nextIdx] || '';
+
+  // Game state — auth card has no data-lvl, clears the level selection
   const lvl = cards[_carouselIdx].dataset.lvl || null;
   S.level = lvl;
   S.diff  = lvl === 'popcorn' ? 'test' : lvl === 'kinoman' ? 'letter' : lvl === 'kineza' ? 'expert' : null;
   checkReady();
 }
 
-// Called by onclick on playable level cards — finds index and delegates
+// Called by onclick on playable level cards
 function carouselSelect(card) {
   const cards = [...document.querySelectorAll('#levels-track .lvl-card')];
   carouselTo(cards.indexOf(card));
 }
 
-// Initialise carousel: show Akolita (idx 1) after DOM paint
+// Initialise: show Akolita (idx 1) after first paint
 window.addEventListener('load', () => { carouselTo(1); });
 
 // Toggle the spoiler section on a level card.
