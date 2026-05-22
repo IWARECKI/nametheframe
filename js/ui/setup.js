@@ -21,17 +21,47 @@ function checkReady() {
   document.getElementById('start-btn').disabled = !(nick && genre && S.level);
 }
 
-// Mark a level card as selected and update S.diff accordingly.
-// Django equivalent: a hidden form field updated via JS before submission.
-function selectLevel(card) {
-  document.querySelectorAll('.lvl-card').forEach(c => c.classList.remove('active'));
-  card.classList.add('active');
-  document.querySelector('.levels').classList.add('has-selection');
-  S.level = card.dataset.lvl;
-  S.diff  = S.level === 'popcorn' ? 'test' : S.level === 'kinoman' ? 'letter' : 'expert';
-  card.scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
+// ── Carousel ──────────────────────────────────────────────────────────────
+// JS-driven: translateX on #levels-track so active card is centred in
+// #levels-carousel (overflow:hidden). Cards 1-3 are playable levels;
+// card 0 is the auth placeholder.
+
+let _carouselIdx = 1; // start on Akolita Popcornu
+
+function carouselTo(idx) {
+  const carousel = document.getElementById('levels-carousel');
+  const track    = document.getElementById('levels-track');
+  if (!carousel || !track) return;
+  const cards = [...track.querySelectorAll('.lvl-card')];
+  if (!cards.length) return;
+
+  _carouselIdx = Math.max(0, Math.min(idx, cards.length - 1));
+
+  // Centre the active card: offset = half of (container - card) from the left
+  const cw    = carousel.offsetWidth;
+  const cardW = cards[0].offsetWidth;
+  const gap   = parseFloat(getComputedStyle(track).gap) || 20;
+  const tx    = (cw - cardW) / 2 - _carouselIdx * (cardW + gap);
+  track.style.transform = `translateX(${tx}px)`;
+
+  // Active class drives CSS: no blur, gold border
+  cards.forEach((c, i) => c.classList.toggle('active', i === _carouselIdx));
+
+  // Update game state — auth card (no data-lvl) clears the level
+  const lvl = cards[_carouselIdx].dataset.lvl || null;
+  S.level = lvl;
+  S.diff  = lvl === 'popcorn' ? 'test' : lvl === 'kinoman' ? 'letter' : lvl === 'kineza' ? 'expert' : null;
   checkReady();
 }
+
+// Called by onclick on playable level cards — finds index and delegates
+function carouselSelect(card) {
+  const cards = [...document.querySelectorAll('#levels-track .lvl-card')];
+  carouselTo(cards.indexOf(card));
+}
+
+// Initialise carousel: show Akolita (idx 1) after DOM paint
+window.addEventListener('load', () => { carouselTo(1); });
 
 // Toggle the spoiler section on a level card.
 // Isolated click event — does not bubble up to selectLevel().
