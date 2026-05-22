@@ -356,11 +356,11 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 
 /* Cards — blurred by default, sharp when .active */
 .lvl-card{
-  flex:0 0 clamp(260px,54vw,400px);
-  min-height:300px;
+  flex:0 0 clamp(200px,38vw,260px);
+  min-height:400px;
   background:rgba(255,255,255,.02);
   border:1px solid var(--border);
-  border-radius:18px;
+  border-radius:24px;
   cursor:pointer;
   overflow:hidden;position:relative;display:flex;flex-direction:column;
   filter:blur(3px) brightness(.48);
@@ -411,37 +411,80 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .lvl-name{font-family:'Cinzel',serif;font-size:.88rem;font-weight:400;letter-spacing:.08em;display:block;margin-bottom:.4rem;}
 .lvl-desc{font-size:9.5px;color:var(--muted);line-height:1.6;letter-spacing:.02em;}
 
-.lvl-spoiler-btn{width:100%;background:transparent;border:none;border-top:1px solid rgba(255,255,255,.06);padding:.5rem .75rem;font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:rgba(201,169,122,.38);cursor:pointer;text-align:center;transition:all .15s;}
-.lvl-spoiler-btn:hover{color:rgba(201,169,122,.7);background:rgba(201,169,122,.04);}
+.lvl-spoiler-btn{
+  width:100%;background:transparent;border:none;
+  border-top:1px solid rgba(201,169,122,.14);
+  padding:.6rem .75rem;
+  font-family:'Space Mono',monospace;font-size:8.5px;letter-spacing:.1em;
+  color:rgba(201,169,122,.62);cursor:pointer;text-align:center;
+  transition:all .18s;
+}
+.lvl-spoiler-btn:hover{color:rgba(201,169,122,.9);background:rgba(201,169,122,.05);}
+.lvl-spoiler-btn.open{color:rgba(201,169,122,.82);border-top-color:rgba(201,169,122,.22);}
 .lvl-spoiler-content{max-height:0;overflow:hidden;transition:max-height .35s ease,padding .35s ease;}
 .lvl-spoiler-content.open{max-height:160px;padding:.75rem 1rem;border-top:1px solid rgba(201,169,122,.12);}
 .spoiler-text{font-size:9.5px;line-height:1.65;color:rgba(201,169,122,.82);font-style:italic;letter-spacing:.02em;}
 
 .start-row{width:100%;max-width:700px;display:flex;gap:.625rem;align-items:stretch;}
-/* Primary CTA — deliberately dominant */
+
+/* ── ZAPAL PROJEKTOR — pulsing projector lamp ── */
 .start-btn{
   flex:1;
   background:var(--gold);color:#080808;border:none;border-radius:var(--r);
-  padding:1.15rem 1.5rem;
-  font-family:'Space Mono',monospace;font-size:10px;font-weight:700;
+  padding:1.2rem 1.5rem;
+  font-family:'Space Mono',monospace;font-size:12px;font-weight:700;
   letter-spacing:.35em;text-transform:uppercase;cursor:pointer;
-  box-shadow:0 0 22px rgba(201,169,110,.18);
-  transition:background .15s,box-shadow .15s;
+  animation:lamp-pulse 3.8s ease-in-out infinite;
+  transition:background .15s;
+  position:relative;overflow:visible;
 }
-.start-btn:hover{background:#d4b47a;box-shadow:0 0 34px rgba(201,169,110,.32);}
-.start-btn:disabled{opacity:.32;cursor:not-allowed;box-shadow:none;}
-/* Secondary — quiet, bordered */
+/* Irregular bulb-flicker: sudden dips then surges */
+@keyframes lamp-pulse{
+  0%,100%{box-shadow:0 0 20px rgba(201,169,110,.20),0 0 50px rgba(201,169,110,.10);}
+  22%    {box-shadow:0 0 34px rgba(201,169,110,.34),0 0 75px rgba(201,169,110,.18);}
+  25%    {box-shadow:0 0  8px rgba(201,169,110,.08),0 0 18px rgba(201,169,110,.04);}
+  27%    {box-shadow:0 0 30px rgba(201,169,110,.28),0 0 68px rgba(201,169,110,.15);}
+  58%    {box-shadow:0 0 42px rgba(201,169,110,.38),0 0 90px rgba(201,169,110,.20);}
+  61%    {box-shadow:0 0 10px rgba(201,169,110,.09),0 0 22px rgba(201,169,110,.05);}
+  62%    {box-shadow:0 0 38px rgba(201,169,110,.32),0 0 80px rgba(201,169,110,.17);}
+}
+.start-btn:hover{background:#d4b47a;}
+.start-btn:disabled{opacity:.32;cursor:not-allowed;animation:none;box-shadow:none;}
+
+/* Click explosion: button emits blinding flash */
+.start-btn.firing{
+  animation:lamp-fire .65s ease-out forwards !important;
+  pointer-events:none;
+}
+@keyframes lamp-fire{
+  0%  {box-shadow:0 0 30px rgba(255,240,200,.5),0 0 80px rgba(201,169,110,.4);transform:scale(1);}
+  45% {box-shadow:0 0 120px rgba(255,250,230,.95),0 0 250px rgba(255,240,210,.7),0 0 500px rgba(201,169,110,.45);transform:scale(1.03);}
+  100%{box-shadow:0 0 60px rgba(255,255,255,.0);transform:scale(1);opacity:.5;}
+}
+
+/* Full-screen flash overlay triggered on game start */
+#screen-flash{
+  position:fixed;inset:0;
+  background:radial-gradient(ellipse at 50% 60%,rgba(255,248,220,1) 0%,rgba(201,169,110,.85) 40%,transparent 75%);
+  opacity:0;pointer-events:none;z-index:500;
+  transition:opacity .18s ease-in;
+}
+#screen-flash.bright{opacity:1;}
+#screen-flash.dim{opacity:0;transition:opacity .55s ease-out;}
+
+/* ── WYNIKI — visible secondary ── */
 .scores-btn{
   flex:0 0 auto;
-  background:transparent;color:var(--muted);
-  border:1px solid var(--border);border-radius:var(--r);
+  background:transparent;
+  color:rgba(201,169,110,.75);
+  border:1px solid rgba(201,169,110,.35);border-radius:var(--r);
   padding:.9rem 1.25rem;
-  font-family:'Space Mono',monospace;font-size:8px;font-weight:700;
+  font-family:'Space Mono',monospace;font-size:9px;font-weight:700;
   letter-spacing:.22em;text-transform:uppercase;cursor:pointer;
-  transition:border-color .15s,color .15s;
+  transition:border-color .15s,color .15s,background .15s;
   white-space:nowrap;
 }
-.scores-btn:hover{border-color:rgba(201,169,110,.35);color:var(--gold);}
+.scores-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,169,110,.06);}
 
 .scores-panel{width:100%;max-width:700px;max-height:0;overflow:hidden;transition:max-height .4s ease,padding .4s ease;padding:0 1rem;}
 .scores-panel.open{max-height:600px;padding:1rem;border:1px solid var(--border);border-radius:var(--r);margin-top:8px;background:rgba(6,6,6,.6);backdrop-filter:blur(8px);}

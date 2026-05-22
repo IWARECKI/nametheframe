@@ -81,7 +81,7 @@ function carouselSelect(card) {
 window.addEventListener('load', () => { carouselTo(1); });
 
 // Toggle the spoiler section on a level card.
-// Isolated click event — does not bubble up to selectLevel().
+// Isolated click event — does not bubble up to carouselSelect().
 function toggleSpoiler(e, btn) {
   e.stopPropagation();
   const content = btn.nextElementSibling;
@@ -89,15 +89,18 @@ function toggleSpoiler(e, btn) {
   // Close any other open spoilers first
   document.querySelectorAll('.lvl-spoiler-content.open').forEach(el => {
     el.classList.remove('open');
-    el.previousElementSibling.textContent = 'kliknij jeśli nie boisz się spoilerów';
+    const b = el.previousElementSibling;
+    b.textContent = '🔒 kliknij jeśli nie boisz się spoilerów';
+    b.classList.remove('open');
   });
   if (!isOpen) {
     content.classList.add('open');
-    btn.textContent = '▲ schowaj spoiler';
+    btn.textContent = '🔓 schowaj mechanikę';
+    btn.classList.add('open');
   }
 }
 
-// Validate setup, preload all film images, then transition to the game.
+// Validate setup, fire projector animation, preload films, start game.
 // Django equivalent: SetupView.form_valid() — saves session, redirects to game.
 async function startGame() {
   const nick  = document.getElementById('nick-input').value.trim();
@@ -107,11 +110,28 @@ async function startGame() {
   S.nick  = nick;
   S.genre = genre;
 
-  const btn = document.getElementById('start-btn');
-  btn.textContent = '⏳  Ładowanie kadrów…';
-  btn.disabled    = true;
+  const btn   = document.getElementById('start-btn');
+  const flash = document.getElementById('screen-flash');
 
-  await preloadAllFilms();
+  // Phase 1: button fires (lamp explosion)
+  btn.classList.add('firing');
+  btn.disabled = true;
+
+  // Phase 2: full-screen flash at peak of button animation (~450ms)
+  setTimeout(() => {
+    if (flash) flash.classList.add('bright');
+    // Fade flash out after brief hold
+    setTimeout(() => {
+      if (flash) { flash.classList.remove('bright'); flash.classList.add('dim'); }
+      setTimeout(() => { if (flash) flash.classList.remove('dim'); }, 600);
+    }, 220);
+  }, 420);
+
+  // Phase 3: preload in background, then reveal game (min 700ms for animation)
+  await Promise.all([
+    preloadAllFilms(),
+    new Promise(r => setTimeout(r, 700)),
+  ]);
 
   S.round = 0;
   S.score = 0;
