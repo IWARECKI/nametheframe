@@ -297,7 +297,7 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .genre-select:focus{border-color:rgba(201,169,110,.4);}
 .genre-select option,.genre-select optgroup{background:#141414;color:var(--text);}
 
-.levels-label{font-size:11px;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);margin-bottom:.875rem;width:100%;max-width:860px;text-align:center;margin-left:auto;margin-right:auto;font-family:'Cinzel',serif;}
+.levels-label{font-size:11px;letter-spacing:1.1em;text-transform:uppercase;color:var(--gold);margin-bottom:.875rem;width:100%;max-width:860px;text-align:center;margin-left:auto;margin-right:auto;font-family:'Cinzel',serif;}
 
 /* ── Level carousel ─────────────────────────────────────────────────────────
    JS-driven circular carousel. carouselTo(idx) translates #levels-track
@@ -312,18 +312,24 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 }
 .carousel-side{
   flex:0 0 80px;
+  align-self:stretch;
   display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:.5rem;
-  background:transparent;border:none;padding:.5rem .25rem;
+  align-items:center;justify-content:space-between;
+  padding:.75rem .25rem;
+  background:transparent;border:none;
   cursor:pointer;border-radius:8px;
-  color:rgba(201,169,110,.55);
+  color:rgba(201,169,110,.45);
   transition:color .2s,background .2s;
 }
-.carousel-side:hover{color:var(--gold);background:rgba(201,169,110,.04);}
+.carousel-side:hover{color:rgba(201,169,110,.75);background:rgba(201,169,110,.03);}
 .carousel-arrow-icon{
   font-family:'Space Mono',monospace;
-  font-size:14px;line-height:1;letter-spacing:-.15em;
-  display:block;
+  font-size:13px;line-height:1;letter-spacing:-.15em;
+  display:block;opacity:.7;
+}
+/* middle arrow group — label + icon */
+.carousel-mid{
+  display:flex;flex-direction:column;align-items:center;gap:.35rem;
 }
 .carousel-label{
   font-family:'Space Mono',monospace;
@@ -373,16 +379,36 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .lvl-card--kinoman.active{border-color:rgba(200,70,70,.6);background:rgba(170,50,50,.07);}
 .lvl-card--kineza.active{border-color:rgba(160,148,215,.55);background:rgba(80,60,140,.07);}
 
-/* Auth / coming-soon badge */
-.lvl-coming{
-  margin:.25rem 1rem .875rem;
-  padding:.45rem .75rem;
-  font-family:'Space Mono',monospace;font-size:8px;
-  letter-spacing:.18em;text-transform:uppercase;
-  color:rgba(120,160,220,.55);
-  border:1px solid rgba(120,160,220,.2);
-  border-radius:var(--r);text-align:center;
+/* Auth buttons */
+.lvl-auth-buttons{
+  display:flex;flex-direction:column;gap:.5rem;
+  padding:.5rem 1rem 1.25rem;
 }
+.lvl-auth-btn{
+  width:100%;background:transparent;
+  border:1px solid rgba(120,160,220,.22);border-radius:var(--r);
+  padding:.65rem 1rem;
+  font-family:'Space Mono',monospace;font-size:8px;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(120,160,220,.45);
+  cursor:pointer;text-align:center;
+  transition:border-color .15s,color .15s,background .15s;
+  position:relative;
+}
+.lvl-auth-btn:hover{
+  border-color:rgba(120,160,220,.45);color:rgba(120,160,220,.7);
+  background:rgba(120,160,220,.04);
+}
+/* Tooltip on click */
+.lvl-auth-tooltip{
+  position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
+  background:rgba(10,10,20,.92);border:1px solid rgba(120,160,220,.25);
+  border-radius:4px;padding:.35rem .7rem;
+  font-size:8px;letter-spacing:.14em;color:rgba(120,160,220,.7);
+  white-space:nowrap;pointer-events:none;
+  opacity:0;transition:opacity .2s;
+}
+.lvl-auth-btn.tip-show .lvl-auth-tooltip{opacity:1;}
 
 /* Director quote */
 .lvl-quote{
@@ -418,6 +444,7 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .lvl-name{
   font-family:'Cinzel',serif;font-size:.94rem;font-weight:600;
   letter-spacing:.1em;display:block;margin-bottom:.6rem;
+  text-align:center;
   background:linear-gradient(135deg,#8a6a20 0%,#c9a96e 30%,#f0d090 50%,#c9a96e 70%,#8a6a20 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
   background-clip:text;
@@ -615,11 +642,11 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 
 /* ── Global footer — visible on setup / game / end ─────────── */
 #site-footer{
-  position:fixed;bottom:.9rem;right:1.25rem;
-  font-family:'Space Mono',monospace;font-size:9px;
-  color:var(--muted);letter-spacing:.06em;
+  position:fixed;bottom:1.5rem;right:1.75rem;
+  font-family:'Cormorant Garamond',serif;font-size:11px;font-style:italic;
+  color:var(--muted);letter-spacing:.08em;
   z-index:50;pointer-events:none;
-  opacity:.38;
+  opacity:.45;
 }
 
 /* ── Setup gold dust ─────────────────────────────────────────── */

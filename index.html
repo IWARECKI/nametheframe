@@ -95,7 +95,11 @@
 
     <button class="carousel-side carousel-side--left" onclick="carouselTo(_carouselIdx - 1)">
       <span class="carousel-arrow-icon">←←</span>
-      <span class="carousel-label" id="carousel-prev-label"></span>
+      <div class="carousel-mid">
+        <span class="carousel-arrow-icon">←←</span>
+        <span class="carousel-label" id="carousel-prev-label"></span>
+      </div>
+      <span class="carousel-arrow-icon">←←</span>
     </button>
 
     <div class="levels-carousel" id="levels-carousel">
@@ -104,12 +108,15 @@
         <!-- Karta 0: Kasa biletowa — logowanie placeholder -->
         <div class="lvl-card lvl-card--auth" onclick="carouselTo(0)">
           <div class="lvl-main">
-            <div class="lvl-emoji-row"><span class="lvl-emoji">🎟️</span><span class="lvl-emoji-beam"></span><span class="lvl-emoji">🗝️</span></div>
             <span class="lvl-name">Kasa Biletowa</span>
             <div class="lvl-name-divider"></div>
             <span class="lvl-desc">Zapisz wyniki, śledź postępy, dołącz do rankingów kinomanów z całej Polski. Globalna tabela, achievementy, daily challenge.</span>
           </div>
-          <div class="lvl-coming">W trakcie zdjęć</div>
+          <div class="lvl-auth-buttons">
+            <button class="lvl-auth-btn" onclick="authBtnClick(event,this)">Logowanie<span class="lvl-auth-tooltip">w trakcie zdjęć</span></button>
+            <button class="lvl-auth-btn" onclick="authBtnClick(event,this)">Dołącz<span class="lvl-auth-tooltip">w trakcie zdjęć</span></button>
+            <button class="lvl-auth-btn" onclick="authBtnClick(event,this)">Osiągnięcia<span class="lvl-auth-tooltip">w trakcie zdjęć</span></button>
+          </div>
         </div>
 
         <!-- Karta 1: Akolita Popcornu -->
@@ -121,7 +128,7 @@
             <span class="lvl-desc">Film to Netflix, chrupanie i chill. Ekspert od sequeli, prequeli i spin-offów. Szybcy i Wściekli to saga życia, odlicza do premiery kolejnego Pieprzyć Mickiewicza.</span>
             <div class="lvl-quote">
               <em>"That was the purest experience, even though it was the cheapest one and the cheesiest looking one."</em>
-              <span class="lvl-quote-attr">— James Cameron o Terminatorze, 1984</span>
+              <span class="lvl-quote-attr">— James Cameron (Terminator, 1984)</span>
             </div>
           </div>
           <button class="lvl-spoiler-btn" onclick="toggleSpoiler(event,this)">🔒 kliknij jeśli nie boisz się spoilerów</button>
@@ -162,7 +169,7 @@
           </div>
           <button class="lvl-spoiler-btn" onclick="toggleSpoiler(event,this)">🔒 kliknij jeśli nie boisz się spoilerów</button>
           <div class="lvl-spoiler-content">
-            <div class="spoiler-text">Jakże można podawać tytuł bez roku? To jak podanie ręki bez uścisku. Reżyser też opcjonalny, ale stawki te same: +3 lub -1. Bez podpowiedzi, bez taryf ulgowych. „Wróg sztuki to brak ograniczeń." — Orson Welles</div>
+            <div class="spoiler-text">Jakże można podawać tytuł bez roku? To jak podanie ręki bez uścisku. Reżyser też opcjonalny, ale stawki te same: +3 lub -1. Bez trailerów, bez Berlinek, bez taryf ulgowych...</div>
           </div>
         </div>
 
@@ -171,7 +178,11 @@
 
     <button class="carousel-side carousel-side--right" onclick="carouselTo(_carouselIdx + 1)">
       <span class="carousel-arrow-icon">→→</span>
-      <span class="carousel-label" id="carousel-next-label"></span>
+      <div class="carousel-mid">
+        <span class="carousel-arrow-icon">→→</span>
+        <span class="carousel-label" id="carousel-next-label"></span>
+      </div>
+      <span class="carousel-arrow-icon">→→</span>
     </button>
 
   </div>

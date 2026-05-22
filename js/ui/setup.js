@@ -85,7 +85,7 @@ function spawnSetupDust() {
   const container = document.getElementById('setup-dust');
   if (!container) return;
   container.innerHTML = '';
-  for (let i = 0; i < 90; i++) {
+  for (let i = 0; i < 140; i++) {
     const d = document.createElement('div');
     d.className = 'setup-dust-dot';
     const size = Math.random() < 0.65
@@ -166,6 +166,13 @@ async function startGame() {
   document.getElementById('game').style.display  = 'flex';
 
   nextRound();
+}
+
+// Auth button — show tooltip briefly, block bubbling to card
+function authBtnClick(e, btn) {
+  e.stopPropagation();
+  btn.classList.add('tip-show');
+  setTimeout(() => btn.classList.remove('tip-show'), 1800);
 }
 
 // Toggle scores panel on setup screen
