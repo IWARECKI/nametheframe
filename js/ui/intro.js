@@ -252,11 +252,10 @@
     beam.style.transform = 'translateX(-50%) scale(4)';
     beam.style.opacity = '0';
 
-    // Word beams rush toward viewer
+    // Word beams fade out (full-width elements — scale would look wrong)
     wordBeams.forEach(b => {
       if(b) {
-        b.style.transition = 'transform .7s ease-in, opacity .6s ease-in';
-        b.style.transform = 'scaleX(3) scaleY(1.5) translateY(20vh)';
+        b.style.transition = 'opacity .5s ease-in';
         b.style.opacity = '0';
       }
     });

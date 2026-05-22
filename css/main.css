@@ -41,69 +41,73 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   display:none;
 }
 
-/* ── Light cones — projector beams shining down onto each word ─────────────
-   Shape: narrow at top (projector source), wide at bottom (text level).
-   clip-path triangle + vertical gradient gives a soft natural falloff.
-   Flicker is driven by filter:brightness() so it's independent of the
-   opacity transitions that JS uses for show/hide. */
+/* ── Light cones — ALL from one projector point (center-top) ───────────────
+   Each beam spans full viewport width so clip-path % = screen %.
+   Shared apex at 50% 0% (horizontal center, top) = projector source.
+   clip-path bases are tuned to the actual word positions in the centred logo.
+   Sway animation uses skewX on shared transform-origin 50% 0% so all three
+   beams pivot around the same projector point, like one lamp wobbling. */
 .word-beam{
   position:absolute;
-  top:0;
-  width:clamp(160px,20vw,340px);
-  /* height ends right at the centred logo (~50vh) — cone "touches" the text */
+  top:0; left:0;
+  width:100vw;
   height:52vh;
-  clip-path:polygon(50% 0%,50% 0%,100% 100%,0% 100%);
+  /* clip-path set per-beam below */
   background:linear-gradient(to bottom,
     transparent 0%,
-    rgba(240,235,226,.06) 20%,
-    rgba(240,235,226,.22) 60%,
-    rgba(240,235,226,.12) 85%,
+    rgba(240,235,226,.05) 15%,
+    rgba(240,235,226,.20) 60%,
+    rgba(240,235,226,.10) 85%,
     transparent 100%
   );
-  opacity:0;z-index:1;
-  filter:blur(24px) brightness(1);
+  opacity:0; z-index:1;
+  filter:blur(26px) brightness(1);
   pointer-events:none;
-  transform-origin:top center;
-  transform:translateX(-50%);
+  transform-origin:50% 0%;   /* pivot = projector point */
 }
+/* "the" — dimmer, narrower */
 .word-beam.beam-sm{
-  width:clamp(90px,11vw,190px);
-  height:51vh;
   background:linear-gradient(to bottom,
     transparent 0%,
-    rgba(240,235,226,.04) 20%,
-    rgba(240,235,226,.15) 60%,
-    rgba(240,235,226,.08) 85%,
+    rgba(240,235,226,.04) 15%,
+    rgba(240,235,226,.14) 60%,
+    rgba(240,235,226,.07) 85%,
     transparent 100%
   );
 }
+/* "Frame" — warm gold */
 .word-beam.beam-gold{
   background:linear-gradient(to bottom,
     transparent 0%,
-    rgba(201,169,110,.07) 20%,
-    rgba(201,169,110,.26) 60%,
-    rgba(201,169,110,.13) 85%,
+    rgba(201,169,110,.06) 15%,
+    rgba(201,169,110,.24) 60%,
+    rgba(201,169,110,.11) 85%,
     transparent 100%
   );
 }
 
-/* Positions: approximate centres of "Name", "the", "Frame" within centred logo */
-#beam-name {left:39%; animation:beam-sway-a 7s ease-in-out infinite, beam-flicker-a 3.7s ease-in-out infinite;}
-#beam-the  {left:50%; animation:beam-sway-b 6s ease-in-out infinite, beam-flicker-b 4.1s ease-in-out infinite;}
-#beam-frame{left:62%; animation:beam-sway-c 8s ease-in-out infinite, beam-flicker-c 3.3s ease-in-out infinite;}
+/* Clip-paths: apex at 50% 0% for all three.
+   Base edges estimated for ~1440px desktop (Cinzel, logo centered):
+     NAME  ≈ 33–46% of screen width
+     THE   ≈ 46–54% (smaller word at 0.6em)
+     FRAME ≈ 55–71%                                                       */
+#beam-name {
+  clip-path:polygon(50% 0%,50% 0%,30% 100%,47% 100%);
+  animation:beam-sway 7s ease-in-out infinite, beam-flicker-a 3.7s ease-in-out infinite;
+}
+#beam-the {
+  clip-path:polygon(50% 0%,50% 0%,44% 100%,56% 100%);
+  animation:beam-sway 7s ease-in-out infinite, beam-flicker-b 4.1s ease-in-out infinite;
+}
+#beam-frame {
+  clip-path:polygon(50% 0%,50% 0%,54% 100%,72% 100%);
+  animation:beam-sway 7s ease-in-out infinite, beam-flicker-c 3.3s ease-in-out infinite;
+}
 
-/* Sway — gentle pendulum */
-@keyframes beam-sway-a{
-  0%,100%{transform:translateX(-50%) rotate(-0.5deg);}
-  50%    {transform:translateX(-50%) rotate(0.5deg);}
-}
-@keyframes beam-sway-b{
-  0%,100%{transform:translateX(-50%) rotate(0.35deg);}
-  50%    {transform:translateX(-50%) rotate(-0.35deg);}
-}
-@keyframes beam-sway-c{
-  0%,100%{transform:translateX(-50%) rotate(0.4deg);}
-  50%    {transform:translateX(-50%) rotate(-0.5deg);}
+/* Single unified sway — all beams pivot together around the projector point */
+@keyframes beam-sway{
+  0%,100%{transform:skewX(-.4deg);}
+  50%    {transform:skewX(.4deg);}
 }
 
 /* Projector flicker — brief brightness dips like a 24fps film shutter.
@@ -276,8 +280,8 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 #setup{min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;padding:2.5rem 1.5rem;opacity:0;transition:opacity .6s;}
 #setup.vis{opacity:1;}
 #setup::before{content:'';position:fixed;top:0;left:50%;transform:translateX(-50%);width:700px;height:300px;background:radial-gradient(ellipse,rgba(201,169,110,.06) 0%,transparent 70%);pointer-events:none;}
-.brand{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2rem,5vw,3.5rem);letter-spacing:-.01em;line-height:1;text-align:center;margin-bottom:.3rem;}
-.brand em{font-style:italic;color:var(--gold);}
+.brand{font-family:'Cinzel',serif;font-weight:400;font-size:clamp(1.6rem,4.5vw,3rem);letter-spacing:.12em;line-height:1;text-align:center;margin-bottom:.3rem;}
+.brand em{font-style:normal;color:var(--gold);}
 .tagline{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:2.5rem;max-width:420px;line-height:1.8;}
 
 .form-row{width:100%;max-width:700px;display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
