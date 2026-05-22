@@ -41,47 +41,95 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   display:none;
 }
 
-/* Three light cones — same size as original beam, centered over each word */
+/* ── Light cones — projector beams shining down onto each word ─────────────
+   Shape: narrow at top (projector source), wide at bottom (text level).
+   clip-path triangle + vertical gradient gives a soft natural falloff.
+   Flicker is driven by filter:brightness() so it's independent of the
+   opacity transitions that JS uses for show/hide. */
 .word-beam{
   position:absolute;
-  top:-5%;
-  width:0;height:0;
-  border-left:120px solid transparent;
-  border-right:120px solid transparent;
-  border-top:65vh solid rgba(240,235,226,.04);
+  top:0;
+  width:clamp(160px,20vw,340px);
+  height:68vh;
+  clip-path:polygon(50% 0%,50% 0%,100% 100%,0% 100%);
+  background:linear-gradient(to bottom,
+    transparent 0%,
+    rgba(240,235,226,.07) 25%,
+    rgba(240,235,226,.22) 65%,
+    rgba(240,235,226,.10) 100%
+  );
   opacity:0;z-index:1;
-  filter:blur(10px);
+  filter:blur(24px) brightness(1);
   pointer-events:none;
+  transform-origin:top center;
   transform:translateX(-50%);
 }
 .word-beam.beam-sm{
-  border-left-width:90px;
-  border-right-width:90px;
-  border-top-color:rgba(240,235,226,.035);
+  width:clamp(90px,11vw,190px);
+  height:66vh;
+  background:linear-gradient(to bottom,
+    transparent 0%,
+    rgba(240,235,226,.05) 25%,
+    rgba(240,235,226,.16) 65%,
+    rgba(240,235,226,.07) 100%
+  );
 }
 .word-beam.beam-gold{
-  border-left-width:120px;
-  border-right-width:120px;
-  border-top-color:rgba(201,169,110,.045);
+  background:linear-gradient(to bottom,
+    transparent 0%,
+    rgba(201,169,110,.08) 25%,
+    rgba(201,169,110,.26) 65%,
+    rgba(201,169,110,.11) 100%
+  );
 }
-/* "Name" is ~25% from left of the logo text */
-#beam-name{left:30%;animation:beam-sway-a 7s ease-in-out infinite;}
-/* "the" is center */
-#beam-the{left:50%;animation:beam-sway-b 6s ease-in-out infinite;}
-/* "Frame" is ~75% from left */
-#beam-frame{left:70%;animation:beam-sway-c 8s ease-in-out infinite;}
 
+/* Positions: approximate centres of "Name", "the", "Frame" within centred logo */
+#beam-name {left:39%; animation:beam-sway-a 7s ease-in-out infinite, beam-flicker-a 3.7s ease-in-out infinite;}
+#beam-the  {left:50%; animation:beam-sway-b 6s ease-in-out infinite, beam-flicker-b 4.1s ease-in-out infinite;}
+#beam-frame{left:62%; animation:beam-sway-c 8s ease-in-out infinite, beam-flicker-c 3.3s ease-in-out infinite;}
+
+/* Sway — gentle pendulum */
 @keyframes beam-sway-a{
-  0%,100%{transform:translateX(-50%) rotate(-0.4deg);}
-  50%{transform:translateX(-50%) rotate(0.4deg);}
+  0%,100%{transform:translateX(-50%) rotate(-0.5deg);}
+  50%    {transform:translateX(-50%) rotate(0.5deg);}
 }
 @keyframes beam-sway-b{
-  0%,100%{transform:translateX(-50%) rotate(0.3deg);}
-  50%{transform:translateX(-50%) rotate(-0.3deg);}
+  0%,100%{transform:translateX(-50%) rotate(0.35deg);}
+  50%    {transform:translateX(-50%) rotate(-0.35deg);}
 }
 @keyframes beam-sway-c{
-  0%,100%{transform:translateX(-50%) rotate(0.3deg);}
-  50%{transform:translateX(-50%) rotate(-0.4deg);}
+  0%,100%{transform:translateX(-50%) rotate(0.4deg);}
+  50%    {transform:translateX(-50%) rotate(-0.5deg);}
+}
+
+/* Projector flicker — brief brightness dips like a 24fps film shutter.
+   Uses brightness() so it is independent of the opacity set by JS. */
+@keyframes beam-flicker-a{
+  0%,100%{filter:blur(24px) brightness(1);}
+  5%     {filter:blur(24px) brightness(.55);}
+  6%     {filter:blur(24px) brightness(1);}
+  38%    {filter:blur(24px) brightness(.78);}
+  39%    {filter:blur(24px) brightness(1);}
+  71%    {filter:blur(24px) brightness(.62);}
+  72%    {filter:blur(24px) brightness(1);}
+}
+@keyframes beam-flicker-b{
+  0%,100%{filter:blur(24px) brightness(1);}
+  12%    {filter:blur(24px) brightness(.60);}
+  13%    {filter:blur(24px) brightness(1);}
+  47%    {filter:blur(24px) brightness(.82);}
+  48%    {filter:blur(24px) brightness(1);}
+  79%    {filter:blur(24px) brightness(.58);}
+  80%    {filter:blur(24px) brightness(1);}
+}
+@keyframes beam-flicker-c{
+  0%,100%{filter:blur(24px) brightness(1);}
+  8%     {filter:blur(24px) brightness(.65);}
+  9%     {filter:blur(24px) brightness(1);}
+  52%    {filter:blur(24px) brightness(.72);}
+  53%    {filter:blur(24px) brightness(1);}
+  84%    {filter:blur(24px) brightness(.56);}
+  85%    {filter:blur(24px) brightness(1);}
 }
 
 /* Dust particles floating in the beam */
