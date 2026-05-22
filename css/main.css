@@ -50,13 +50,15 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   position:absolute;
   top:0;
   width:clamp(160px,20vw,340px);
-  height:68vh;
+  /* height ends right at the centred logo (~50vh) — cone "touches" the text */
+  height:52vh;
   clip-path:polygon(50% 0%,50% 0%,100% 100%,0% 100%);
   background:linear-gradient(to bottom,
     transparent 0%,
-    rgba(240,235,226,.07) 25%,
-    rgba(240,235,226,.22) 65%,
-    rgba(240,235,226,.10) 100%
+    rgba(240,235,226,.06) 20%,
+    rgba(240,235,226,.22) 60%,
+    rgba(240,235,226,.12) 85%,
+    transparent 100%
   );
   opacity:0;z-index:1;
   filter:blur(24px) brightness(1);
@@ -66,20 +68,22 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 }
 .word-beam.beam-sm{
   width:clamp(90px,11vw,190px);
-  height:66vh;
+  height:51vh;
   background:linear-gradient(to bottom,
     transparent 0%,
-    rgba(240,235,226,.05) 25%,
-    rgba(240,235,226,.16) 65%,
-    rgba(240,235,226,.07) 100%
+    rgba(240,235,226,.04) 20%,
+    rgba(240,235,226,.15) 60%,
+    rgba(240,235,226,.08) 85%,
+    transparent 100%
   );
 }
 .word-beam.beam-gold{
   background:linear-gradient(to bottom,
     transparent 0%,
-    rgba(201,169,110,.08) 25%,
-    rgba(201,169,110,.26) 65%,
-    rgba(201,169,110,.11) 100%
+    rgba(201,169,110,.07) 20%,
+    rgba(201,169,110,.26) 60%,
+    rgba(201,169,110,.13) 85%,
+    transparent 100%
   );
 }
 
