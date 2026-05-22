@@ -70,14 +70,21 @@
   function createDustParticles() {
     if (!dust) return;
     dust.innerHTML = '';
-    for (let i = 0; i < 35; i++) {
+    for (let i = 0; i < 70; i++) {
       const p = document.createElement('div');
       p.className = 'dust-dot';
-      p.style.left = (15 + Math.random() * 70) + '%';
-      p.style.top = (5 + Math.random() * 80) + '%';
-      p.style.animationDelay = (Math.random() * 5) + 's';
-      p.style.animationDuration = (2.5 + Math.random() * 4) + 's';
-      p.style.width = p.style.height = (1 + Math.random() * 2.5) + 'px';
+      // concentrate particles inside the beam area (20–80% horizontally)
+      p.style.left = (20 + Math.random() * 60) + '%';
+      p.style.top  = (3 + Math.random() * 75) + '%';
+      p.style.animationDelay    = (Math.random() * 6) + 's';
+      p.style.animationDuration = (2 + Math.random() * 5) + 's';
+      // mix of tiny sparks and slightly larger motes
+      const size = Math.random() < 0.7
+        ? (0.8 + Math.random() * 1.4)   // small — 0.8–2.2px
+        : (2.2 + Math.random() * 1.8);  // larger motes — 2.2–4px
+      p.style.width = p.style.height = size + 'px';
+      // gold tint on ~40% of particles
+      if (Math.random() < 0.4) p.style.background = 'var(--gold)';
       dust.appendChild(p);
     }
   }

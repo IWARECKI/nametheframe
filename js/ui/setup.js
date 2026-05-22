@@ -26,8 +26,10 @@ function checkReady() {
 function selectLevel(card) {
   document.querySelectorAll('.lvl-card').forEach(c => c.classList.remove('active'));
   card.classList.add('active');
+  document.querySelector('.levels').classList.add('has-selection');
   S.level = card.dataset.lvl;
   S.diff  = S.level === 'popcorn' ? 'test' : S.level === 'kinoman' ? 'letter' : 'expert';
+  card.scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
   checkReady();
 }
 
