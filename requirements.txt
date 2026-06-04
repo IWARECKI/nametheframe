@@ -1,0 +1,8 @@
+django>=5.0,<5.2
+gunicorn>=21.0
+psycopg2-binary>=2.9
+django-allauth[socialaccount]>=0.63
+whitenoise[brotli]>=6.6
+requests>=2.31
+dj-database-url>=2.1
+django-environ>=0.11

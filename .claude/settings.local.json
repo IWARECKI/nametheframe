@@ -5,7 +5,11 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "Bash(git config:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(pip --version)",
+      "PowerShell(python --version)",
+      "PowerShell(pip --version)",
+      "Bash(sed -i \\\\ *)"
     ]
   }
 }

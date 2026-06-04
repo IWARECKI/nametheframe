@@ -1,0 +1,10 @@
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "gunicorn nametheframe.wsgi --workers 2 --bind 0.0.0.0:$PORT"
+restartPolicyType = "on_failure"
+
+[[deploy.envVars]]
+name = "DJANGO_SETTINGS_MODULE"
+value = "nametheframe.settings"
