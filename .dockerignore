@@ -1,0 +1,17 @@
+# Keep the Docker build context small & fast (Docker ignores .gitignore).
+.git
+.venv
+venv
+__pycache__
+*.pyc
+*.pyo
+db.sqlite3
+staticfiles
+.vscode
+.idea
+.claude
+node_modules
+*.log
+django_err.txt
+.env
+docs
