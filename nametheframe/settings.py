@@ -126,4 +126,13 @@ if not DEBUG:
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+    # HSTS — production is served only over HTTPS (Railway terminates TLS)
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
     ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['nametheframe.com', '*.railway.app'])
+    # CSRF trusted origins for the Railway + custom domain (Django 4+ requires scheme)
+    CSRF_TRUSTED_ORIGINS = env.list(
+        'CSRF_TRUSTED_ORIGINS',
+        default=['https://nametheframe.com', 'https://*.railway.app'],
+    )

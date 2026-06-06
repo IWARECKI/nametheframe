@@ -2,7 +2,9 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "gunicorn nametheframe.wsgi --workers 2 --bind 0.0.0.0:$PORT"
+# collectstatic is required (WhiteNoise CompressedManifestStaticFilesStorage),
+# then migrate, then serve. Runs on every deploy.
+startCommand = "python manage.py collectstatic --noinput && python manage.py migrate --noinput && gunicorn nametheframe.wsgi --workers 2 --bind 0.0.0.0:$PORT"
 restartPolicyType = "on_failure"
 
 [[deploy.envVars]]

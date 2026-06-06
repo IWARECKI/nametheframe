@@ -5,15 +5,21 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 
 from .models import Score
 
 
 # ── Main page ─────────────────────────────────────────────────────────────────
 
+@ensure_csrf_cookie
 def index(request):
-    """Serve the single-page app. Passes auth state to template."""
+    """Serve the single-page app. Passes auth state to template.
+
+    @ensure_csrf_cookie guarantees the csrftoken cookie is set on the page
+    load, so the frontend (scores.js getCsrfToken) can send it back on
+    POST /api/scores/save/. Without it, every save returns 403.
+    """
     user = request.user
     ctx = {
         'user_json': json.dumps({
