@@ -1,11 +1,10 @@
 [build]
-builder = "nixpacks"
+builder = "dockerfile"
 
 [deploy]
-# migrate runs AFTER build (preDeploy has DB network access; build does not).
-# collectstatic runs at build time (see nixpacks.toml) — it needs no DB.
-preDeployCommand = "python manage.py migrate --noinput"
-startCommand = "gunicorn nametheframe.wsgi --workers 2 --bind 0.0.0.0:$PORT"
+# Build (Dockerfile) runs collectstatic only — no DB. migrate runs at
+# container start, where the private network to Postgres is available.
+startCommand = "python manage.py migrate --noinput && gunicorn nametheframe.wsgi --workers 2 --bind 0.0.0.0:$PORT"
 restartPolicyType = "on_failure"
 
 [[deploy.envVars]]

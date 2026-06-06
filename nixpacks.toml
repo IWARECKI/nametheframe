@@ -1,6 +1,0 @@
-# Take control of the build phase so nixpacks does NOT run `migrate` here.
-# The Postgres host is unreachable during build → migrate must run at
-# preDeploy instead (see railway.toml). collectstatic needs no DB, so it
-# stays in the build.
-[phases.build]
-cmds = ["python manage.py collectstatic --noinput"]
