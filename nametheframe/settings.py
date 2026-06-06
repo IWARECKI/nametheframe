@@ -108,7 +108,10 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 # ── TMDB API key (server-side — not exposed to client) ────────────────────────
-TMDB_API_KEY = env('TMDB_API_KEY', default='')
+# Default is the project's existing v3 key (was already public in the old
+# static frontend on GitHub Pages). Override via the TMDB_API_KEY env var on
+# Railway to rotate it. It is a low-risk read-only key.
+TMDB_API_KEY = env('TMDB_API_KEY', default='1c61618d5544a3d8f83110b7b8444d61')
 TMDB_BASE_URL = 'https://api.themoviedb.org/3'
 TMDB_IMG_BASE = 'https://image.tmdb.org/t/p'
 
@@ -130,7 +133,10 @@ if not DEBUG:
     SECURE_HSTS_SECONDS = 31536000  # 1 year
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
-    ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['nametheframe.com', '*.railway.app'])
+    # NOTE: Django needs the leading-dot form '.railway.app' (NOT '*.railway.app',
+    # which Django's host validation does not match). CSRF_TRUSTED_ORIGINS below
+    # is different — there the '*' wildcard IS supported.
+    ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['nametheframe.com', '.railway.app'])
     # CSRF trusted origins for the Railway + custom domain (Django 4+ requires scheme)
     CSRF_TRUSTED_ORIGINS = env.list(
         'CSRF_TRUSTED_ORIGINS',
