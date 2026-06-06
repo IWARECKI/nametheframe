@@ -1,0 +1,59 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ title }} | Name the Frame{% endblock %}
+
+{% block branding %}
+<div id="site-name">
+  <a href="{% url 'admin:index' %}" style="font-family:Georgia,'Times New Roman',serif;
+     font-size:22px;letter-spacing:.5px;color:#e0b84a;text-decoration:none;">
+    🎞️ Name&nbsp;the&nbsp;Frame
+    <span style="font-size:12px;color:#9a8a5c;letter-spacing:2px;">PANEL</span>
+  </a>
+</div>
+{% endblock %}
+
+{% block extrastyle %}{{ block.super }}
+<style>
+  /* Cinema palette — gold on near-black, matching the game UI. */
+  :root,
+  html[data-theme="light"],
+  html[data-theme="dark"] {
+    --primary:        #c9a227;
+    --secondary:      #1a1814;
+    --accent:         #e0b84a;
+    --header-bg:      #100f0c;
+    --header-color:   #e0b84a;
+    --header-branding-color: #e0b84a;
+    --link-fg:        #c9a227;
+    --link-hover-color: #e0b84a;
+    --button-bg:      #c9a227;
+    --button-hg:      #e0b84a;
+    --button-fg:      #100f0c;
+    --default-button-bg: #c9a227;
+    --default-button-hover-bg: #e0b84a;
+    --object-tools-bg: #2a261d;
+    --object-tools-hover-bg: #c9a227;
+  }
+  /* Dark base everywhere so it reads as a "cinema" panel regardless of OS theme. */
+  body { background: #16140f; color: #e8e3d6; }
+  #header { border-bottom: 2px solid #c9a227; box-shadow: 0 2px 14px #0008; }
+  div.breadcrumbs { background: #1a1814; color: #b9ab86; border-bottom: 1px solid #2a261d; }
+  div.breadcrumbs a { color: #c9a227; }
+  .module h2, .module caption, .inline-group h2 {
+    background: #2a261d; color: #e0b84a; letter-spacing: .5px;
+  }
+  #content-main .module, #content-related .module {
+    background: #1b1813; border: 1px solid #2a261d; border-radius: 8px;
+  }
+  a:link, a:visited { color: #c9a227; }
+  .button, input[type=submit], .submit-row input, a.button {
+    border-radius: 6px; font-weight: 600;
+  }
+  #changelist table thead th { background: #221f18; }
+  tr:hover > td, tr:hover > th { background: #221f18 !important; }
+  .object-tools a { border-radius: 6px; }
+  /* Login screen polish */
+  body.login #container { box-shadow: 0 8px 40px #000a; border-radius: 10px; }
+  body.login #header { border-radius: 10px 10px 0 0; }
+</style>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "admin/change_list.html" %}
+
+{% block content_title %}
+  {% if title %}<h1>{{ title }}</h1>{% endif %}
+  {% if ntf_stats %}
+  <div style="display:flex;gap:14px;flex-wrap:wrap;margin:14px 0 6px;">
+    {% with s=ntf_stats %}
+    <div style="flex:1;min-width:140px;background:#1b1813;border:1px solid #2a261d;
+         border-radius:10px;padding:14px 16px;">
+      <div style="font-size:11px;letter-spacing:2px;color:#9a8a5c;text-transform:uppercase;">Rozgrywki</div>
+      <div style="font-size:26px;font-weight:700;color:#e0b84a;">{{ s.total }}</div>
+    </div>
+    <div style="flex:1;min-width:140px;background:#1b1813;border:1px solid #2a261d;
+         border-radius:10px;padding:14px 16px;">
+      <div style="font-size:11px;letter-spacing:2px;color:#9a8a5c;text-transform:uppercase;">Gracze (nicki)</div>
+      <div style="font-size:26px;font-weight:700;color:#e0b84a;">{{ s.players }}</div>
+    </div>
+    <div style="flex:1;min-width:140px;background:#1b1813;border:1px solid #2a261d;
+         border-radius:10px;padding:14px 16px;">
+      <div style="font-size:11px;letter-spacing:2px;color:#9a8a5c;text-transform:uppercase;">Najlepszy wynik</div>
+      <div style="font-size:26px;font-weight:700;color:#e0b84a;">{{ s.best }}</div>
+    </div>
+    <div style="flex:1;min-width:140px;background:#1b1813;border:1px solid #2a261d;
+         border-radius:10px;padding:14px 16px;">
+      <div style="font-size:11px;letter-spacing:2px;color:#9a8a5c;text-transform:uppercase;">Średnia</div>
+      <div style="font-size:26px;font-weight:700;color:#e0b84a;">{{ s.avg }}</div>
+    </div>
+    {% endwith %}
+  </div>
+  {% endif %}
+{% endblock %}
