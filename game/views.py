@@ -83,6 +83,13 @@ def api_scores_save(request):
     if not nick or level not in ('popcorn', 'kinoman', 'kineza'):
         return JsonResponse({'error': 'missing required fields'}, status=400)
 
+    # Anti-cheat: the client computes the score, so reject anything outside the
+    # theoretical range for the level (10 rounds × max per-round points:
+    # popcorn 1, kinoman 5, kineza 8). Keeps the leaderboard honest.
+    max_score = {'popcorn': 10, 'kinoman': 50, 'kineza': 80}[level]
+    if not (0 <= score <= max_score):
+        return JsonResponse({'error': 'score out of range'}, status=400)
+
     Score.objects.create(
         user=request.user if request.user.is_authenticated else None,
         nick=nick,
