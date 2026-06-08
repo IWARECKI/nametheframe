@@ -1,4 +1,4 @@
-django>=5.0,<5.2
+django>=5.2.7,<6.0
 gunicorn>=21.0
 psycopg2-binary>=2.9
 django-allauth[socialaccount]>=0.63

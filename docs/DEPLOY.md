@@ -58,9 +58,9 @@ do Postgresa (stąd wcześniejszy błąd „could not translate host name").
 ```
 .venv/Scripts/python.exe manage.py runserver
 ```
-⚠️ **Python:** repo działa na 3.12 (produkcja). Lokalny `.venv` jest na
-**Pythonie 3.14**, który jest niezgodny z Django 5.1 w panelu admina
-(`AttributeError: 'super' object has no attribute 'dicts'` przy renderze
-list zmian). Sama gra i API działają na 3.14; tylko admin się wywala.
-Rozwiązanie: użyć lokalnie Pythona 3.12 **albo** podbić Django do 5.2.7+/6.0.
+**Python:** Django podbite do **5.2 LTS** (`django>=5.2.7,<6.0`), które wspiera
+Python 3.14 — lokalny `.venv` (3.14) działa już w pełni, łącznie z panelem
+admina. Produkcja (Docker) jedzie na Pythonie 3.12. Wcześniejszy błąd
+`AttributeError: 'super' object has no attribute 'dicts'` (Django 5.1 × Py 3.14)
+jest tym samym rozwiązany.
 ```
