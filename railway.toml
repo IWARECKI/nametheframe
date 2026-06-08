@@ -2,9 +2,10 @@
 builder = "dockerfile"
 
 [deploy]
-# Build (Dockerfile) runs collectstatic only — no DB. migrate runs at
-# container start, where the private network to Postgres is available.
-startCommand = "python manage.py migrate --noinput && python manage.py ensure_superuser && gunicorn nametheframe.wsgi --workers 2 --bind 0.0.0.0:$PORT"
+# No startCommand: the container runs the Dockerfile CMD (entrypoint.sh),
+# which does migrate → ensure_superuser → exec gunicorn. Using the image's
+# own entrypoint avoids any ambiguity in how the platform wraps a shell
+# startCommand, and `exec gunicorn` keeps the process in the foreground.
 restartPolicyType = "on_failure"
 
 [[deploy.envVars]]

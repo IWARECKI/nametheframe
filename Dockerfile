@@ -15,7 +15,9 @@ COPY . .
 
 # collectstatic needs no database, so it is safe at build time.
 # migrate is intentionally NOT here — the DB is unreachable during build.
-# It runs at container start instead (see railway.toml startCommand).
+# It runs at container start instead (see entrypoint.sh).
 RUN python manage.py collectstatic --noinput
 
-CMD ["sh", "-c", "gunicorn nametheframe.wsgi --workers 2 --bind 0.0.0.0:$PORT"]
+# Start: migrate → ensure_superuser → exec gunicorn (foreground/PID 1).
+RUN chmod +x entrypoint.sh
+CMD ["./entrypoint.sh"]

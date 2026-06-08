@@ -1,0 +1,4 @@
+# Shell scripts must use LF even on Windows, or the Linux container fails
+# to run them ("/bin/sh^M: bad interpreter").
+*.sh text eol=lf
+entrypoint.sh text eol=lf
