@@ -25,6 +25,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.discord',
     # Local
     'game',
 ]
@@ -103,16 +105,27 @@ LOGOUT_REDIRECT_URL = '/'
 # instead of failing on a missing SMTP server. Override EMAIL_* for real mail.
 EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
 
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': ['profile', 'email'],
-        'AUTH_PARAMS': {'access_type': 'online'},
-        'APP': {
-            'client_id': env('GOOGLE_CLIENT_ID', default=''),
-            'secret': env('GOOGLE_CLIENT_SECRET', default=''),
-        },
-    }
+# Social providers. A provider's button only appears once its OAuth keys are
+# set (env vars) — so without keys there are no broken buttons, and adding the
+# keys on Railway activates the provider automatically (no code change).
+#
+# To activate, set on Railway (per provider):
+#   Google:  GOOGLE_CLIENT_ID  / GOOGLE_CLIENT_SECRET
+#   GitHub:  GITHUB_CLIENT_ID  / GITHUB_CLIENT_SECRET
+#   Discord: DISCORD_CLIENT_ID / DISCORD_CLIENT_SECRET
+# Redirect/callback URL for each: https://<domain>/accounts/<provider>/login/callback/
+SOCIALACCOUNT_PROVIDERS = {}
+
+_SOCIAL = {
+    'google':  {'SCOPE': ['profile', 'email'], 'AUTH_PARAMS': {'access_type': 'online'}},
+    'github':  {'SCOPE': ['read:user', 'user:email']},
+    'discord': {'SCOPE': ['identify', 'email']},
 }
+for _prov, _cfg in _SOCIAL.items():
+    _cid = env(f'{_prov.upper()}_CLIENT_ID', default='')
+    _sec = env(f'{_prov.upper()}_CLIENT_SECRET', default='')
+    if _cid and _sec:
+        SOCIALACCOUNT_PROVIDERS[_prov] = {**_cfg, 'APP': {'client_id': _cid, 'secret': _sec}}
 
 # ── TMDB API key (server-side — not exposed to client) ────────────────────────
 # Default is the project's existing v3 key (was already public in the old
