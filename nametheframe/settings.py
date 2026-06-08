@@ -142,3 +142,11 @@ if not DEBUG:
         'CSRF_TRUSTED_ORIGINS',
         default=['https://nametheframe.com', 'https://*.railway.app'],
     )
+
+# Django's ALLOWED_HOSTS does not understand the '*.domain' wildcard — it needs
+# the leading-dot form '.domain'. Auto-fix any '*.x' the env var may contain so
+# a value like 'nametheframe.com,*.railway.app' still works.
+ALLOWED_HOSTS = [
+    ('.' + h[2:]) if h.startswith('*.') else h
+    for h in ALLOWED_HOSTS
+]
