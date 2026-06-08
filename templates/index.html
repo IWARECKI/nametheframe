@@ -21,6 +21,18 @@
   .sp-tab.active{ background:var(--gold,#c9a227)22; border-color:var(--gold,#c9a227);
     color:var(--gold,#e0b84a); font-weight:700; }
   .sp-tab:hover{ border-color:var(--gold,#c9a227); }
+  .auth-bar{ position:fixed; top:16px; right:18px; z-index:1000; display:flex;
+    align-items:center; gap:10px; font-family:'Space Mono',monospace; font-size:12px; }
+  .auth-bar-user{ color:var(--gold,#c9a227); letter-spacing:.04em; max-width:200px;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .auth-bar-link{ text-decoration:none; color:var(--muted,#9a8a5c); padding:7px 14px;
+    border:1px solid var(--border,#2a261d); border-radius:8px; letter-spacing:.08em;
+    text-transform:uppercase; font-size:11px; transition:all .15s; }
+  .auth-bar-link:hover{ color:var(--gold,#e0b84a); border-color:var(--gold,#c9a227); }
+  .auth-bar-link.primary{ background:var(--gold,#c9a227); color:#100f0c; border-color:var(--gold,#c9a227); font-weight:700; }
+  .auth-bar-link.primary:hover{ background:var(--gold,#e0b84a); color:#100f0c; }
+  @media(max-width:600px){ .auth-bar{ top:10px; right:10px; gap:6px; }
+    .auth-bar-link{ padding:6px 10px; font-size:10px; } .auth-bar-user{ max-width:110px; } }
 </style>
 </head>
 <body>
@@ -43,6 +55,17 @@
 <!-- Setup section -->
 <div id="setup-dust"></div>
 <section id="setup">
+  <!-- Always-visible auth bar (the carousel "Kasa Biletowa" card is only
+       clickable when centered, so these links guarantee access). -->
+  <div class="auth-bar">
+    {% if user.is_authenticated %}
+      <span class="auth-bar-user">🎟️ {{ user.first_name|default:user.email }}</span>
+      <a class="auth-bar-link" href="{% url 'account_logout' %}">Wyloguj</a>
+    {% else %}
+      <a class="auth-bar-link" href="{% url 'account_login' %}">Zaloguj</a>
+      <a class="auth-bar-link primary" href="{% url 'account_signup' %}">Dołącz</a>
+    {% endif %}
+  </div>
   <div class="brand">Name the <em>Frame</em></div>
   <p class="tagline">Rozpoznaj kadr &nbsp;·&nbsp; Sprawdź swój poziom filmowtajemniczenia</p>
 
