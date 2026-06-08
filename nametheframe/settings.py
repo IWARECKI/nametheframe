@@ -92,9 +92,16 @@ SITE_ID = 1
 # django-allauth
 ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
-ACCOUNT_EMAIL_VERIFICATION = 'optional'
+# No email infrastructure yet → don't require/send verification emails on
+# signup (would try SMTP and 500). Switch to 'optional'/'mandatory' once a
+# real email provider (Resend/Mailgun/SMTP) is configured.
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+# Console backend: any email (e.g. password reset) is written to the logs
+# instead of failing on a missing SMTP server. Override EMAIL_* for real mail.
+EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
