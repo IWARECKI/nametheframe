@@ -14,4 +14,7 @@ urlpatterns = [
 
     # TMDB proxy
     path('api/backdrops/<int:film_id>/', views.api_backdrops, name='api_backdrops'),
+
+    # Frame reports (player flags broken/wrong frame)
+    path('api/report-frame/', views.api_report_frame, name='api_report_frame'),
 ]

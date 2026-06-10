@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 
-from .models import Score
+from .models import Score, FrameReport, BlockedBackdrop, BlockedFilm
 
 
 # ── Main page ─────────────────────────────────────────────────────────────────
@@ -103,30 +103,68 @@ def api_scores_save(request):
 # ── API: TMDB backdrop proxy ───────────────────────────────────────────────────
 # Keeps the API key on the server — never exposed in JS.
 
-TMDB_CACHE = {}  # simple in-process cache (resets on dyno restart; fine for now)
+TMDB_CACHE = {}  # film_id -> list of TMDB file_paths (in-process; resets on restart)
+
+def fetch_backdrop_paths(film_id):
+    """Return up to 12 TMDB backdrop file_paths for a film (cached).
+
+    Caching paths (not final URLs) lets blocked-backdrop filtering apply at
+    response time, so an admin block takes effect without a cache flush.
+    Raises requests.RequestException on TMDB failure.
+    """
+    if film_id in TMDB_CACHE:
+        return TMDB_CACHE[film_id]
+    resp = requests.get(
+        f'{settings.TMDB_BASE_URL}/movie/{film_id}/images',
+        params={'api_key': settings.TMDB_API_KEY},
+        timeout=5,
+    )
+    resp.raise_for_status()
+    paths = [b['file_path'] for b in resp.json().get('backdrops', [])[:12]]
+    TMDB_CACHE[film_id] = paths
+    return paths
+
 
 def api_backdrops(request, film_id):
-    """Return backdrop image URLs for a TMDB film ID."""
+    """Return backdrop image URLs for a TMDB film ID (minus admin blocks)."""
     if not settings.TMDB_API_KEY:
         return JsonResponse({'error': 'TMDB not configured'}, status=503)
 
-    if film_id in TMDB_CACHE:
-        return JsonResponse(TMDB_CACHE[film_id])
+    if BlockedFilm.objects.filter(film_id=film_id).exists():
+        return JsonResponse({'film_id': film_id, 'backdrops': [], 'blocked': True})
 
     try:
-        resp = requests.get(
-            f'{settings.TMDB_BASE_URL}/movie/{film_id}/images',
-            params={'api_key': settings.TMDB_API_KEY},
-            timeout=5,
-        )
-        resp.raise_for_status()
-        data = resp.json()
-        backdrops = [
-            f"{settings.TMDB_IMG_BASE}/w1280{b['file_path']}"
-            for b in data.get('backdrops', [])[:5]
-        ]
-        result = {'film_id': film_id, 'backdrops': backdrops}
-        TMDB_CACHE[film_id] = result
-        return JsonResponse(result)
+        paths = fetch_backdrop_paths(film_id)
     except requests.RequestException as e:
         return JsonResponse({'error': str(e), 'backdrops': []}, status=502)
+
+    blocked = set(BlockedBackdrop.objects.filter(film_id=film_id)
+                  .values_list('file_path', flat=True))
+    urls = [f"{settings.TMDB_IMG_BASE}/w1280{p}" for p in paths if p not in blocked][:5]
+    return JsonResponse({'film_id': film_id, 'backdrops': urls})
+
+
+# ── API: frame reports (player flags a broken/wrong frame) ────────────────────
+
+@require_http_methods(['POST'])
+def api_report_frame(request):
+    """Record a player report that a frame failed to load / shows wrong film."""
+    try:
+        body    = json.loads(request.body)
+        film_id = int(body.get('film_id'))
+        title   = str(body.get('title', ''))[:120]
+        url     = str(body.get('url', ''))[:300]
+    except (json.JSONDecodeError, ValueError, TypeError):
+        return JsonResponse({'error': 'invalid payload'}, status=400)
+
+    report, created = FrameReport.objects.get_or_create(
+        film_id=film_id, defaults={'title': title, 'last_url': url},
+    )
+    if not created:
+        report.reports += 1
+        if title:
+            report.title = title
+        if url:
+            report.last_url = url
+        report.save()
+    return JsonResponse({'ok': True, 'reports': report.reports})

@@ -1,0 +1,69 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<div style="max-width:1100px;">
+
+  <p style="margin:4px 0 14px;">
+    <a href="{% url 'admin:game_framereport_changelist' %}">← wróć do zgłoszeń</a>
+    &nbsp;·&nbsp; TMDB id: <b>{{ film_id }}</b>
+    {% if report %} &nbsp;·&nbsp; zgłoszeń: <b style="color:#e0b84a;">{{ report.reports }}</b>{% endif %}
+    &nbsp;·&nbsp; aktywnych kadrów: <b>{{ active_count }}</b>
+  </p>
+
+  {% if film_blocked %}
+    <div style="background:#5c1f1f;border:1px solid #a33;border-radius:8px;padding:12px 16px;margin-bottom:16px;">
+      ⛔ <b>Cały film jest zablokowany</b> — nie pojawia się w grze.
+      <form method="post" style="display:inline;margin-left:12px;">{% csrf_token %}
+        <input type="hidden" name="action" value="unblock_film">
+        <button type="submit">Odblokuj film</button>
+      </form>
+    </div>
+  {% else %}
+    <div style="margin-bottom:16px;display:flex;gap:10px;flex-wrap:wrap;">
+      <form method="post">{% csrf_token %}
+        <input type="hidden" name="action" value="block_film">
+        <button type="submit" style="background:#a33;color:#fff;"
+                onclick="return confirm('Zablokować cały film? Zniknie z gry.')">⛔ Zablokuj cały film</button>
+      </form>
+      {% if report %}
+      <form method="post">{% csrf_token %}
+        <input type="hidden" name="action" value="clear_reports">
+        <button type="submit" onclick="return confirm('Wyczyścić zgłoszenia dla tego filmu?')">✓ Wyczyść zgłoszenia</button>
+      </form>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  {% if tmdb_error %}
+    <div style="background:#5c1f1f;border-radius:8px;padding:12px 16px;">
+      Błąd TMDB: {{ tmdb_error }} — sprawdź, czy id filmu jest poprawne.
+    </div>
+  {% endif %}
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;">
+    {% for f in frames %}
+    <div style="background:#1b1813;border:1px solid {% if f.blocked %}#a33{% else %}#2a261d{% endif %};
+                border-radius:10px;overflow:hidden;{% if f.blocked %}opacity:.55;{% endif %}">
+      <a href="{{ f.full }}" target="_blank" title="Otwórz pełny rozmiar">
+        <img src="{{ f.thumb }}" style="width:100%;display:block;aspect-ratio:16/9;object-fit:cover;">
+      </a>
+      <div style="padding:10px 12px;display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:10px;color:#9a8a5c;">{% if f.blocked %}⛔ zablokowany{% else %}✅ w grze{% endif %}</span>
+        <form method="post" style="margin:0;">{% csrf_token %}
+          <input type="hidden" name="file_path" value="{{ f.file_path }}">
+          {% if f.blocked %}
+            <input type="hidden" name="action" value="unblock">
+            <button type="submit">Przywróć</button>
+          {% else %}
+            <input type="hidden" name="action" value="block">
+            <button type="submit" style="background:#a33;color:#fff;">Zablokuj</button>
+          {% endif %}
+        </form>
+      </div>
+    </div>
+    {% empty %}
+      {% if not tmdb_error %}<p>Brak kadrów w TMDB dla tego filmu.</p>{% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

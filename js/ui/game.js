@@ -48,6 +48,18 @@ function confirmBrokenAndSkip() {
     if (count >= 3) {
       console.log(`Film ${S.cur.id} (${S.cur.title}) permanently removed from pool.`);
     }
+    // Report to the server so admins can review/block the frame in /admin/.
+    try {
+      fetch('/api/report-frame/', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken()},
+        body: JSON.stringify({
+          film_id: S.cur.id,
+          title: S.cur.title,
+          url: (document.getElementById('bgimg') || {}).src || '',
+        }),
+      }).catch(() => {});
+    } catch {}
   }
   skipBrokenRound();
 }

@@ -55,7 +55,13 @@ function nextRound() {
   const available = FILMS.filter(f => !S.used.includes(f.id) && !isPermaBroken(f.id));
   if (!available.length) { endGame(); return; }
 
-  S.cur = pickWeighted(available, S.level);
+  // Prefer films that actually have frames (admin-blocked films and TMDB
+  // misses have an empty cache → would show BRAK KADRU). If the whole cache
+  // is empty (e.g. preload failed offline), fall back to the raw pool.
+  const withFrames = available.filter(f => (tmdbCache[f.id] || []).length > 0);
+  const pool = withFrames.length ? withFrames : available;
+
+  S.cur = pickWeighted(pool, S.level);
   S.used.push(S.cur.id);
   S.round++;
 
