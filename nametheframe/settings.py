@@ -91,19 +91,39 @@ AUTHENTICATION_BACKENDS = [
 
 SITE_ID = 1
 
+# ── Email ─────────────────────────────────────────────────────────────────────
+# Fully env-driven. Without EMAIL_HOST_PASSWORD mails go to the console (logs)
+# and signup skips verification. Setting the SMTP env vars on Railway enables
+# real mail + email verification automatically — no code change needed.
+#
+# Resend example (https://resend.com — free tier):
+#   EMAIL_HOST=smtp.resend.com  EMAIL_HOST_USER=resend
+#   EMAIL_HOST_PASSWORD=<api key>  DEFAULT_FROM_EMAIL=Name the Frame <no-reply@nametheframe.com>
+EMAIL_HOST          = env('EMAIL_HOST', default='')
+EMAIL_PORT          = env.int('EMAIL_PORT', default=587)
+EMAIL_HOST_USER     = env('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='')
+EMAIL_USE_TLS       = env.bool('EMAIL_USE_TLS', default=True)
+DEFAULT_FROM_EMAIL  = env('DEFAULT_FROM_EMAIL', default='Name the Frame <no-reply@nametheframe.com>')
+
+EMAIL_CONFIGURED = bool(EMAIL_HOST and EMAIL_HOST_PASSWORD)
+EMAIL_BACKEND = env('EMAIL_BACKEND', default=(
+    'django.core.mail.backends.smtp.EmailBackend' if EMAIL_CONFIGURED
+    else 'django.core.mail.backends.console.EmailBackend'))
+
 # django-allauth
 ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
-# No email infrastructure yet → don't require/send verification emails on
-# signup (would try SMTP and 500). Switch to 'optional'/'mandatory' once a
-# real email provider (Resend/Mailgun/SMTP) is configured.
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+# With real email: send a verification mail (non-blocking). Without: skip —
+# sending would 500 on a missing SMTP server. Override via env if needed.
+ACCOUNT_EMAIL_VERIFICATION = env(
+    'ACCOUNT_EMAIL_VERIFICATION',
+    default=('optional' if EMAIL_CONFIGURED else 'none'))
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
-
-# Console backend: any email (e.g. password reset) is written to the logs
-# instead of failing on a missing SMTP server. Override EMAIL_* for real mail.
-EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
+# Social signup: take the email from the provider, log straight in.
+SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
+SOCIALACCOUNT_LOGIN_ON_GET = True
 
 # Social providers. A provider's button only appears once its OAuth keys are
 # set (env vars) — so without keys there are no broken buttons, and adding the

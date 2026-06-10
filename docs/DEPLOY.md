@@ -35,6 +35,9 @@ do Postgresa (stąd wcześniejszy błąd „could not translate host name").
 | `TMDB_API_KEY` | opcjonalnie (domyślny klucz jest w `settings.py`) |
 | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | po konfiguracji OAuth |
 | `DJANGO_SUPERUSER_EMAIL` / `DJANGO_SUPERUSER_PASSWORD` | by `ensure_superuser` założył admina |
+| `EMAIL_HOST` / `EMAIL_HOST_USER` / `EMAIL_HOST_PASSWORD` | SMTP (Resend: `smtp.resend.com` / `resend` / api-key). Ustawienie włącza realną pocztę + weryfikację e-mail automatycznie |
+| `DEFAULT_FROM_EMAIL` | np. `Name the Frame <no-reply@nametheframe.com>` |
+| `GITHUB_CLIENT_ID/SECRET`, `DISCORD_CLIENT_ID/SECRET` | dodatkowe logowania social (przycisk pojawia się sam po ustawieniu) |
 
 > ⚠️ `ALLOWED_HOSTS`: Django **nie** matchuje `*.railway.app`. Użyj `.railway.app`.
 > Aktualnie zmienna na Railway ma jeszcze `*.railway.app` — zaktualizuj ją.
