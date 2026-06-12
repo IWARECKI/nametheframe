@@ -70,7 +70,10 @@ class Command(BaseCommand):
 
         js_path = Path(settings.BASE_DIR) / 'js' / 'data' / 'films.js'
         if not js_path.exists():
-            self.stderr.write(self.style.ERROR(f'File not found: {js_path}'))
+            # Fallback: try static/ path (used on production/Railway)
+            js_path = Path(settings.BASE_DIR) / 'static' / 'js' / 'data' / 'films.js'
+        if not js_path.exists():
+            self.stderr.write(self.style.ERROR(f'File not found in js/data/ or static/js/data/'))
             return
 
         films_data = self._parse_films_js(js_path)
