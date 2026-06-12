@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.github',
     'allauth.socialaccount.providers.discord',
+    'anymail',
     # Local
     'game',
 ]
@@ -104,12 +105,26 @@ EMAIL_PORT          = env.int('EMAIL_PORT', default=587)
 EMAIL_HOST_USER     = env('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='')
 EMAIL_USE_TLS       = env.bool('EMAIL_USE_TLS', default=True)
+EMAIL_TIMEOUT       = env.int('EMAIL_TIMEOUT', default=15)  # fail fast, never hang
 DEFAULT_FROM_EMAIL  = env('DEFAULT_FROM_EMAIL', default='Name the Frame <no-reply@nametheframe.com>')
 
-EMAIL_CONFIGURED = bool(EMAIL_HOST and EMAIL_HOST_PASSWORD)
-EMAIL_BACKEND = env('EMAIL_BACKEND', default=(
-    'django.core.mail.backends.smtp.EmailBackend' if EMAIL_CONFIGURED
-    else 'django.core.mail.backends.console.EmailBackend'))
+# Prefer Resend's HTTPS API (django-anymail) over SMTP. Railway throttles/blocks
+# outbound SMTP, which makes sends hang → request timeouts (Cloudflare 524).
+# Reuse the Resend API key already provided as EMAIL_HOST_PASSWORD.
+RESEND_API_KEY = env('RESEND_API_KEY', default='') or (
+    EMAIL_HOST_PASSWORD if 'resend' in EMAIL_HOST.lower() else '')
+
+if RESEND_API_KEY:
+    EMAIL_BACKEND = 'anymail.backends.resend.EmailBackend'
+    ANYMAIL = {'RESEND_API_KEY': RESEND_API_KEY}
+    EMAIL_CONFIGURED = True
+elif EMAIL_HOST and EMAIL_HOST_PASSWORD:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_CONFIGURED = True
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    EMAIL_CONFIGURED = False
+EMAIL_BACKEND = env('EMAIL_BACKEND', default=EMAIL_BACKEND)  # explicit override wins
 
 # django-allauth
 ACCOUNT_LOGIN_METHODS = {'email'}

@@ -6,3 +6,4 @@ whitenoise[brotli]>=6.6
 requests>=2.31
 dj-database-url>=2.1
 django-environ>=0.11
+django-anymail[resend]>=10.0
