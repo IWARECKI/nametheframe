@@ -124,6 +124,12 @@ LOGOUT_REDIRECT_URL = '/'
 # Social signup: take the email from the provider, log straight in.
 SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
 SOCIALACCOUNT_LOGIN_ON_GET = True
+# Link a verified social login to an existing account with the same email
+# (no "log in first, then connect" step). Our adapter also makes the match
+# Gmail-dot-insensitive so marcin.iwarecki@ == marciniwarecki@.
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
+SOCIALACCOUNT_ADAPTER = 'game.adapters.SocialAccountAdapter'
 
 # Social providers. A provider's button only appears once its OAuth keys are
 # set (env vars) — so without keys there are no broken buttons, and adding the
