@@ -79,7 +79,9 @@ function cOpt(btn, correct, picked) {
     if (b.textContent.trim() === correct) b.classList.add('correct');
   });
   if (picked !== correct) btn.classList.add('wrong');
-  sr(picked === correct, 1, correct, '');
+  const guessed = picked === correct;
+  sr(guessed, 1, correct, '');
+  logRound(S.cur.id, guessed);
 }
 
 // Handle answer submission in hangman mode (Samozwańczy Kinoman).
@@ -105,6 +107,7 @@ function cLetter() {
 
   S.score += pts;
   showResult(pts > 0 ? 'ok' : 'bad', lines.join('<br>'));
+  logRound(S.cur.id, titleOK);
 }
 
 // Handle answer submission in expert mode (Orędownik Wielkiej Kinezy).
@@ -139,6 +142,7 @@ function cExpert() {
   S.score += pts;
   const cls = pts === 0 ? 'bad' : (partial || pts < 5) ? 'partial' : 'ok';
   showResult(cls, lines.join('<br>'));
+  logRound(S.cur.id, titleOK);
 }
 
 // Disable all answer inputs after submission to prevent re-submitting.

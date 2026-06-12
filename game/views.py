@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 
-from .models import Score, FrameReport, BlockedBackdrop, BlockedFilm
+from .models import Score, FrameReport, BlockedBackdrop, BlockedFilm, Film, GameRound
 
 
 # ── Main page ─────────────────────────────────────────────────────────────────
@@ -126,7 +126,11 @@ def fetch_backdrop_paths(film_id):
 
 
 def api_backdrops(request, film_id):
-    """Return backdrop image URLs for a TMDB film ID (minus admin blocks)."""
+    """Return backdrop image URLs for a TMDB film ID (minus admin blocks).
+    
+    TODO: Migrate to use Backdrop model (Film.backdrops) instead of TMDB API + BlockedBackdrop/BlockedFilm.
+    The new Backdrop model with status='active'/'blocked' replaces this workflow.
+    """
     if not settings.TMDB_API_KEY:
         return JsonResponse({'error': 'TMDB not configured'}, status=503)
 
@@ -168,3 +172,48 @@ def api_report_frame(request):
             report.last_url = url
         report.save()
     return JsonResponse({'ok': True, 'reports': report.reports})
+
+
+# ── API: films for game frontend ──────────────────────────────────────────────
+
+@require_http_methods(['GET'])
+def api_films(request):
+    """Return all active films for the game frontend."""
+    qs = Film.objects.filter(is_active=True)
+
+    # Optional filters
+    tiers = request.GET.getlist('tier')
+    if tiers:
+        qs = qs.filter(tier__in=tiers)
+    eras = request.GET.getlist('era')
+    if eras:
+        qs = qs.filter(cinema_era__in=eras)
+
+    data = [
+        {
+            'id': f.tmdb_id,
+            'title': f.title,
+            'dir': f.director,
+            'y': f.year,
+            't': f.tier,
+            'era': f.cinema_era,
+        }
+        for f in qs.only('tmdb_id', 'title', 'director', 'year', 'tier', 'cinema_era')
+    ]
+    return JsonResponse({'films': data})
+
+
+# ── API: game round logging ───────────────────────────────────────────────────
+
+@require_http_methods(['POST'])
+def api_log_round(request):
+    """Log a game round for per-film statistics."""
+    try:
+        body = json.loads(request.body)
+        film_id = int(body.get('film_id'))
+        guessed = bool(body.get('guessed', False))
+    except (json.JSONDecodeError, ValueError, TypeError):
+        return JsonResponse({'error': 'invalid payload'}, status=400)
+
+    GameRound.objects.create(film_id=film_id, guessed=guessed)
+    return JsonResponse({'ok': True})

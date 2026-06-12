@@ -9,7 +9,8 @@
       "Bash(pip --version)",
       "PowerShell(python --version)",
       "PowerShell(pip --version)",
-      "Bash(sed -i \\\\ *)"
+      "Bash(sed -i \\\\ *)",
+      "PowerShell(iwr https://railway.app/install.ps1 | iex)"
     ]
   }
 }

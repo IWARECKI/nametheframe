@@ -150,7 +150,8 @@ async function startGame() {
     }, 220);
   }, 420);
 
-  // Phase 3: preload in background, then reveal game (min 700ms for animation)
+  // Phase 3: load films from API (fallback to static), preload backdrops, then reveal game
+  await loadFilmsFromAPI();
   await Promise.all([
     preloadAllFilms(),
     new Promise(r => setTimeout(r, 700)),

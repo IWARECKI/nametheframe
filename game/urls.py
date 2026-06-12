@@ -17,4 +17,10 @@ urlpatterns = [
 
     # Frame reports (player flags broken/wrong frame)
     path('api/report-frame/', views.api_report_frame, name='api_report_frame'),
+
+    # Films API (game frontend)
+    path('api/films/', views.api_films, name='api_films'),
+
+    # Game round logging
+    path('api/rounds/log/', views.api_log_round, name='api_log_round'),
 ]

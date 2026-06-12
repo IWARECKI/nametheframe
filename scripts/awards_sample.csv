@@ -1,0 +1,56 @@
+tmdb_id,prize,category,year,person
+238,oscars,Best Picture,1973,
+238,oscars,Best Actor,1973,Marlon Brando
+238,oscars,Best Adapted Screenplay,1973,Mario Puzo & Francis Ford Coppola
+238,golden_globes,Best Motion Picture – Drama,1973,
+278,oscars,Best Picture (Nominated),1995,
+274,oscars,Best Picture,1992,
+274,oscars,Best Director,1992,Jonathan Demme
+274,oscars,Best Actor,1992,Anthony Hopkins
+274,oscars,Best Actress,1992,Jodie Foster
+510,oscars,Best Picture,1976,
+510,oscars,Best Director,1976,Miloš Forman
+510,oscars,Best Actor,1976,Jack Nicholson
+510,oscars,Best Actress,1976,Louise Fletcher
+424,oscars,Best Picture,1994,
+424,oscars,Best Director,1994,Steven Spielberg
+424,bafta,Best Film,1994,
+680,cannes,Palme d'Or,1994,
+680,oscars,Best Original Screenplay,1995,Quentin Tarantino & Roger Avary
+680,golden_globes,Best Screenplay,1995,Quentin Tarantino
+496243,oscars,Best Picture,2020,
+496243,oscars,Best Director,2020,Bong Joon-ho
+496243,oscars,Best Original Screenplay,2020,Bong Joon-ho & Han Jin-won
+496243,oscars,Best International Feature Film,2020,
+496243,cannes,Palme d'Or,2019,
+872585,oscars,Best Picture,2024,
+872585,oscars,Best Director,2024,Christopher Nolan
+872585,oscars,Best Actor,2024,Cillian Murphy
+872585,golden_globes,Best Motion Picture – Drama,2024,
+155,oscars,Best Supporting Actor,2009,Heath Ledger
+155,bafta,Best Supporting Actor,2009,Heath Ledger
+244786,oscars,Best Supporting Actor,2015,J.K. Simmons
+244786,oscars,Best Film Editing,2015,Tom Cross
+157336,oscars,Best Visual Effects,2015,
+76341,oscars,Best Film Editing,2016,
+76341,oscars,Best Costume Design,2016,Jenny Beavan
+76341,oscars,Best Production Design,2016,
+76341,bafta,Best Editing,2016,
+120467,oscars,Best Original Score,2015,Alexandre Desplat
+120467,oscars,Best Production Design,2015,
+346,venice,Silver Lion,1954,
+376867,oscars,Best Picture,2017,
+376867,oscars,Best Supporting Actor,2017,Mahershala Ali
+376867,golden_globes,Best Motion Picture – Drama,2017,
+194662,oscars,Best Picture,2015,
+194662,oscars,Best Director,2015,Alejandro González Iñárritu
+194662,venice,Golden Lion,2014,
+335984,oscars,Best Cinematography,2018,Roger Deakins
+335984,oscars,Best Visual Effects,2018,
+399055,oscars,Best Picture,2018,
+399055,oscars,Best Director,2018,Guillermo del Toro
+399055,venice,Golden Lion,2017,
+129,oscars,Best Animated Feature Film,2003,
+129,berlinale,Golden Bear,2002,
+313369,golden_globes,Best Motion Picture – Musical or Comedy,2017,
+313369,oscars,Best Director,2017,Damien Chazelle
