@@ -42,16 +42,24 @@
     input[type=checkbox]{ width:auto; margin-right:8px; }
     .foot{ text-align:center; margin-top:18px; font-size:12px; }
     .back{ display:block; text-align:center; margin-top:16px; font-size:11px; letter-spacing:1px; color:var(--muted); }
-    /* socialaccount provider list */
-    .socialaccount_providers{ list-style:none; padding:0; margin:16px 0 0; }
-    .socialaccount_providers li{ margin-top:10px; }
+    /* "lub" separator */
+    .social-sep{ display:flex; align-items:center; gap:12px; margin:20px 0 14px; color:var(--muted); font-size:11px; }
+    .social-sep::before,.social-sep::after{ content:""; flex:1; height:1px; background:var(--border); }
+    /* modern Google button (white, brand-correct) */
+    .social-btn{ display:flex; align-items:center; justify-content:center; gap:10px;
+      width:100%; padding:11px 16px; background:#fff; color:#1f1f1f; border:1px solid #dadce0;
+      border-radius:8px; font-family:'Space Mono',monospace; font-size:13px; font-weight:700;
+      text-decoration:none; transition:box-shadow .15s,background .15s; }
+    .social-btn:hover{ background:#f7f8f8; box-shadow:0 1px 6px #0006; color:#1f1f1f; }
+    .social-btn + .social-btn{ margin-top:10px; }
+    .social-ic{ flex:none; }
   </style>
   {% block extra_head %}{% endblock extra_head %}
 </head>
 <body>
   <div class="auth-wrap">
     <div class="brand">
-      <a href="/"><span class="t">🎞️ Name the Frame</span><span class="s">Kasa Biletowa</span></a>
+      <a href="/"><span class="t">🎞️ Name the Frame</span></a>
     </div>
     <div class="card">
       {% block content %}{% endblock content %}
