@@ -26,9 +26,15 @@
     a:hover{ color:var(--gold-hi); }
     form{ margin-top:18px; }
     label{ display:block; font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--muted); margin:14px 0 6px; }
+    /* Field labels are redundant with placeholders → hide visually but keep
+       them for screen readers (a11y). Checkbox labels (remember me) stay. */
+    label[for=id_email],label[for=id_login],label[for=id_password],
+    label[for=id_password1],label[for=id_password2]{
+        position:absolute; width:1px; height:1px; padding:0; margin:0; overflow:hidden;
+        clip:rect(0 0 0 0); white-space:nowrap; border:0; }
     input[type=text],input[type=email],input[type=password],input:not([type]){
-        width:100%; padding:12px 14px; background:#100f0c; border:1px solid var(--border); border-radius:8px;
-        color:var(--ink); font-family:'Space Mono',monospace; font-size:14px; }
+        width:100%; margin-top:12px; padding:12px 14px; background:#100f0c; border:1px solid var(--border);
+        border-radius:8px; color:var(--ink); font-family:'Space Mono',monospace; font-size:14px; }
     input:focus{ outline:none; border-color:var(--gold); box-shadow:0 0 0 3px #c9a22733; }
     button,.button,input[type=submit]{
         display:inline-block; width:100%; margin-top:20px; padding:13px 18px; border:none; border-radius:8px;
@@ -38,7 +44,18 @@
     .secondary,a.button.secondary{ background:transparent; color:var(--gold); border:1px solid var(--border); }
     ul{ list-style:none; padding:0; margin:8px 0; }
     .errorlist{ color:#e57373; font-size:11px; margin:6px 0; }
-    .helptext{ display:block; color:var(--muted); font-size:10px; margin-top:4px; line-height:1.5; }
+    /* Password help → hidden until the password field is focused, then shown
+       as a small bubble (with a little arrow pointing up at the field). */
+    .helptext{ display:none; }
+    input:focus + .helptext{
+        display:block; position:relative; margin-top:10px; padding:9px 12px;
+        background:#2a261d; border:1px solid var(--border); border-radius:8px;
+        color:var(--ink); font-size:11px; line-height:1.5; }
+    input:focus + .helptext::before{
+        content:""; position:absolute; top:-6px; left:18px; width:10px; height:10px;
+        background:#2a261d; border-left:1px solid var(--border); border-top:1px solid var(--border);
+        transform:rotate(45deg); }
+    .helptext ul{ margin:0; padding:0; }
     input[type=checkbox]{ width:auto; margin-right:8px; }
     .foot{ text-align:center; margin-top:18px; font-size:12px; }
     .back{ display:block; text-align:center; margin-top:16px; font-size:11px; letter-spacing:1px; color:var(--muted); }

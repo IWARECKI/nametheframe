@@ -119,7 +119,9 @@ ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
 ACCOUNT_EMAIL_VERIFICATION = env(
     'ACCOUNT_EMAIL_VERIFICATION',
     default=('optional' if EMAIL_CONFIGURED else 'none'))
-LOGIN_REDIRECT_URL = '/'
+# '?in=1' tells the frontend to skip the intro animation after auth.
+LOGIN_REDIRECT_URL = '/?in=1'
+ACCOUNT_SIGNUP_REDIRECT_URL = '/?in=1'
 LOGOUT_REDIRECT_URL = '/'
 # Social signup: take the email from the provider, log straight in.
 SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'

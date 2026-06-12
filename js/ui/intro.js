@@ -4,6 +4,17 @@
 
 (function initIntro() {
   const intro   = document.getElementById('intro');
+
+  // Coming back from login/signup (?in=1) → skip the projector intro and go
+  // straight to the setup screen. Clean the URL so a refresh behaves normally.
+  if (new URLSearchParams(location.search).get('in') === '1') {
+    history.replaceState(null, '', location.pathname);
+    if (intro) intro.style.display = 'none';
+    const setup = document.getElementById('setup');
+    if (setup) { setup.style.display = 'flex'; setup.classList.add('vis'); }
+    return;
+  }
+
   const counter = document.getElementById('film-counter');
   const enter   = document.getElementById('frame-enter');
   const logo    = document.getElementById('intro-logo');
