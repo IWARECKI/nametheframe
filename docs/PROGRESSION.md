@@ -657,3 +657,26 @@ Name the Frame to nie quiz — to **kuratorskie doświadczenie filmowe** z meta-
 - `static/js/ui/setup.js` + `js/ui/setup.js`
 - `templates/index.html`
 - `game/views.py`
+
+
+---
+
+### 2026-06-14 — Poprawki UX po testach
+
+**Bug 4: Nick-check blokował zalogowanego usera własnym nickiem**
+- `api_nick_check()` teraz wyklucza requestującego usera z wyników (`.exclude(pk=request.user.pk)`)
+- Zalogowany gracz może użyć swojego własnego nicku bez blokady
+
+**Bug 5: Przycisk "Zapal projektor" wyglądał złoto zamiast metalicznie**
+- Specyficzność CSS: `.start-btn` (złoty) nadpisywał `.start-btn--metal` (ciemny)
+- Fix: selektory zmienione na `.start-btn.start-btn--metal` (wyższa specyficzność)
+- Dodane `animation:none` żeby lamp-pulse nie działał na metalowej wersji
+
+**Poprawa: Nick zachowany przy replay**
+- `resetGame()` zachowuje `S.nick` i wypełnia input — przy "Zagraj jeszcze raz" nie trzeba wpisywać nicku ponownie
+- Zalogowany user i tak ma disabled input z nickiem
+
+**Pliki:**
+- `game/views.py` — nick-check exclude self
+- `static/css/main.css` + `css/main.css` — specyficzność `.start-btn.start-btn--metal`
+- `static/js/game/engine.js` + `js/game/engine.js` — resetGame zachowuje nick
