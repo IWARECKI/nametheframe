@@ -539,7 +539,7 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 }
 
 /* ── ZAPAL PROJEKTOR — heavy metallic switch ── */
-.start-btn--metal{
+.start-btn.start-btn--metal{
   width:100%;
   background:linear-gradient(180deg,#3a3a3a 0%,#1a1a1a 40%,#0d0d0d 100%);
   color:var(--gold);
@@ -550,6 +550,7 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   letter-spacing:.35em;text-transform:uppercase;
   cursor:pointer;
   position:relative;overflow:visible;
+  animation:none;
   /* Deep metallic shadow — projector switch feel */
   box-shadow:
     0 4px 0 #000,
@@ -558,7 +559,7 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
     inset 0 1px 0 rgba(255,255,255,.06);
   transition:transform .08s ease,box-shadow .08s ease,background .12s;
 }
-.start-btn--metal:hover{
+.start-btn.start-btn--metal:hover{
   background:linear-gradient(180deg,#444 0%,#222 40%,#111 100%);
   border-color:rgba(201,169,110,.5);
   box-shadow:
@@ -567,7 +568,7 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
     0 14px 36px rgba(0,0,0,.5),
     inset 0 1px 0 rgba(255,255,255,.08);
 }
-.start-btn--metal:active{
+.start-btn.start-btn--metal:active{
   transform:scale(0.97) translateY(3px);
   box-shadow:
     0 1px 0 #000,
@@ -575,16 +576,17 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
     inset 0 2px 4px rgba(0,0,0,.4);
   transition:transform .04s ease,box-shadow .04s ease;
 }
-.start-btn--metal:disabled{
+.start-btn.start-btn--metal:disabled{
   opacity:.35;cursor:not-allowed;
   box-shadow:0 2px 8px rgba(0,0,0,.3);
+  animation:none;
 }
-.start-btn--metal.checking{
+.start-btn.start-btn--metal.checking{
   opacity:.6;cursor:wait;
 }
 
 /* Click explosion: button emits blinding flash */
-.start-btn--metal.firing{
+.start-btn.start-btn--metal.firing{
   animation:lamp-fire .65s ease-out forwards !important;
   pointer-events:none;
 }

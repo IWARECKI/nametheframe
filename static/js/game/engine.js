@@ -174,7 +174,9 @@ function renderSummaryGrid() {
 // Reset state and return to setup screen.
 // Django equivalent: session.flush() + redirect to /setup/.
 function resetGame() {
+  const prevNick = S.nick;  // remember nick for replay
   S = {...S, round: 0, score: 0, used: [], cur: null, sessionStart: 0, sessionMs: 0, history: []};
+  S.nick = prevNick;  // keep nick across replays
   document.getElementById('end').style.display   = 'none';
   document.getElementById('setup').style.display = 'flex';
   document.getElementById('setup').classList.add('vis');
@@ -184,5 +186,11 @@ function resetGame() {
   if (btn) {
     btn.disabled = false;
     btn.classList.remove('firing', 'checking');
+  }
+
+  // Keep nick input filled from previous game
+  const input = document.getElementById('nick-input');
+  if (input && prevNick) {
+    input.value = prevNick;
   }
 }

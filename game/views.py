@@ -224,16 +224,29 @@ def api_log_round(request):
 
 @require_http_methods(['GET'])
 def api_nick_check(request):
-    """Check if a nick is already taken (by any Score or User.first_name)."""
+    """Check if a nick is already taken (by any Score or User.first_name).
+    
+    If the requesting user is authenticated and the nick matches their own
+    first_name, it's considered available (they own it).
+    """
     nick = request.GET.get('nick', '').strip()
     if not nick:
         return JsonResponse({'available': False, 'reason': 'empty'})
 
     # Check if any existing user has this as first_name
     from django.contrib.auth.models import User
-    taken_by_user = User.objects.filter(first_name__iexact=nick).exists()
+    user_qs = User.objects.filter(first_name__iexact=nick)
+    # Exclude the requesting user themselves
+    if request.user.is_authenticated:
+        user_qs = user_qs.exclude(pk=request.user.pk)
+    taken_by_user = user_qs.exists()
+
     # Check if any score used this nick (case-insensitive)
-    taken_by_score = Score.objects.filter(nick__iexact=nick).exists()
+    # Exclude scores owned by the requesting user
+    score_qs = Score.objects.filter(nick__iexact=nick)
+    if request.user.is_authenticated:
+        score_qs = score_qs.exclude(user=request.user)
+    taken_by_score = score_qs.exists()
 
     available = not (taken_by_user or taken_by_score)
     return JsonResponse({'available': available, 'nick': nick})
