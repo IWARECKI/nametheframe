@@ -590,3 +590,70 @@ Name the Frame to nie quiz — to **kuratorskie doświadczenie filmowe** z meta-
 - Achievementy nagradzają różnorodność → gracz eksploruje
 
 **Cel**: Stać się Duolingo dla wiedzy filmowej. Codziennie. Z przyjemnością. Bez poczucia winy.
+
+
+---
+
+## Changelog
+
+### 2026-06-14 — Refaktoryzacja ekranu startowego
+
+**Zakres**: Uproszczenie setup screen do minimalistycznego formularza.
+
+**Usunięte z widoku (zachowane w `docs/archive/`):**
+- Select żywiołu (genre-select)
+- Karuzela poziomów (4 karty: Kasa, Popcorn, Kinoman, Kineza)
+- Label "Wybierz seans"
+- Stary layout `.start-row` (przycisk + Wyniki obok siebie)
+
+**Dodane:**
+- Auth-bar (góra — nick lub "gość")
+- Minimalistyczny formularz: nick-input + przycisk "Zapal projektor"
+- Ciężki metalowy przycisk (deep box-shadow, :active scale(0.97))
+- Web Audio: clunk (80Hz sine→35Hz + 2200Hz metallic click) na kliknięcie
+- Web Audio: error buzz (biały szum + sawtooth snap) na błąd nicku
+- Neon-error animation na inpucie (3× flash jaskrawą czerwienią)
+- Efekt "przepalonej żarówki" na tekście błędu
+- Async nick-check (`/api/nick-check/`) przed startem gry
+- Złota ramka na inpucie zalogowanego usera (disabled)
+- Link "Wyniki" (zamiast dużego buttona)
+- `js/services/films_loader.js` dodany do script load
+
+**Pod maską:**
+- `S.level = 'popcorn'`, `S.diff = 'test'`, `S.genre = 'casual'` (domyślne)
+- Backend endpoint `GET /api/nick-check/?nick=xxx` → `{available: true/false}`
+
+**Pliki zmodyfikowane:**
+- `templates/index.html` — przebudowa sekcji #setup (Django template)
+- `index.html` — jw. (wersja statyczna)
+- `static/css/main.css` + `css/main.css` — nowe style
+- `static/js/ui/setup.js` + `js/ui/setup.js` — nowa logika
+- `game/views.py` — endpoint nick-check (już istniał)
+- `game/urls.py` — route (już istniał)
+
+**Archiwum**: `docs/archive/setup_carousel_removed.html`, `docs/archive/setup_carousel_removed.js`
+
+---
+
+### 2026-06-14 — Bugfixy po refaktoryzacji
+
+**Bug 1: Summary grid nie wyświetlał kadrów 3×4**
+- Brakowało CSS `.summary-grid` / `.sg-cell` — dodane (grid 4 kolumny, aspect-ratio 16:9, staggered reveal)
+- Trafione kadry: jasność .85, nietrafione: brightness(.4) saturate(.3)
+
+**Bug 2: "Zagraj jeszcze raz" → przycisk "Zapal projektor" nie reagował**
+- `resetGame()` nie resetowało klas `firing`/`checking` ani `disabled` na `#start-btn`
+- Dodane: `btn.disabled = false; btn.classList.remove('firing','checking')`
+
+**Bug 3: Nick pobierany z email zamiast ręcznie wpisany**
+- `api_me()` zwracał `user.email.split('@')[0]` jako fallback — zmienione na `None`
+- `index` view: `user_json` — jw.
+- Template: `first_name|default:user.email` → teraz sprawdza `user.first_name` bezpośrednio
+- JS `initAuthBar`: dodana walidacja `isEmailFallback` (nie lockuje pola jeśli nick wygląda jak email)
+
+**Pliki zmodyfikowane:**
+- `static/js/game/engine.js` + `js/game/engine.js`
+- `static/css/main.css` + `css/main.css`
+- `static/js/ui/setup.js` + `js/ui/setup.js`
+- `templates/index.html`
+- `game/views.py`
