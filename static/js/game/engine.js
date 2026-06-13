@@ -178,4 +178,11 @@ function resetGame() {
   document.getElementById('end').style.display   = 'none';
   document.getElementById('setup').style.display = 'flex';
   document.getElementById('setup').classList.add('vis');
+
+  // Reset the start button so it can be pressed again
+  const btn = document.getElementById('start-btn');
+  if (btn) {
+    btn.disabled = false;
+    btn.classList.remove('firing', 'checking');
+  }
 }

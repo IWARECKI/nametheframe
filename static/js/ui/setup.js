@@ -117,27 +117,34 @@ async function checkNickAvailability(nick) {
 let _authNick = null;
 
 function initAuthBar() {
-  // Django template already sets input value + disabled for authenticated users.
+  // Django template already sets input value + disabled for authenticated users with a nick.
   // Check DJANGO_USER (injected by template) or fall back to /api/me/.
   if (typeof DJANGO_USER !== 'undefined' && DJANGO_USER.authenticated && DJANGO_USER.nick) {
-    _authNick = DJANGO_USER.nick;
-    const input = document.getElementById('nick-input');
-    input.value = _authNick;
-    input.disabled = true;
-    input.classList.add('nick-input--authed');
-    const statusEl = document.getElementById('auth-status');
-    if (statusEl) statusEl.textContent = _authNick;
+    // Only lock nick if the user actually has a first_name set (not email fallback)
+    const isEmailFallback = DJANGO_USER.nick && DJANGO_USER.nick.includes('@');
+    if (!isEmailFallback) {
+      _authNick = DJANGO_USER.nick;
+      const input = document.getElementById('nick-input');
+      input.value = _authNick;
+      input.disabled = true;
+      input.classList.add('nick-input--authed');
+      const statusEl = document.getElementById('auth-status');
+      if (statusEl) statusEl.textContent = _authNick;
+    }
   } else {
     // Fallback for static hosting (no Django)
     fetch('/api/me/').then(r => r.ok ? r.json() : null).then(data => {
       if (data && data.authenticated && data.nick) {
-        _authNick = data.nick;
-        const input = document.getElementById('nick-input');
-        input.value = _authNick;
-        input.disabled = true;
-        input.classList.add('nick-input--authed');
-        const statusEl = document.getElementById('auth-status');
-        if (statusEl) statusEl.textContent = _authNick;
+        const isEmailFallback = data.nick && data.nick.includes('@');
+        if (!isEmailFallback) {
+          _authNick = data.nick;
+          const input = document.getElementById('nick-input');
+          input.value = _authNick;
+          input.disabled = true;
+          input.classList.add('nick-input--authed');
+          const statusEl = document.getElementById('auth-status');
+          if (statusEl) statusEl.textContent = _authNick;
+        }
       }
     }).catch(() => {});
   }

@@ -25,7 +25,7 @@ def index(request):
         'user_json': json.dumps({
             'authenticated': user.is_authenticated,
             'email': user.email if user.is_authenticated else None,
-            'nick': user.first_name or user.email.split('@')[0] if user.is_authenticated else None,
+            'nick': user.first_name or None if user.is_authenticated else None,
         })
     }
     return render(request, 'index.html', ctx)
@@ -40,7 +40,7 @@ def api_me(request):
     return JsonResponse({
         'authenticated': True,
         'email': user.email,
-        'nick': user.first_name or user.email.split('@')[0],
+        'nick': user.first_name or None,  # None if no nick set — don't use email
         'id': user.id,
     })
 

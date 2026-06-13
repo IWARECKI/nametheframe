@@ -21,10 +21,13 @@ let S = {
   used:        [],     // film IDs already shown this session
   cur:         null,   // current Film object
   revealedIdx: 0,      // index of the pre-revealed letter in hangman mode
+  sessionStart: 0,     // timestamp when game started (ms)
+  sessionMs:   0,      // total session duration (ms)
+  history:     [],     // [{film, backdrop, guessed}] for summary grid
 };
 
-// Number of rounds per game session
-const ROUNDS_PER_GAME = 10;
+// Number of rounds per game session ("pół sekundy kina" = 12 klatek)
+const ROUNDS_PER_GAME = 12;
 
 // Tier weights per difficulty level.
 // 't' field on each film: 'c' = classic, 'a' = ambitious, 'r' = arthouse
@@ -99,6 +102,9 @@ function nextRound() {
 // Transition to the end screen and persist the score.
 // Django equivalent: a POST view that saves the Score model and redirects to /end/.
 function endGame() {
+  // Stop session timer
+  S.sessionMs = Date.now() - S.sessionStart;
+
   const levelName = S.level === 'popcorn'
     ? 'Akolita Popcornu'
     : S.level === 'kinoman'
@@ -116,6 +122,11 @@ function endGame() {
 
   const genreLabel = GENRE_LABELS[S.genre] || S.genre;
 
+  // Format session time
+  const secs = Math.round(S.sessionMs / 1000);
+  const mins = Math.floor(secs / 60);
+  const timeStr = mins > 0 ? `${mins}m ${secs % 60}s` : `${secs}s`;
+
   // Persist locally (localStorage)
   saveScore(S.nick, S.genre, S.level, S.score);
 
@@ -123,19 +134,55 @@ function endGame() {
   document.getElementById('game').style.display = 'none';
   document.getElementById('end').style.display  = 'flex';
   document.getElementById('esc').textContent       = S.score;
-  document.getElementById('emx').textContent       = `punktów · poziom: ${levelName}`;
+  document.getElementById('emx').textContent       = `punktów · poziom: ${levelName} · ${timeStr}`;
   document.getElementById('enick-line').textContent = `${S.nick} · żywioł: ${genreLabel}`;
   document.getElementById('evd').textContent        = verdict;
+
+  // Render summary grid (12 frames, 3×4)
+  renderSummaryGrid();
 
   // Render leaderboard
   renderLeaderboard();
 }
 
+// Render the 3×4 grid of frames from the session with staggered reveal animation
+function renderSummaryGrid() {
+  const container = document.getElementById('summary-grid');
+  if (!container) return;
+  container.innerHTML = '';
+
+  S.history.forEach((entry, i) => {
+    const cell = document.createElement('div');
+    cell.className = 'sg-cell' + (entry.guessed ? ' sg-ok' : ' sg-miss');
+    cell.style.animationDelay = (i * 100) + 'ms';
+
+    const img = document.createElement('img');
+    img.src = entry.backdrop || '';
+    img.alt = entry.film ? entry.film.title : '';
+    img.loading = 'lazy';
+
+    const overlay = document.createElement('div');
+    overlay.className = 'sg-overlay';
+    overlay.innerHTML = `<span class="sg-icon">${entry.guessed ? '✓' : '✗'}</span>`;
+
+    cell.appendChild(img);
+    cell.appendChild(overlay);
+    container.appendChild(cell);
+  });
+}
+
 // Reset state and return to setup screen.
 // Django equivalent: session.flush() + redirect to /setup/.
 function resetGame() {
-  S = {...S, round: 0, score: 0, used: [], cur: null};
+  S = {...S, round: 0, score: 0, used: [], cur: null, sessionStart: 0, sessionMs: 0, history: []};
   document.getElementById('end').style.display   = 'none';
   document.getElementById('setup').style.display = 'flex';
   document.getElementById('setup').classList.add('vis');
+
+  // Reset the start button so it can be pressed again
+  const btn = document.getElementById('start-btn');
+  if (btn) {
+    btn.disabled = false;
+    btn.classList.remove('firing', 'checking');
+  }
 }

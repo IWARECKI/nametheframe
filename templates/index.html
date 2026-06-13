@@ -42,8 +42,10 @@
 <section id="setup">
   <!-- Auth bar — top strip -->
   <div class="auth-bar" id="auth-bar">
-    {% if user.is_authenticated %}
-      <span class="auth-status" id="auth-status">{{ user.first_name|default:user.email }}</span>
+    {% if user.is_authenticated and user.first_name %}
+      <span class="auth-status" id="auth-status">{{ user.first_name }}</span>
+    {% elif user.is_authenticated %}
+      <span class="auth-status" id="auth-status">zalogowany</span>
     {% else %}
       <span class="auth-status" id="auth-status">gość</span>
     {% endif %}
@@ -54,9 +56,9 @@
 
   <div class="setup-form">
     <div class="field-wrap">
-      {% if user.is_authenticated %}
+      {% if user.is_authenticated and user.first_name %}
         <input class="nick-input nick-input--authed" id="nick-input" type="text"
-               value="{{ user.first_name|default:user.email }}" maxlength="22"
+               value="{{ user.first_name }}" maxlength="22"
                autocomplete="off" disabled/>
       {% else %}
         <input class="nick-input" id="nick-input" type="text"
