@@ -680,3 +680,26 @@ Name the Frame to nie quiz — to **kuratorskie doświadczenie filmowe** z meta-
 - `game/views.py` — nick-check exclude self
 - `static/css/main.css` + `css/main.css` — specyficzność `.start-btn.start-btn--metal`
 - `static/js/game/engine.js` + `js/game/engine.js` — resetGame zachowuje nick
+
+
+---
+
+### 2026-06-14 — Nick persistence + performance
+
+**Nick zapisywany na koncie po grze**
+- `api_scores_save()` teraz ustawia `user.first_name = nick` po zapisie score (jeśli zalogowany)
+- `api_me()` fallback: jeśli brak `first_name`, bierze nick z ostatniego Score usera
+- Template używa `player_nick` (computed w view) zamiast surowego `user.first_name`
+- Efekt: zalogowany user z nickiem widzi go w rogu + disabled input, bez potrzeby ponownego wpisywania
+
+**Perf: lazy preload backdrops**
+- `preloadAllFilms()` ładowało ALL filmy (100+ fetch do backendu) — trwało sekundy
+- Fix: preload 5 pierwszych filmów synchronicznie, reszta w tle (chunks po 5)
+- Sztuczny delay 700ms → 400ms
+- Efekt: start gry 2-5× szybszy
+
+**Pliki:**
+- `game/views.py` — nick persist + fallback + `player_nick` w ctx
+- `templates/index.html` — `player_nick` zamiast `user.first_name`
+- `static/js/services/tmdb.js` + `js/services/tmdb.js` — lazy preload
+- `static/js/ui/setup.js` + `js/ui/setup.js` — reduced delay
