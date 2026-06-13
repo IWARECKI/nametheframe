@@ -691,3 +691,47 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   .levels-carousel{width:100%;flex:none;}
   .lvl-card{flex:0 0 78vw;}
 }
+
+/* ── SUMMARY GRID — 3×4 end-screen frame mosaic ───────────── */
+.summary-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:4px;
+  width:100%;max-width:520px;
+  margin:1.5rem auto;
+  perspective:800px;
+}
+.sg-cell{
+  position:relative;aspect-ratio:16/9;overflow:hidden;
+  border-radius:3px;
+  opacity:0;transform:scale(0.85) rotateX(8deg);
+  animation:sg-stamp .4s ease-out forwards;
+}
+.sg-cell img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  filter:brightness(0.7);
+}
+.sg-cell.sg-ok img{filter:brightness(0.85);}
+.sg-cell.sg-miss img{filter:brightness(0.4) saturate(0.3);}
+
+.sg-overlay{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.sg-icon{
+  font-size:1.4rem;font-weight:700;
+  text-shadow:0 0 8px rgba(0,0,0,.8);
+}
+.sg-cell.sg-ok .sg-icon{color:var(--ok-t);}
+.sg-cell.sg-miss .sg-icon{color:var(--bad-t);}
+
+/* Border accent per result */
+.sg-cell.sg-ok{border:1px solid rgba(100,180,120,.4);}
+.sg-cell.sg-miss{border:1px solid rgba(180,90,90,.3);}
+
+/* Staggered stamp-in animation */
+@keyframes sg-stamp{
+  0%{opacity:0;transform:scale(0.85) rotateX(8deg);}
+  60%{opacity:1;transform:scale(1.03) rotateX(-1deg);}
+  100%{opacity:1;transform:scale(1) rotateX(0);}
+}

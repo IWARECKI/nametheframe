@@ -163,6 +163,14 @@ function showResult(cls, html) {
   document.getElementById('frm').textContent = `${S.cur.dir} · ${S.cur.y}`;
   document.getElementById('fr').style.display = 'block';
   document.getElementById('nb').style.display = 'block';
+
+  // Record for summary grid
+  const bgImg = document.getElementById('bgimg');
+  S.history.push({
+    film: S.cur,
+    backdrop: bgImg ? bgImg.src : '',
+    guessed: cls !== 'bad',
+  });
 }
 
 // Simplified result renderer used by multiple-choice mode (cOpt).
@@ -180,6 +188,14 @@ function sr(ok, pts, ct, ex) {
   document.getElementById('frm').textContent = `${S.cur.dir} · ${S.cur.y}`;
   document.getElementById('fr').style.display = 'block';
   document.getElementById('nb').style.display = 'block';
+
+  // Record for summary grid
+  const bgImg = document.getElementById('bgimg');
+  S.history.push({
+    film: S.cur,
+    backdrop: bgImg ? bgImg.src : '',
+    guessed: ok,
+  });
 }
 
 // Report wrong frame — player says the image doesn't match the film

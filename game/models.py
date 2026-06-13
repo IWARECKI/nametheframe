@@ -17,6 +17,7 @@ class Score(models.Model):
     genre = models.CharField(max_length=64)
     level = models.CharField(max_length=16, choices=LEVEL_CHOICES)
     score = models.IntegerField()
+    duration_ms = models.IntegerField(null=True, blank=True, help_text='Session duration in milliseconds')
     ts    = models.DateTimeField(auto_now_add=True)
 
     class Meta:

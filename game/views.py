@@ -77,16 +77,16 @@ def api_scores_save(request):
         genre = str(body.get('genre', ''))[:64]
         level = str(body.get('level', ''))
         score = int(body.get('score', 0))
+        duration_ms = int(body.get('duration_ms', 0)) or None
     except (json.JSONDecodeError, ValueError, TypeError):
         return JsonResponse({'error': 'invalid payload'}, status=400)
 
     if not nick or level not in ('popcorn', 'kinoman', 'kineza'):
         return JsonResponse({'error': 'missing required fields'}, status=400)
 
-    # Anti-cheat: the client computes the score, so reject anything outside the
-    # theoretical range for the level (10 rounds × max per-round points:
-    # popcorn 1, kinoman 5, kineza 8). Keeps the leaderboard honest.
-    max_score = {'popcorn': 10, 'kinoman': 50, 'kineza': 80}[level]
+    # Anti-cheat: 12 rounds × max per-round points:
+    # popcorn 1, kinoman 5, kineza 8.
+    max_score = {'popcorn': 12, 'kinoman': 60, 'kineza': 96}[level]
     if not (0 <= score <= max_score):
         return JsonResponse({'error': 'score out of range'}, status=400)
 
@@ -96,6 +96,7 @@ def api_scores_save(request):
         genre=genre,
         level=level,
         score=score,
+        duration_ms=duration_ms,
     )
     return JsonResponse({'ok': True})
 

@@ -160,6 +160,8 @@ async function startGame() {
   S.round = 0;
   S.score = 0;
   S.used  = [];
+  S.history = [];
+  S.sessionStart = Date.now();
 
   document.getElementById('mrnd').textContent  = ROUNDS_PER_GAME;
   document.getElementById('hnick').textContent = S.nick;
