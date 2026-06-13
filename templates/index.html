@@ -11,9 +11,6 @@
 <!-- Auth state injected by Django -->
 <script>const DJANGO_USER = {{ user_json|safe }};</script>
 <style>
-  a.lvl-auth-btn{ display:inline-block; text-decoration:none; text-align:center; }
-  .lvl-auth-welcome{ font-size:12px; color:var(--gold,#c9a227); letter-spacing:.05em;
-    margin-bottom:8px; word-break:break-word; }
   .sp-tabs{ display:flex; gap:8px; margin:10px 0 14px; flex-wrap:wrap; }
   .sp-tab{ flex:1; min-width:90px; padding:8px 6px; background:transparent;
     border:1px solid var(--border,#2a261d); border-radius:8px; color:var(--muted,#9a8a5c);
@@ -21,18 +18,6 @@
   .sp-tab.active{ background:var(--gold,#c9a227)22; border-color:var(--gold,#c9a227);
     color:var(--gold,#e0b84a); font-weight:700; }
   .sp-tab:hover{ border-color:var(--gold,#c9a227); }
-  .auth-bar{ position:fixed; top:16px; right:18px; z-index:1000; display:flex;
-    align-items:center; gap:10px; font-family:'Space Mono',monospace; font-size:12px; }
-  .auth-bar-user{ color:var(--gold,#c9a227); letter-spacing:.04em; max-width:200px;
-    overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .auth-bar-link{ text-decoration:none; color:var(--muted,#9a8a5c); padding:7px 14px;
-    border:1px solid var(--border,#2a261d); border-radius:8px; letter-spacing:.08em;
-    text-transform:uppercase; font-size:11px; transition:all .15s; }
-  .auth-bar-link:hover{ color:var(--gold,#e0b84a); border-color:var(--gold,#c9a227); }
-  .auth-bar-link.primary{ background:var(--gold,#c9a227); color:#100f0c; border-color:var(--gold,#c9a227); font-weight:700; }
-  .auth-bar-link.primary:hover{ background:var(--gold,#e0b84a); color:#100f0c; }
-  @media(max-width:600px){ .auth-bar{ top:10px; right:10px; gap:6px; }
-    .auth-bar-link{ padding:6px 10px; font-size:10px; } .auth-bar-user{ max-width:110px; } }
 </style>
 </head>
 <body>
@@ -52,184 +37,39 @@
   </div>
 </div>
 
-<!-- Setup section -->
+<!-- Setup section — minimalist: nick + Zapal projektor -->
 <div id="setup-dust"></div>
 <section id="setup">
-  <!-- Always-visible auth bar (the carousel "Kasa Biletowa" card is only
-       clickable when centered, so these links guarantee access). -->
-  <div class="auth-bar">
+  <!-- Auth bar — top strip -->
+  <div class="auth-bar" id="auth-bar">
     {% if user.is_authenticated %}
-      <span class="auth-bar-user">🎟️ {{ user.first_name|default:user.email }}</span>
-      <a class="auth-bar-link" href="{% url 'account_logout' %}">Wyloguj</a>
+      <span class="auth-status" id="auth-status">{{ user.first_name|default:user.email }}</span>
     {% else %}
-      <a class="auth-bar-link" href="{% url 'account_login' %}">Zaloguj</a>
-      <a class="auth-bar-link primary" href="{% url 'account_signup' %}">Dołącz</a>
+      <span class="auth-status" id="auth-status">gość</span>
     {% endif %}
   </div>
+
   <div class="brand">Name the <em>Frame</em></div>
   <p class="tagline">Rozpoznaj kadr &nbsp;·&nbsp; Sprawdź swój poziom filmowtajemniczenia</p>
 
-  <div class="form-row">
+  <div class="setup-form">
     <div class="field-wrap">
-      <span class="field-sub">Jak chcesz się zapisać w historii?</span>
-      <input class="nick-input" id="nick-input" type="text" placeholder="Przedstaw się wędrowcze…" maxlength="22" autocomplete="off"/>
-    </div>
-    <div class="field-wrap">
-      <span class="field-sub">Gatunek niekoniecznie ludzki</span>
-      <select class="genre-select" id="genre-select">
-        <option value="">— Twój żywioł —</option>
-        <optgroup label="Klasyczne gatunki">
-          <option value="horror">🩸 Horror</option>
-          <option value="thriller">🔪 Thriller</option>
-          <option value="noir">🕵️ Noir</option>
-          <option value="kryminał">🚬 Kryminał</option>
-          <option value="dramat">🎭 Dramat</option>
-          <option value="komedia">😂 Komedia</option>
-          <option value="romans">💔 Romans</option>
-          <option value="melodramat">🌧️ Melodramat</option>
-        </optgroup>
-        <optgroup label="Akcja i przygoda">
-          <option value="akcja">💥 Akcja</option>
-          <option value="przygodowy">🗺️ Przygodowy</option>
-          <option value="western">🤠 Western</option>
-          <option value="wojenny">⚔️ Wojenny</option>
-          <option value="szpiegowski">🕶️ Szpiegowski</option>
-          <option value="superbohaterski">🦸 Superbohaterski</option>
-        </optgroup>
-        <optgroup label="Wyobraźnia i fantastyka">
-          <option value="sci-fi">🚀 Sci-Fi</option>
-          <option value="fantasy">🧙 Fantasy</option>
-          <option value="animacja">✏️ Animacja</option>
-          <option value="baśń">🏰 Baśń</option>
-          <option value="surrealizm">🌀 Surrealizm</option>
-        </optgroup>
-        <optgroup label="Kino artystyczne">
-          <option value="art-house">🎞️ Art-house</option>
-          <option value="slow-cinema">🌿 Slow Cinema</option>
-          <option value="eksperyment">🔬 Eksperyment</option>
-          <option value="esej-filmowy">📖 Esej filmowy</option>
-          <option value="dokumentalny">📷 Dokumentalny</option>
-          <option value="mockumentary">🎤 Mockumentary</option>
-        </optgroup>
-        <optgroup label="Nastrój i klimat">
-          <option value="body-horror">🫀 Body Horror</option>
-          <option value="giallo">🔴 Giallo</option>
-          <option value="yakuza">🏯 Yakuza</option>
-          <option value="road-movie">🚗 Road Movie</option>
-          <option value="coming-of-age">🌱 Coming of Age</option>
-          <option value="mumblecore">☕ Mumblecore</option>
-          <option value="neon-noir">🌃 Neon Noir</option>
-          <option value="musical">🎵 Musical</option>
-        </optgroup>
-      </select>
-    </div>
-  </div>
-
-  <div class="levels-label">Wybierz seans</div>
-  <div class="carousel-wrapper">
-
-    <button class="carousel-side carousel-side--left" onclick="carouselTo(_carouselIdx - 1)">
-      <span class="carousel-arrow-icon">←←</span>
-      <div class="carousel-mid">
-        <span class="carousel-arrow-icon">←←</span>
-        <span class="carousel-label" id="carousel-prev-label"></span>
-      </div>
-      <span class="carousel-arrow-icon">←←</span>
-    </button>
-
-    <div class="levels-carousel" id="levels-carousel">
-      <div class="levels" id="levels-track">
-
-        <!-- Karta 0: Kasa biletowa — logowanie placeholder -->
-        <div class="lvl-card lvl-card--auth" onclick="carouselTo(0)">
-          <div class="lvl-main">
-            <span class="lvl-name">Kasa Biletowa</span>
-            <div class="lvl-name-divider"></div>
-            <span class="lvl-desc">Zapisz wyniki, śledź postępy, dołącz do rankingów kinomanów z całej Polski. Globalna tabela, achievementy, daily challenge.</span>
-          </div>
-          <div class="lvl-auth-buttons">
-            {% if user.is_authenticated %}
-              <div class="lvl-auth-welcome">Witaj, {{ user.first_name|default:user.email }}</div>
-              <a class="lvl-auth-btn" href="{% url 'account_logout' %}" onclick="event.stopPropagation()">Wyloguj</a>
-            {% else %}
-              <a class="lvl-auth-btn" href="{% url 'account_login' %}" onclick="event.stopPropagation()">Logowanie</a>
-              <a class="lvl-auth-btn" href="{% url 'account_signup' %}" onclick="event.stopPropagation()">Dołącz</a>
-            {% endif %}
-          </div>
-        </div>
-
-        <!-- Karta 1: Akolita Popcornu -->
-        <div class="lvl-card lvl-card--popcorn" data-lvl="popcorn" onclick="carouselSelect(this)">
-          <div class="lvl-main">
-            <div class="lvl-emoji-row"><span class="lvl-emoji">🍿</span><span class="lvl-emoji-beam"></span><span class="lvl-emoji">🛋️</span></div>
-            <span class="lvl-name">Akolita Popcornu</span>
-            <div class="lvl-name-divider"></div>
-            <span class="lvl-desc">Film to Netflix, chrupanie i chill. Ekspert od sequeli, prequeli i spin-offów. Szybcy i Wściekli to saga życia, odlicza do premiery kolejnego Pieprzyć Mickiewicza.</span>
-            <div class="lvl-quote">
-              <em>"That was the purest experience, even though it was the cheapest one and the cheesiest looking one."</em>
-              <span class="lvl-quote-attr">— James Cameron (Terminator, 1984)</span>
-            </div>
-          </div>
-          <button class="lvl-spoiler-btn" onclick="toggleSpoiler(event,this)">🔒 kliknij jeśli nie boisz się spoilerów</button>
-          <div class="lvl-spoiler-content">
-            <div class="spoiler-text">Najważniejszy jest film — zgadujesz tytuł, klasyczny test 4 opcje. Przygląda Ci się Hubert Urbański, który nieprzypadkowo jest aktorem. Prawie jak Milionerzy.</div>
-          </div>
-        </div>
-
-        <!-- Karta 2: Samozwańczy Kinoman -->
-        <div class="lvl-card lvl-card--kinoman" data-lvl="kinoman" onclick="carouselSelect(this)">
-          <div class="lvl-main">
-            <div class="lvl-emoji-row"><span class="lvl-emoji">🎬</span><span class="lvl-emoji-beam"></span><span class="lvl-emoji">🍷</span></div>
-            <span class="lvl-name">Samozwańczy Kinoman</span>
-            <div class="lvl-name-divider"></div>
-            <span class="lvl-desc">Tłumaczy znajomym na imprezach różnicę między Davidami — Cronenbergiem, Fincherem a Lynchem. Szczytuje przy każdej wzmiance o Villeneuvie. Ukrywa miłość do Marvela.</span>
-            <div class="lvl-quote">
-              <em>"I hate television. I hate it as much as peanuts. But I can't stop eating peanuts."</em>
-              <span class="lvl-quote-attr">— Orson Welles</span>
-            </div>
-          </div>
-          <button class="lvl-spoiler-btn" onclick="toggleSpoiler(event,this)">🔒 kliknij jeśli nie boisz się spoilerów</button>
-          <div class="lvl-spoiler-content">
-            <div class="spoiler-text">Testy są dla dzieci. Wprawiaj w ruch litery — jedna z nich zawsze odkryta przed Twoim gustem. Masz też opcję reżysera za extra punkty (+3) — ale pomyłka kosztuje (-1). Choć czy extra to już sam sobie odpowiedz...</div>
-          </div>
-        </div>
-
-        <!-- Karta 3: Orędownik Wielkiej Kinezy -->
-        <div class="lvl-card lvl-card--kineza" data-lvl="kineza" onclick="carouselSelect(this)">
-          <div class="lvl-main">
-            <div class="lvl-emoji-row"><span class="lvl-emoji">🎞️</span><span class="lvl-emoji-beam"></span><span class="lvl-emoji">🪐</span></div>
-            <span class="lvl-name">Orędownik Wielkiej Kinezy</span>
-            <div class="lvl-name-divider"></div>
-            <span class="lvl-desc">Zostaje na napisach. Nigdy nie wychodzi na siu siu. Płacze z dumą na Malicku. Do każdego outfitu ma inną torbę filmfestiwalową. Ze smutkiem akceptuje ludzi oceniających filmy na Filmwebie.</span>
-            <div class="lvl-quote">
-              <em>"Film is 24 lies per second at the service of truth, or at the service of the attempt to find the truth."</em>
-              <span class="lvl-quote-attr">— Michael Haneke</span>
-            </div>
-          </div>
-          <button class="lvl-spoiler-btn" onclick="toggleSpoiler(event,this)">🔒 kliknij jeśli nie boisz się spoilerów</button>
-          <div class="lvl-spoiler-content">
-            <div class="spoiler-text">Jakże można podawać tytuł bez roku? To jak podanie ręki bez uścisku. Reżyser też opcjonalny, ale stawki te same: +3 lub -1. Bez trailerów, bez Berlinek, bez taryf ulgowych...</div>
-          </div>
-        </div>
-
-      </div>
+      {% if user.is_authenticated %}
+        <input class="nick-input nick-input--authed" id="nick-input" type="text"
+               value="{{ user.first_name|default:user.email }}" maxlength="22"
+               autocomplete="off" disabled/>
+      {% else %}
+        <input class="nick-input" id="nick-input" type="text"
+               placeholder="Przedstaw się wędrowcze…" maxlength="22" autocomplete="off"/>
+      {% endif %}
+      <span class="nick-error" id="nick-error"></span>
     </div>
 
-    <button class="carousel-side carousel-side--right" onclick="carouselTo(_carouselIdx + 1)">
-      <span class="carousel-arrow-icon">→→</span>
-      <div class="carousel-mid">
-        <span class="carousel-arrow-icon">→→</span>
-        <span class="carousel-label" id="carousel-next-label"></span>
-      </div>
-      <span class="carousel-arrow-icon">→→</span>
-    </button>
+    <button class="start-btn start-btn--metal" id="start-btn" onclick="startGame()">▶ &nbsp;Zapal projektor</button>
 
+    <a class="scores-link" href="#" id="scores-link" onclick="toggleScores();return false;">Wyniki</a>
   </div>
 
-  <div class="start-row">
-    <button class="start-btn" id="start-btn" onclick="startGame()" disabled>▶ &nbsp;Zapal projektor</button>
-    <button class="scores-btn" id="scores-btn" onclick="toggleScores()">Wyniki</button>
-  </div>
   <div class="scores-panel" id="scores-panel"></div>
   <p class="scred">© 2026 iwarecki · Dane i obrazy: The Movie Database (TMDB) · nametheframe.com</p>
 </section>

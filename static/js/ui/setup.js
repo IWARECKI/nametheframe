@@ -116,20 +116,31 @@ async function checkNickAvailability(nick) {
 // ── Auth state ───────────────────────────────────────────────────────────────
 let _authNick = null;
 
-async function initAuthBar() {
-  try {
-    const resp = await fetch('/api/me/');
-    if (!resp.ok) return;
-    const data = await resp.json();
-    if (data.authenticated && data.nick) {
-      _authNick = data.nick;
-      const input = document.getElementById('nick-input');
-      input.value = _authNick;
-      input.disabled = true;
-      input.classList.add('nick-input--authed');
-      document.getElementById('auth-status').textContent = data.nick;
-    }
-  } catch(e) { /* stay as guest */ }
+function initAuthBar() {
+  // Django template already sets input value + disabled for authenticated users.
+  // Check DJANGO_USER (injected by template) or fall back to /api/me/.
+  if (typeof DJANGO_USER !== 'undefined' && DJANGO_USER.authenticated && DJANGO_USER.nick) {
+    _authNick = DJANGO_USER.nick;
+    const input = document.getElementById('nick-input');
+    input.value = _authNick;
+    input.disabled = true;
+    input.classList.add('nick-input--authed');
+    const statusEl = document.getElementById('auth-status');
+    if (statusEl) statusEl.textContent = _authNick;
+  } else {
+    // Fallback for static hosting (no Django)
+    fetch('/api/me/').then(r => r.ok ? r.json() : null).then(data => {
+      if (data && data.authenticated && data.nick) {
+        _authNick = data.nick;
+        const input = document.getElementById('nick-input');
+        input.value = _authNick;
+        input.disabled = true;
+        input.classList.add('nick-input--authed');
+        const statusEl = document.getElementById('auth-status');
+        if (statusEl) statusEl.textContent = _authNick;
+      }
+    }).catch(() => {});
+  }
 }
 
 // ── Start game ───────────────────────────────────────────────────────────────
