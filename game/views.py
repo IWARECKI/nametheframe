@@ -218,3 +218,22 @@ def api_log_round(request):
 
     GameRound.objects.create(film_id=film_id, guessed=guessed)
     return JsonResponse({'ok': True})
+
+
+# ── API: nick availability check ──────────────────────────────────────────────
+
+@require_http_methods(['GET'])
+def api_nick_check(request):
+    """Check if a nick is already taken (by any Score or User.first_name)."""
+    nick = request.GET.get('nick', '').strip()
+    if not nick:
+        return JsonResponse({'available': False, 'reason': 'empty'})
+
+    # Check if any existing user has this as first_name
+    from django.contrib.auth.models import User
+    taken_by_user = User.objects.filter(first_name__iexact=nick).exists()
+    # Check if any score used this nick (case-insensitive)
+    taken_by_score = Score.objects.filter(nick__iexact=nick).exists()
+
+    available = not (taken_by_user or taken_by_score)
+    return JsonResponse({'available': available, 'nick': nick})

@@ -23,4 +23,7 @@ urlpatterns = [
 
     # Game round logging
     path('api/rounds/log/', views.api_log_round, name='api_log_round'),
+
+    # Nick availability check
+    path('api/nick-check/', views.api_nick_check, name='api_nick_check'),
 ]
