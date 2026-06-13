@@ -29,166 +29,25 @@
 <!-- Django equivalent: {% block setup %}{% include "partials/setup.html" %}{% endblock %} -->
 <div id="setup-dust"></div>
 <section id="setup">
+  <!-- Auth bar — top strip -->
+  <div class="auth-bar" id="auth-bar">
+    <span class="auth-status" id="auth-status">gość</span>
+  </div>
+
   <div class="brand">Name the <em>Frame</em></div>
   <p class="tagline">Rozpoznaj kadr &nbsp;·&nbsp; Sprawdź swój poziom filmowtajemniczenia</p>
 
-  <div class="form-row">
+  <div class="setup-form">
     <div class="field-wrap">
-      <span class="field-sub">Jak chcesz się zapisać w historii?</span>
       <input class="nick-input" id="nick-input" type="text" placeholder="Przedstaw się wędrowcze…" maxlength="22" autocomplete="off"/>
-    </div>
-    <div class="field-wrap">
-      <span class="field-sub">Gatunek niekoniecznie ludzki</span>
-      <select class="genre-select" id="genre-select">
-        <option value="">— Twój żywioł —</option>
-        <optgroup label="Klasyczne gatunki">
-          <option value="horror">🩸 Horror</option>
-          <option value="thriller">🔪 Thriller</option>
-          <option value="noir">🕵️ Noir</option>
-          <option value="kryminał">🚬 Kryminał</option>
-          <option value="dramat">🎭 Dramat</option>
-          <option value="komedia">😂 Komedia</option>
-          <option value="romans">💔 Romans</option>
-          <option value="melodramat">🌧️ Melodramat</option>
-        </optgroup>
-        <optgroup label="Akcja i przygoda">
-          <option value="akcja">💥 Akcja</option>
-          <option value="przygodowy">🗺️ Przygodowy</option>
-          <option value="western">🤠 Western</option>
-          <option value="wojenny">⚔️ Wojenny</option>
-          <option value="szpiegowski">🕶️ Szpiegowski</option>
-          <option value="superbohaterski">🦸 Superbohaterski</option>
-        </optgroup>
-        <optgroup label="Wyobraźnia i fantastyka">
-          <option value="sci-fi">🚀 Sci-Fi</option>
-          <option value="fantasy">🧙 Fantasy</option>
-          <option value="animacja">✏️ Animacja</option>
-          <option value="baśń">🏰 Baśń</option>
-          <option value="surrealizm">🌀 Surrealizm</option>
-        </optgroup>
-        <optgroup label="Kino artystyczne">
-          <option value="art-house">🎞️ Art-house</option>
-          <option value="slow-cinema">🌿 Slow Cinema</option>
-          <option value="eksperyment">🔬 Eksperyment</option>
-          <option value="esej-filmowy">📖 Esej filmowy</option>
-          <option value="dokumentalny">📷 Dokumentalny</option>
-          <option value="mockumentary">🎤 Mockumentary</option>
-        </optgroup>
-        <optgroup label="Nastrój i klimat">
-          <option value="body-horror">🫀 Body Horror</option>
-          <option value="giallo">🔴 Giallo</option>
-          <option value="yakuza">🏯 Yakuza</option>
-          <option value="road-movie">🚗 Road Movie</option>
-          <option value="coming-of-age">🌱 Coming of Age</option>
-          <option value="mumblecore">☕ Mumblecore</option>
-          <option value="neon-noir">🌃 Neon Noir</option>
-          <option value="musical">🎵 Musical</option>
-        </optgroup>
-      </select>
-    </div>
-  </div>
-
-  <div class="levels-label">Wybierz seans</div>
-  <div class="carousel-wrapper">
-
-    <button class="carousel-side carousel-side--left" onclick="carouselTo(_carouselIdx - 1)">
-      <span class="carousel-arrow-icon">←←</span>
-      <div class="carousel-mid">
-        <span class="carousel-arrow-icon">←←</span>
-        <span class="carousel-label" id="carousel-prev-label"></span>
-      </div>
-      <span class="carousel-arrow-icon">←←</span>
-    </button>
-
-    <div class="levels-carousel" id="levels-carousel">
-      <div class="levels" id="levels-track">
-
-        <!-- Karta 0: Kasa biletowa — logowanie placeholder -->
-        <div class="lvl-card lvl-card--auth" onclick="carouselTo(0)">
-          <div class="lvl-main">
-            <span class="lvl-name">Kasa Biletowa</span>
-            <div class="lvl-name-divider"></div>
-            <span class="lvl-desc">Zapisz wyniki, śledź postępy, dołącz do rankingów kinomanów z całej Polski. Globalna tabela, achievementy, daily challenge.</span>
-          </div>
-          <div class="lvl-auth-buttons">
-            <button class="lvl-auth-btn" onclick="authBtnClick(event,this)">Logowanie<span class="lvl-auth-tooltip">w trakcie zdjęć</span></button>
-            <button class="lvl-auth-btn" onclick="authBtnClick(event,this)">Dołącz<span class="lvl-auth-tooltip">w trakcie zdjęć</span></button>
-            <button class="lvl-auth-btn" onclick="authBtnClick(event,this)">Osiągnięcia<span class="lvl-auth-tooltip">w trakcie zdjęć</span></button>
-          </div>
-        </div>
-
-        <!-- Karta 1: Akolita Popcornu -->
-        <div class="lvl-card lvl-card--popcorn" data-lvl="popcorn" onclick="carouselSelect(this)">
-          <div class="lvl-main">
-            <div class="lvl-emoji-row"><span class="lvl-emoji">🍿</span><span class="lvl-emoji-beam"></span><span class="lvl-emoji">🛋️</span></div>
-            <span class="lvl-name">Akolita Popcornu</span>
-            <div class="lvl-name-divider"></div>
-            <span class="lvl-desc">Film to Netflix, chrupanie i chill. Ekspert od sequeli, prequeli i spin-offów. Szybcy i Wściekli to saga życia, odlicza do premiery kolejnego Pieprzyć Mickiewicza.</span>
-            <div class="lvl-quote">
-              <em>"That was the purest experience, even though it was the cheapest one and the cheesiest looking one."</em>
-              <span class="lvl-quote-attr">— James Cameron (Terminator, 1984)</span>
-            </div>
-          </div>
-          <button class="lvl-spoiler-btn" onclick="toggleSpoiler(event,this)">🔒 kliknij jeśli nie boisz się spoilerów</button>
-          <div class="lvl-spoiler-content">
-            <div class="spoiler-text">Najważniejszy jest film — zgadujesz tytuł, klasyczny test 4 opcje. Przygląda Ci się Hubert Urbański, który nieprzypadkowo jest aktorem. Prawie jak Milionerzy.</div>
-          </div>
-        </div>
-
-        <!-- Karta 2: Samozwańczy Kinoman -->
-        <div class="lvl-card lvl-card--kinoman" data-lvl="kinoman" onclick="carouselSelect(this)">
-          <div class="lvl-main">
-            <div class="lvl-emoji-row"><span class="lvl-emoji">🎬</span><span class="lvl-emoji-beam"></span><span class="lvl-emoji">🍷</span></div>
-            <span class="lvl-name">Samozwańczy Kinoman</span>
-            <div class="lvl-name-divider"></div>
-            <span class="lvl-desc">Tłumaczy znajomym na imprezach różnicę między Davidami — Cronenbergiem, Fincherem a Lynchem. Szczytuje przy każdej wzmiance o Villeneuvie. Ukrywa miłość do Marvela.</span>
-            <div class="lvl-quote">
-              <em>"I hate television. I hate it as much as peanuts. But I can't stop eating peanuts."</em>
-              <span class="lvl-quote-attr">— Orson Welles</span>
-            </div>
-          </div>
-          <button class="lvl-spoiler-btn" onclick="toggleSpoiler(event,this)">🔒 kliknij jeśli nie boisz się spoilerów</button>
-          <div class="lvl-spoiler-content">
-            <div class="spoiler-text">Testy są dla dzieci. Wprawiaj w ruch litery — jedna z nich zawsze odkryta przed Twoim gustem. Masz też opcję reżysera za extra punkty (+3) — ale pomyłka kosztuje (-1). Choć czy extra to już sam sobie odpowiedz...</div>
-          </div>
-        </div>
-
-        <!-- Karta 3: Orędownik Wielkiej Kinezy -->
-        <div class="lvl-card lvl-card--kineza" data-lvl="kineza" onclick="carouselSelect(this)">
-          <div class="lvl-main">
-            <div class="lvl-emoji-row"><span class="lvl-emoji">🎞️</span><span class="lvl-emoji-beam"></span><span class="lvl-emoji">🪐</span></div>
-            <span class="lvl-name">Orędownik Wielkiej Kinezy</span>
-            <div class="lvl-name-divider"></div>
-            <span class="lvl-desc">Zostaje na napisach. Nigdy nie wychodzi na siu siu. Płacze z dumą na Malicku. Do każdego outfitu ma inną torbę filmfestiwalową. Ze smutkiem akceptuje ludzi oceniających filmy na Filmwebie.</span>
-            <div class="lvl-quote">
-              <em>"Film is 24 lies per second at the service of truth, or at the service of the attempt to find the truth."</em>
-              <span class="lvl-quote-attr">— Michael Haneke</span>
-            </div>
-          </div>
-          <button class="lvl-spoiler-btn" onclick="toggleSpoiler(event,this)">🔒 kliknij jeśli nie boisz się spoilerów</button>
-          <div class="lvl-spoiler-content">
-            <div class="spoiler-text">Jakże można podawać tytuł bez roku? To jak podanie ręki bez uścisku. Reżyser też opcjonalny, ale stawki te same: +3 lub -1. Bez trailerów, bez Berlinek, bez taryf ulgowych...</div>
-          </div>
-        </div>
-
-      </div>
+      <span class="nick-error" id="nick-error"></span>
     </div>
 
-    <button class="carousel-side carousel-side--right" onclick="carouselTo(_carouselIdx + 1)">
-      <span class="carousel-arrow-icon">→→</span>
-      <div class="carousel-mid">
-        <span class="carousel-arrow-icon">→→</span>
-        <span class="carousel-label" id="carousel-next-label"></span>
-      </div>
-      <span class="carousel-arrow-icon">→→</span>
-    </button>
+    <button class="start-btn start-btn--metal" id="start-btn" onclick="startGame()">▶ &nbsp;Zapal projektor</button>
 
+    <a class="scores-link" href="#" id="scores-link" onclick="toggleScores();return false;">Wyniki</a>
   </div>
 
-  <div class="start-row">
-    <button class="start-btn" id="start-btn" onclick="startGame()" disabled>▶ &nbsp;Zapal projektor</button>
-    <button class="scores-btn" id="scores-btn" onclick="toggleScores()">Wyniki</button>
-  </div>
   <div class="scores-panel" id="scores-panel"></div>
   <p class="scred">© 2026 iwarecki · Dane i obrazy: The Movie Database (TMDB) · nametheframe.com</p>
 </section>
@@ -248,6 +107,7 @@
 <!-- Service layer -->
 <script src="js/services/tmdb.js"></script>
 <script src="js/services/scores.js"></script>
+<script src="js/services/films_loader.js"></script>
 
 <!-- Game logic (no DOM dependencies) -->
 <script src="js/game/scoring.js"></script>

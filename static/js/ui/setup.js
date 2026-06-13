@@ -1,156 +1,187 @@
-// Django equivalent: views/setup.py + forms/setup.py
-// In Django:
-//   class SetupForm(forms.Form):
-//       nick  = forms.CharField(max_length=22)
-//       genre = forms.ChoiceField(choices=GENRE_CHOICES)
-//   class SetupView(FormView):
-//       form_class = SetupForm
-//       def form_valid(self, form): ...  # start session, redirect to game
+// ── Setup screen — minimalist: nick + "Zapal projektor" ──────────────────────
+// Default level is popcorn (hidden). No carousel, no genre select.
 
-// Wire up live validation for nick and genre fields.
-['nick-input', 'genre-select'].forEach(id => {
-  document.getElementById(id).addEventListener('change', checkReady);
-  document.getElementById(id).addEventListener('input',  checkReady);
-});
+// ── Defaults (under the hood) ────────────────────────────────────────────────
+S.level = 'popcorn';
+S.diff  = 'test';
+S.genre = 'casual';
 
-// Enable/disable the start button based on form completeness.
-// Django equivalent: form.is_valid() — but handled client-side for UX.
-function checkReady() {
-  const nick  = document.getElementById('nick-input').value.trim();
-  const genre = document.getElementById('genre-select').value;
-  document.getElementById('start-btn').disabled = !(nick && genre && S.level);
+// ── Web Audio: heavy clunk & error buzz ──────────────────────────────────────
+let _audioCtx = null;
+function getAudioCtx() {
+  if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return _audioCtx;
 }
 
-// ── Circular Carousel ─────────────────────────────────────────────────────
-// 4 cards: 0=Kasa, 1=Akolita, 2=Kinoman, 3=Kineza.
-// Circular: wraps with modulo so Kineza→right→Kasa and Kasa→left→Kineza.
-// Navigation labels update dynamically to show what's adjacent.
+function playClunk() {
+  try {
+    const ctx = getAudioCtx();
+    // Low-frequency thump
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(80, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(35, ctx.currentTime + 0.12);
+    gain.gain.setValueAtTime(0.6, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.2);
 
-let _carouselIdx = 1; // start on Akolita Popcornu
-
-const _CARD_LABELS = [
-  'KASA BILETOWA',
-  'AKOLITA POPCORNU',
-  'KINOMAN',
-  'WIELKA KINEZA',
-];
-
-function carouselTo(idx) {
-  const carousel = document.getElementById('levels-carousel');
-  const track    = document.getElementById('levels-track');
-  if (!carousel || !track) return;
-  const cards = [...track.querySelectorAll('.lvl-card')];
-  const n = cards.length;
-  if (!n) return;
-
-  // Circular wrap
-  _carouselIdx = ((idx % n) + n) % n;
-
-  // Centre the active card
-  const cw    = carousel.offsetWidth;
-  const cardW = cards[0].offsetWidth;
-  const gap   = parseFloat(getComputedStyle(track).gap) || 20;
-  const tx    = (cw - cardW) / 2 - _carouselIdx * (cardW + gap);
-  track.style.transform = `translateX(${tx}px)`;
-
-  // Active class drives CSS accent colour + no blur
-  cards.forEach((c, i) => c.classList.toggle('active', i === _carouselIdx));
-
-  // Dynamic nav labels — generic prev/next
-  const prevEl  = document.getElementById('carousel-prev-label');
-  const nextEl  = document.getElementById('carousel-next-label');
-  if (prevEl) prevEl.textContent = 'poprzedni';
-  if (nextEl) nextEl.textContent = 'następny';
-
-  // Game state — auth card has no data-lvl, clears the level selection
-  const lvl = cards[_carouselIdx].dataset.lvl || null;
-  S.level = lvl;
-  S.diff  = lvl === 'popcorn' ? 'test' : lvl === 'kinoman' ? 'letter' : lvl === 'kineza' ? 'expert' : null;
-  checkReady();
+    // Metallic click overlay
+    const click = ctx.createOscillator();
+    const clickGain = ctx.createGain();
+    click.type = 'square';
+    click.frequency.setValueAtTime(2200, ctx.currentTime);
+    click.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.03);
+    clickGain.gain.setValueAtTime(0.15, ctx.currentTime);
+    clickGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
+    click.connect(clickGain);
+    clickGain.connect(ctx.destination);
+    click.start(ctx.currentTime);
+    click.stop(ctx.currentTime + 0.08);
+  } catch(e) { /* audio not available */ }
 }
 
-// Called by onclick on playable level cards
-function carouselSelect(card) {
-  const cards = [...document.querySelectorAll('#levels-track .lvl-card')];
-  carouselTo(cards.indexOf(card));
+function playErrorBuzz() {
+  try {
+    const ctx = getAudioCtx();
+    // Short static/crackle noise
+    const bufferSize = ctx.sampleRate * 0.08;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize);
+    }
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+
+    // Snap: short square wave
+    const snap = ctx.createOscillator();
+    const snapGain = ctx.createGain();
+    snap.type = 'sawtooth';
+    snap.frequency.setValueAtTime(120, ctx.currentTime);
+    snapGain.gain.setValueAtTime(0.3, ctx.currentTime);
+    snapGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
+    snap.connect(snapGain);
+    snapGain.connect(ctx.destination);
+    snap.start(ctx.currentTime);
+    snap.stop(ctx.currentTime + 0.07);
+
+    const noiseGain = ctx.createGain();
+    noiseGain.gain.setValueAtTime(0.25, ctx.currentTime);
+    noiseGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.08);
+    noise.connect(noiseGain);
+    noiseGain.connect(ctx.destination);
+    noise.start(ctx.currentTime);
+  } catch(e) { /* audio not available */ }
 }
 
-// Initialise: show Akolita (idx 1) after first paint, spawn setup dust
-window.addEventListener('load', () => {
-  carouselTo(1);
-  spawnSetupDust();
-});
+// ── Nick error animation (neon flash) ────────────────────────────────────────
+function showNickError(msg) {
+  const input = document.getElementById('nick-input');
+  const errorEl = document.getElementById('nick-error');
 
-function spawnSetupDust() {
-  const container = document.getElementById('setup-dust');
-  if (!container) return;
-  container.innerHTML = '';
-  for (let i = 0; i < 140; i++) {
-    const d = document.createElement('div');
-    d.className = 'setup-dust-dot';
-    const size = Math.random() < 0.65
-      ? (0.9 + Math.random() * 1.4)   // small 0.9–2.3px
-      : (2.3 + Math.random() * 1.8);  // larger 2.3–4.1px
-    d.style.width  = size + 'px';
-    d.style.height = size + 'px';
-    d.style.left   = (Math.random() * 100) + '%';
-    d.style.top    = (10 + Math.random() * 85) + '%';
-    d.style.animationDuration = (6 + Math.random() * 12) + 's';
-    d.style.animationDelay   = (Math.random() * 10) + 's';
-    // ~30% silver/white, rest gold
-    if (Math.random() < 0.3) d.style.background = 'rgba(240,235,226,.7)';
-    container.appendChild(d);
+  // Flash input 3 times
+  input.classList.add('neon-error-flash');
+  setTimeout(() => input.classList.remove('neon-error-flash'), 350);
+
+  // Show error text with burnt-bulb effect
+  errorEl.textContent = msg;
+  errorEl.classList.add('visible', 'burnt-flash');
+  setTimeout(() => errorEl.classList.remove('burnt-flash'), 400);
+
+  playErrorBuzz();
+}
+
+function clearNickError() {
+  const errorEl = document.getElementById('nick-error');
+  errorEl.classList.remove('visible', 'burnt-flash');
+  errorEl.textContent = '';
+}
+
+// ── Nick check against backend ───────────────────────────────────────────────
+async function checkNickAvailability(nick) {
+  try {
+    const resp = await fetch(`/api/nick-check/?nick=${encodeURIComponent(nick)}`);
+    if (!resp.ok) return true; // fail open on server error
+    const data = await resp.json();
+    return data.available;
+  } catch(e) {
+    return true; // fail open on network error
   }
 }
 
-// Toggle the spoiler section on a level card.
-// Isolated click event — does not bubble up to carouselSelect().
-function toggleSpoiler(e, btn) {
-  e.stopPropagation();
-  const content = btn.nextElementSibling;
-  const isOpen  = content.classList.contains('open');
-  // Close any other open spoilers first
-  document.querySelectorAll('.lvl-spoiler-content.open').forEach(el => {
-    el.classList.remove('open');
-    const b = el.previousElementSibling;
-    b.textContent = '🔒 kliknij jeśli nie boisz się spoilerów';
-    b.classList.remove('open');
-  });
-  if (!isOpen) {
-    content.classList.add('open');
-    btn.textContent = '🔓 schowaj mechanikę';
-    btn.classList.add('open');
-  }
+// ── Auth state ───────────────────────────────────────────────────────────────
+let _authNick = null;
+
+async function initAuthBar() {
+  try {
+    const resp = await fetch('/api/me/');
+    if (!resp.ok) return;
+    const data = await resp.json();
+    if (data.authenticated && data.nick) {
+      _authNick = data.nick;
+      const input = document.getElementById('nick-input');
+      input.value = _authNick;
+      input.disabled = true;
+      input.classList.add('nick-input--authed');
+      document.getElementById('auth-status').textContent = data.nick;
+    }
+  } catch(e) { /* stay as guest */ }
 }
 
-// Validate setup, fire projector animation, preload films, start game.
-// Django equivalent: SetupView.form_valid() — saves session, redirects to game.
+// ── Start game ───────────────────────────────────────────────────────────────
 async function startGame() {
-  const nick  = document.getElementById('nick-input').value.trim();
-  const genre = document.getElementById('genre-select').value;
-  if (!nick || !genre || !S.level) return;
+  const input = document.getElementById('nick-input');
+  const nick = input.value.trim();
+  const btn = document.getElementById('start-btn');
+
+  // Validate nick presence
+  if (!nick) {
+    showNickError('Podaj pseudonim, wędrowcze');
+    return;
+  }
+
+  // Play clunk immediately on press for tactile feel
+  playClunk();
+
+  // Disable button during check
+  btn.disabled = true;
+  btn.classList.add('checking');
+
+  // Check nick availability (skip for authed users)
+  if (!_authNick) {
+    const available = await checkNickAvailability(nick);
+    if (!available) {
+      btn.disabled = false;
+      btn.classList.remove('checking');
+      showNickError('Ten pseudonim jest już na taśmie');
+      return;
+    }
+  }
+
+  clearNickError();
 
   S.nick  = nick;
-  S.genre = genre;
+  // genre stays 'casual' — no select needed
 
-  const btn   = document.getElementById('start-btn');
   const flash = document.getElementById('screen-flash');
 
   // Phase 1: button fires (lamp explosion)
   btn.classList.add('firing');
-  btn.disabled = true;
 
   // Phase 2: full-screen flash at peak of button animation (~450ms)
   setTimeout(() => {
     if (flash) flash.classList.add('bright');
-    // Fade flash out after brief hold
     setTimeout(() => {
       if (flash) { flash.classList.remove('bright'); flash.classList.add('dim'); }
       setTimeout(() => { if (flash) flash.classList.remove('dim'); }, 600);
     }, 220);
   }, 420);
 
-  // Phase 3: load films from API (fallback to static), preload backdrops, then reveal game
+  // Phase 3: load films from API, preload backdrops, then reveal game
   await loadFilmsFromAPI();
   await Promise.all([
     preloadAllFilms(),
@@ -171,15 +202,30 @@ async function startGame() {
   nextRound();
 }
 
-// Auth button — show tooltip briefly, block bubbling to card
-function authBtnClick(e, btn) {
-  e.stopPropagation();
-  btn.classList.add('tip-show');
-  setTimeout(() => btn.classList.remove('tip-show'), 1800);
+// ── Setup dust particles ─────────────────────────────────────────────────────
+function spawnSetupDust() {
+  const container = document.getElementById('setup-dust');
+  if (!container) return;
+  container.innerHTML = '';
+  for (let i = 0; i < 140; i++) {
+    const d = document.createElement('div');
+    d.className = 'setup-dust-dot';
+    const size = Math.random() < 0.65
+      ? (0.9 + Math.random() * 1.4)
+      : (2.3 + Math.random() * 1.8);
+    d.style.width  = size + 'px';
+    d.style.height = size + 'px';
+    d.style.left   = (Math.random() * 100) + '%';
+    d.style.top    = (10 + Math.random() * 85) + '%';
+    d.style.animationDuration = (6 + Math.random() * 12) + 's';
+    d.style.animationDelay   = (Math.random() * 10) + 's';
+    if (Math.random() < 0.3) d.style.background = 'rgba(240,235,226,.7)';
+    container.appendChild(d);
+  }
 }
 
-// Toggle scores panel on setup screen — global rankings, one tab per level.
-let _scoreTab = 'kineza';
+// ── Scores panel (kept from original) ────────────────────────────────────────
+let _scoreTab = 'popcorn';
 
 function toggleScores() {
   const panel = document.getElementById('scores-panel');
@@ -210,3 +256,11 @@ async function renderScorePanel(level) {
     return `<div class="sp-row"><span class="sp-pos">${medal}</span><span class="sp-nick">${he(s.nick)}</span><span class="sp-score">${s.score}</span><span class="sp-date">${date}</span></div>`;
   }).join('');
 }
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+window.addEventListener('load', () => {
+  spawnSetupDust();
+  initAuthBar();
+  // Clear error on typing
+  document.getElementById('nick-input').addEventListener('input', clearNickError);
+});
