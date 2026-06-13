@@ -15,9 +15,30 @@ async function loadFilmImages(film) {
   }
 }
 
-// Preload all films in parallel before the game starts.
+// Preload backdrops for a batch of films (parallel).
+async function preloadFilmBatch(films) {
+  await Promise.all(films.map(loadFilmImages));
+}
+
+// Preload enough films to start quickly (first 5), then continue in background.
 async function preloadAllFilms() {
-  await Promise.all(FILMS.map(loadFilmImages));
+  const unloaded = FILMS.filter(f => !tmdbCache[f.id]);
+  if (!unloaded.length) return;
+
+  // Load first batch fast (enough for first few rounds)
+  const firstBatch = unloaded.slice(0, 5);
+  await preloadFilmBatch(firstBatch);
+
+  // Continue loading the rest in background (non-blocking)
+  const rest = unloaded.slice(5);
+  if (rest.length) {
+    // Load in chunks of 5 to avoid hammering the backend
+    (async () => {
+      for (let i = 0; i < rest.length; i += 5) {
+        await preloadFilmBatch(rest.slice(i, i + 5));
+      }
+    })();
+  }
 }
 
 // Pick a random cached backdrop URL for a given film id.

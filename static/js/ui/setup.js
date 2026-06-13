@@ -199,11 +199,11 @@ async function startGame() {
     }, 220);
   }, 420);
 
-  // Phase 3: load films from API, preload backdrops, then reveal game
+  // Phase 3: load films from API, preload first batch of backdrops, then reveal game
   await loadFilmsFromAPI();
   await Promise.all([
     preloadAllFilms(),
-    new Promise(r => setTimeout(r, 700)),
+    new Promise(r => setTimeout(r, 400)),  // minimum for flash animation
   ]);
 
   S.round = 0;
