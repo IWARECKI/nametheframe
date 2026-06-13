@@ -21,12 +21,22 @@ def index(request):
     POST /api/scores/save/. Without it, every save returns 403.
     """
     user = request.user
+    # Nick = first_name, or fallback to last played score nick
+    nick = None
+    if user.is_authenticated:
+        nick = user.first_name or None
+        if not nick:
+            last_score = Score.objects.filter(user=user).order_by('-ts').first()
+            if last_score:
+                nick = last_score.nick
+
     ctx = {
         'user_json': json.dumps({
             'authenticated': user.is_authenticated,
             'email': user.email if user.is_authenticated else None,
-            'nick': user.first_name or None if user.is_authenticated else None,
-        })
+            'nick': nick,
+        }),
+        'player_nick': nick,  # for template rendering
     }
     return render(request, 'index.html', ctx)
 
@@ -37,10 +47,18 @@ def api_me(request):
     user = request.user
     if not user.is_authenticated:
         return JsonResponse({'authenticated': False})
+
+    # Nick = first_name, or fallback to last score's nick
+    nick = user.first_name or None
+    if not nick:
+        last_score = Score.objects.filter(user=user).order_by('-ts').first()
+        if last_score:
+            nick = last_score.nick
+
     return JsonResponse({
         'authenticated': True,
         'email': user.email,
-        'nick': user.first_name or None,  # None if no nick set — don't use email
+        'nick': nick,
         'id': user.id,
     })
 
@@ -98,6 +116,13 @@ def api_scores_save(request):
         score=score,
         duration_ms=duration_ms,
     )
+
+    # Persist nick as user's first_name for future sessions
+    if request.user.is_authenticated and nick:
+        if request.user.first_name != nick:
+            request.user.first_name = nick
+            request.user.save(update_fields=['first_name'])
+
     return JsonResponse({'ok': True})
 
 
