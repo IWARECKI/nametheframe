@@ -703,3 +703,37 @@ Name the Frame to nie quiz — to **kuratorskie doświadczenie filmowe** z meta-
 - `templates/index.html` — `player_nick` zamiast `user.first_name`
 - `static/js/services/tmdb.js` + `js/services/tmdb.js` — lazy preload
 - `static/js/ui/setup.js` + `js/ui/setup.js` — reduced delay
+
+
+---
+
+### 2026-06-14 — Karta Widza (profil gracza MVP)
+
+**Nowa funkcjonalność: Panel profilu gracza "Karta Widza"**
+
+**Backend:**
+- Model `PlayerProfile` (OneToOne → User): `last_nick_change`, `games_played`, `frames_guessed`
+- Migracja `0006_playerprofile`
+- Signal `post_save` na Score → aktualizuje `games_played` na profilu
+- `api_scores_save` rozszerzony o `frames_guessed` z payloadu
+- `GET /api/profile/stats/` — nick, statystyki, cooldown status
+- `POST /api/profile/nick/` — zmiana nicku z walidacją (1-22 znaków, unikalność, 30-dniowy cooldown)
+
+**Frontend:**
+- Złoty Bilet 🎫 — button fixed top-right, gold shimmer animation, hover scale(1.05)
+- Panel "Karta Widza" — slide-in z góry (cubic-bezier bounce), backdrop z blur
+- Statystyki: "Rozegrane seanse" + "Trafione kadry" (neonowe liczniki)
+- Formularz zmiany nicku z walidacją
+- Blokada cooldownu: czerwona taśma ostrzegawcza "Taśma zablokowana przez: X dni"
+- Shake animation + locked sound na kliknięciu zablokowanego przycisku
+- Audio: ticket reveal (ascending shimmer), panel close (descending), nick success (C-E-G ping), locked (square wave)
+
+**Pliki dodane:**
+- `game/signals.py`, `game/migrations/0006_playerprofile.py`
+- `static/js/ui/profile.js` + `js/ui/profile.js`
+- `.kiro/specs/karta-widza/` (requirements, design, tasks)
+
+**Pliki zmodyfikowane:**
+- `game/models.py`, `game/views.py`, `game/urls.py`, `game/apps.py`
+- `templates/index.html`, `static/css/main.css`, `css/main.css`
+- `static/js/services/scores.js`, `js/services/scores.js`
