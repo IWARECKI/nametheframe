@@ -92,6 +92,7 @@ function renderMetaPills(film) {
     const eraLabel = ERA_LABELS[film.era] || film.era;
     pills += `<span class="pill pill-era">⏳ ${eraLabel}</span>`;
   }
+  pills += renderHeartButton();
   return `<div class="meta-pills">${pills}</div>`;
 }
 
@@ -186,11 +187,10 @@ function showResult(cls, html) {
   rb.innerHTML  = html;
   rb.style.display = 'block';
   document.getElementById('frt').textContent = S.cur.title;
-  document.getElementById('frm').textContent = `${S.cur.dir} · ${S.cur.y}`;
+  document.getElementById('frm').style.display = 'none';
   const fr = document.getElementById('fr');
   fr.querySelectorAll('.meta-pills, .heart-btn').forEach(el => el.remove());
   fr.insertAdjacentHTML('beforeend', renderMetaPills(S.cur));
-  fr.insertAdjacentHTML('beforeend', renderHeartButton());
   fr.style.display = 'block';
   document.getElementById('nb').style.display = 'block';
   smartTimer.start();
@@ -208,11 +208,10 @@ function sr(ok, pts, ct, ex) {
     : `✗ &nbsp;Nie. To: &nbsp;<strong>${he(ct)}</strong>${ex}`;
   rb.style.display = 'block';
   document.getElementById('frt').textContent = S.cur.title;
-  document.getElementById('frm').textContent = `${S.cur.dir} · ${S.cur.y}`;
+  document.getElementById('frm').style.display = 'none';
   const fr = document.getElementById('fr');
   fr.querySelectorAll('.meta-pills, .heart-btn').forEach(el => el.remove());
   fr.insertAdjacentHTML('beforeend', renderMetaPills(S.cur));
-  fr.insertAdjacentHTML('beforeend', renderHeartButton());
   fr.style.display = 'block';
   document.getElementById('nb').style.display = 'block';
   smartTimer.start();
