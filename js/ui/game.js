@@ -191,9 +191,18 @@ function showResult(cls, html) {
   fr.querySelectorAll('.meta-pills').forEach(el => el.remove());
   fr.insertAdjacentHTML('beforeend', renderMetaPills(S.cur));
   fr.style.display = 'block';
-  // Floating heart in qinner
+  // Floating heart in qinner — only reveal on correct answer
   const qi = fr.closest('.qinner');
-  if (qi) { qi.querySelectorAll('.heart-btn').forEach(el => el.remove()); qi.insertAdjacentHTML('afterbegin', renderHeartButton()); }
+  if (qi) {
+    qi.querySelectorAll('.heart-btn').forEach(el => el.remove());
+    qi.insertAdjacentHTML('afterbegin', renderHeartButton());
+    if (cls === 'ok') {
+      setTimeout(() => {
+        const hb = qi.querySelector('.heart-btn');
+        if (hb) { hb.classList.add('heart-revealed'); playStampSound(); }
+      }, 400);
+    }
+  }
   document.getElementById('nb').style.display = 'block';
   smartTimer.start();
 }
@@ -215,9 +224,18 @@ function sr(ok, pts, ct, ex) {
   fr.querySelectorAll('.meta-pills').forEach(el => el.remove());
   fr.insertAdjacentHTML('beforeend', renderMetaPills(S.cur));
   fr.style.display = 'block';
-  // Floating heart in qinner
+  // Floating heart in qinner — only reveal on correct answer
   const qi = fr.closest('.qinner');
-  if (qi) { qi.querySelectorAll('.heart-btn').forEach(el => el.remove()); qi.insertAdjacentHTML('afterbegin', renderHeartButton()); }
+  if (qi) {
+    qi.querySelectorAll('.heart-btn').forEach(el => el.remove());
+    qi.insertAdjacentHTML('afterbegin', renderHeartButton());
+    if (ok) {
+      setTimeout(() => {
+        const hb = qi.querySelector('.heart-btn');
+        if (hb) { hb.classList.add('heart-revealed'); playStampSound(); }
+      }, 400);
+    }
+  }
   document.getElementById('nb').style.display = 'block';
   smartTimer.start();
 }
@@ -256,6 +274,39 @@ function playHeartSound() {
     osc.stop(ctx.currentTime + 0.1);
   } catch (e) {
     // Silently ignore — Web Audio may not be available
+  }
+}
+
+// Play a mechanical stamp/click sound when the heart slot reveals.
+function playStampSound() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const t = ctx.currentTime;
+    // Thud — low freq burst
+    const osc1 = ctx.createOscillator();
+    const g1 = ctx.createGain();
+    osc1.type = 'square';
+    osc1.frequency.setValueAtTime(120, t);
+    osc1.frequency.exponentialRampToValueAtTime(50, t + 0.08);
+    g1.gain.setValueAtTime(0.3, t);
+    g1.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+    osc1.connect(g1);
+    g1.connect(ctx.destination);
+    osc1.start(t);
+    osc1.stop(t + 0.1);
+    // Click — high freq tick
+    const osc2 = ctx.createOscillator();
+    const g2 = ctx.createGain();
+    osc2.type = 'triangle';
+    osc2.frequency.value = 1200;
+    g2.gain.setValueAtTime(0.15, t);
+    g2.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
+    osc2.connect(g2);
+    g2.connect(ctx.destination);
+    osc2.start(t);
+    osc2.stop(t + 0.05);
+  } catch (e) {
+    // Silently ignore
   }
 }
 
