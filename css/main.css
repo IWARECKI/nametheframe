@@ -695,7 +695,8 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .hprog{position:fixed;top:44px;left:0;right:0;height:2px;background:rgba(255,255,255,.05);z-index:20;}
 .hprogf{height:100%;background:var(--gold);transition:width .5s ease;}
 .floader{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;font-size:9px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;z-index:5;transition:opacity .3s;}
-.qpanel{position:fixed;bottom:10%;left:50%;transform:translateX(-50%);z-index:10;padding:2rem 2rem 1.8rem;background:radial-gradient(ellipse at center,rgba(8,10,8,.4) 0%,rgba(8,10,8,.2) 60%,transparent 100%);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.04);border-radius:16px;max-height:70vh;overflow-y:auto;overflow-x:visible;width:calc(100% - 2rem);max-width:560px;box-shadow:none;}
+.qpanel{position:fixed;bottom:10%;left:50%;transform:translateX(-50%);z-index:10;padding:2rem 2rem 1.8rem;background:radial-gradient(ellipse at center,rgba(8,10,8,.4) 0%,rgba(8,10,8,.2) 60%,transparent 100%);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.04);border-radius:16px;max-height:70vh;overflow-y:auto;overflow-x:visible;width:calc(100% - 2rem);max-width:560px;box-shadow:none;cursor:grab;transition:transform .1s ease;}
+.qpanel.is-dragging{cursor:grabbing;user-select:none;-webkit-user-select:none;transition:none;}
 .qinner{position:relative;max-width:520px;margin:0 auto;overflow:visible;}
 .qtxt{font-family:'Cormorant Garamond',serif;font-size:clamp(1.2rem,3vw,1.625rem);font-weight:300;line-height:1.3;margin-bottom:.875rem;}
 
@@ -746,7 +747,7 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 
 .frev{margin-top:.75rem;padding:.75rem 1rem;background:rgba(6,6,6,.55);border:1px solid var(--border);border-radius:var(--r);display:none;backdrop-filter:blur(4px);}
 .frev .frt-row{display:flex;align-items:center;flex-direction:row;}
-.frt{font-family:'Cormorant Garamond',serif;font-size:1rem;margin-bottom:2px;}
+.frt{font-family:'Cormorant Garamond',serif;font-size:1.2em;margin-bottom:2px;color:rgba(255,248,230,.95);text-shadow:0 1px 6px rgba(201,169,110,.25);}
 .frm{font-size:10px;letter-spacing:.1em;color:var(--muted);}
 
 /* ── Heart / Favorite button ─────────────────────────────────── */
@@ -849,7 +850,8 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .pill-dir{border-color:rgba(201,169,110,.3);color:rgba(201,169,110,.85);}
 .pill-year{border-color:rgba(140,180,220,.25);color:rgba(160,200,240,.8);}
 .pill-country{border-color:rgba(120,200,160,.25);color:rgba(140,220,180,.8);}
-.pill-era{border-color:rgba(180,140,220,.25);color:rgba(200,160,240,.8);}
+.pill-genre{border-color:rgba(220,180,100,.25);color:rgba(240,200,120,.8);}
+.meta-pills-row2{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
 
 .nbtn{--timer-progress:0;margin-top:.75rem;width:100%;background:linear-gradient(90deg,rgba(201,169,110,.18) calc(var(--timer-progress)*100%),transparent calc(var(--timer-progress)*100%));border:1px solid rgba(255,255,255,.12);border-radius:var(--r);padding:.7rem;color:var(--muted);font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.25em;text-transform:uppercase;cursor:pointer;transition:all .12s;display:none;}
 .nbtn:hover{border-color:var(--gold);color:var(--gold);}

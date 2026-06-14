@@ -1,4 +1,4 @@
-// Django equivalent: views/game.py — handles game round interactions
+﻿// Django equivalent: views/game.py â€” handles game round interactions
 // In Django each answer submission would be a POST request:
 //   class AnswerView(LoginRequiredMixin, View):
 //       def post(self, request): ...  # validate answer, update score, return JSON
@@ -33,10 +33,10 @@ function imgErr() {
     <div style="text-align:center;">
       <div style="margin-bottom:.75rem;font-size:10px;letter-spacing:.2em;color:var(--muted);">BRAK KADRU</div>
       <div style="font-size:9px;color:var(--muted);margin-bottom:1rem;max-width:280px;line-height:1.6;">
-        Obraz nie załadował się. Potwierdź brak — po 3 zgłoszeniach film zostanie usunięty z puli.
+        Obraz nie zaĹ‚adowaĹ‚ siÄ™. PotwierdĹş brak â€” po 3 zgĹ‚oszeniach film zostanie usuniÄ™ty z puli.
       </div>
-      <button onclick="confirmBrokenAndSkip()" style="background:var(--gold);color:#080808;border:none;border-radius:var(--r);padding:.6rem 1.5rem;font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;margin-right:8px;">Potwierdź brak</button>
-      <button onclick="skipBrokenRound()" style="background:transparent;border:1px solid var(--border);border-radius:var(--r);padding:.6rem 1.5rem;color:var(--muted);font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;">Pomiń</button>
+      <button onclick="confirmBrokenAndSkip()" style="background:var(--gold);color:#080808;border:none;border-radius:var(--r);padding:.6rem 1.5rem;font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;margin-right:8px;">PotwierdĹş brak</button>
+      <button onclick="skipBrokenRound()" style="background:transparent;border:1px solid var(--border);border-radius:var(--r);padding:.6rem 1.5rem;color:var(--muted);font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;">PomiĹ„</button>
     </div>`;
   loader.style.opacity = '1';
 }
@@ -73,32 +73,27 @@ function skipBrokenRound() {
 
 // --- Metadata Pills ---
 
-const ERA_LABELS = {
-  silent: 'Era ciszy',
-  golden: 'Złoty wiek',
-  new_wave: 'Nowa fala',
-  modern: 'Kino współczesne',
-  contemporary: 'Najnowsze',
-};
-
 function renderMetaPills(film) {
-  let pills = '';
-  pills += `<span class="pill pill-dir">🎬 ${film.dir}</span>`;
-  pills += `<span class="pill pill-year">📅 ${film.y}</span>`;
+  // Row 1: Director, Year, Country
+  let row1 = '';
+  row1 += `<span class="pill pill-dir">đźŽ¬ ${film.dir}</span>`;
+  row1 += `<span class="pill pill-year">đź“… ${film.y}</span>`;
   if (film.country) {
-    pills += `<span class="pill pill-country">🌍 ${film.country}</span>`;
+    row1 += `<span class="pill pill-country">đźŚŤ ${film.country}</span>`;
   }
-  if (film.era) {
-    const eraLabel = ERA_LABELS[film.era] || film.era;
-    pills += `<span class="pill pill-era">⏳ ${eraLabel}</span>`;
+  // Row 2: Genres
+  let row2 = '';
+  if (film.genres && film.genres.length) {
+    const genreText = film.genres.slice(0, 3).join(' Â· ');
+    row2 = `<div class="meta-pills-row2"><span class="pill pill-genre">đźŽ­ ${genreText}</span></div>`;
   }
-  return `<div class="meta-pills">${pills}</div>`;
+  return `<div class="meta-pills">${row1}</div>${row2}`;
 }
 
 // Returns HTML for the heart/favorite button shown after each round result.
 // Positioned as floating bookmark in top-right of qinner.
 function renderHeartButton() {
-  return `<button class="heart-btn" type="button" aria-label="Polub ten kadr">♡</button>`;
+  return `<button class="heart-btn" type="button" aria-label="Polub ten kadr">â™ˇ</button>`;
 }
 
 // Handle a multiple-choice option click (Akolita Popcornu mode).
@@ -112,7 +107,7 @@ function cOpt(btn, correct, picked) {
   sr(picked === correct, 1, correct, '');
 }
 
-// Handle answer submission in hangman mode (Samozwańczy Kinoman).
+// Handle answer submission in hangman mode (SamozwaĹ„czy Kinoman).
 // Django equivalent: POST /game/answer/ with {type: 'letter', title: '...', director: '...'}
 function cLetter() {
   const f     = S.cur;
@@ -123,21 +118,21 @@ function cLetter() {
   const titleOK = fuzzyMatch(title, f.title);
   let pts = 0, lines = [];
 
-  if (titleOK) { pts += 2; lines.push(`✓ Tytuł: <strong>${he(f.title)}</strong> +2 pkt`); }
-  else          {           lines.push(`✗ Tytuł: <strong>${he(f.title)}</strong>`); }
+  if (titleOK) { pts += 2; lines.push(`âś“ TytuĹ‚: <strong>${he(f.title)}</strong> +2 pkt`); }
+  else          {           lines.push(`âś— TytuĹ‚: <strong>${he(f.title)}</strong>`); }
 
   if (dir) {
     // Accept if the normalized guess contains the director's last name
     const dirOK = nm(dir).includes(nm(f.dir).split(' ').pop());
-    if (dirOK) { pts += 3; lines.push(`✓ Reżyser: <strong>${he(f.dir)}</strong> +3 pkt`); }
-    else        { pts = Math.max(0, pts - 1); lines.push(`✗ Reżyser: <strong>${he(f.dir)}</strong> -1 pkt`); }
+    if (dirOK) { pts += 3; lines.push(`âś“ ReĹĽyser: <strong>${he(f.dir)}</strong> +3 pkt`); }
+    else        { pts = Math.max(0, pts - 1); lines.push(`âś— ReĹĽyser: <strong>${he(f.dir)}</strong> -1 pkt`); }
   }
 
   S.score += pts;
   showResult(pts > 0 ? 'ok' : 'bad', lines.join('<br>'));
 }
 
-// Handle answer submission in expert mode (Orędownik Wielkiej Kinezy).
+// Handle answer submission in expert mode (OrÄ™downik Wielkiej Kinezy).
 // Django equivalent: POST /game/answer/ with {type: 'expert', title, year, director}
 function cExpert() {
   const f     = S.cur;
@@ -150,20 +145,20 @@ function cExpert() {
 
   // Title: up to 3 pts
   const titleOK = fuzzyMatch(title, f.title);
-  if (titleOK) { pts += 3; lines.push(`✓ Tytuł: <strong>${he(f.title)}</strong> +3 pkt`); }
-  else          {           lines.push(`✗ Tytuł: <strong>${he(f.title)}</strong>`); }
+  if (titleOK) { pts += 3; lines.push(`âś“ TytuĹ‚: <strong>${he(f.title)}</strong> +3 pkt`); }
+  else          {           lines.push(`âś— TytuĹ‚: <strong>${he(f.title)}</strong>`); }
 
   // Year: up to 2 pts with partial credit
   const ys = yearScore(year, f.y, 2);
   pts += ys.pts;
   if (ys.pts > 0 && ys.pts < 2) partial = true;
-  lines.push(`${ys.pts > 0 ? '✓' : '✗'} Rok: <strong>${f.y}</strong> ${ys.label}`);
+  lines.push(`${ys.pts > 0 ? 'âś“' : 'âś—'} Rok: <strong>${f.y}</strong> ${ys.label}`);
 
   // Director: optional bonus/penalty
   if (dir) {
     const dirOK = nm(dir).includes(nm(f.dir).split(' ').pop());
-    if (dirOK) { pts += 3; lines.push(`✓ Reżyser: <strong>${he(f.dir)}</strong> +3 pkt`); }
-    else        { pts = Math.max(0, pts - 1); lines.push(`✗ Reżyser: <strong>${he(f.dir)}</strong> -1 pkt`); }
+    if (dirOK) { pts += 3; lines.push(`âś“ ReĹĽyser: <strong>${he(f.dir)}</strong> +3 pkt`); }
+    else        { pts = Math.max(0, pts - 1); lines.push(`âś— ReĹĽyser: <strong>${he(f.dir)}</strong> -1 pkt`); }
   }
 
   S.score += pts;
@@ -187,7 +182,7 @@ function showResult(cls, html) {
   rb.style.display = 'block';
   document.getElementById('frm').style.display = 'none';
   const fr = document.getElementById('fr');
-  fr.querySelectorAll('.meta-pills, .heart-btn').forEach(el => el.remove());
+  fr.querySelectorAll('.meta-pills, .meta-pills-row2, .heart-btn').forEach(el => el.remove());
   // Heart inline with title in .frt-row
   const frt = document.getElementById('frt');
   frt.textContent = S.cur.title;
@@ -210,19 +205,19 @@ function showResult(cls, html) {
 }
 
 // Simplified result renderer used by multiple-choice mode (cOpt).
-// Kept separate for clarity — test mode only has a binary correct/wrong state.
+// Kept separate for clarity â€” test mode only has a binary correct/wrong state.
 function sr(ok, pts, ct, ex) {
   if (ok) S.score += pts;
   document.getElementById('pts').textContent = S.score;
   const rb = document.getElementById('rb');
   rb.className = 'rbox ' + (ok ? 'ok' : 'bad');
   rb.innerHTML = ok
-    ? `✓ &nbsp;Tak! &nbsp;<strong>${he(ct)}</strong> &nbsp;+${pts} pkt`
-    : `✗ &nbsp;Nie. To: &nbsp;<strong>${he(ct)}</strong>${ex}`;
+    ? `âś“ &nbsp;Tak! &nbsp;<strong>${he(ct)}</strong> &nbsp;+${pts} pkt`
+    : `âś— &nbsp;Nie. To: &nbsp;<strong>${he(ct)}</strong>${ex}`;
   rb.style.display = 'block';
   document.getElementById('frm').style.display = 'none';
   const fr = document.getElementById('fr');
-  fr.querySelectorAll('.meta-pills, .heart-btn').forEach(el => el.remove());
+  fr.querySelectorAll('.meta-pills, .meta-pills-row2, .heart-btn').forEach(el => el.remove());
   // Heart inline with title in .frt-row
   const frt = document.getElementById('frt');
   frt.textContent = S.cur.title;
@@ -247,12 +242,12 @@ function sr(ok, pts, ct, ex) {
 // --- Heart Button Click Handler ---
 
 // Extract TMDB backdrop file_path from a full image URL.
-// e.g. "https://image.tmdb.org/t/p/w1280/abc123.jpg" → "/abc123.jpg"
+// e.g. "https://image.tmdb.org/t/p/w1280/abc123.jpg" â†’ "/abc123.jpg"
 function extractBackdropPath(url) {
   if (!url) return '';
   try {
     const pathname = new URL(url).pathname;
-    // pathname is like /t/p/w1280/abc123.jpg — we want the last segment
+    // pathname is like /t/p/w1280/abc123.jpg â€” we want the last segment
     const parts = pathname.split('/');
     return '/' + parts[parts.length - 1];
   } catch {
@@ -277,7 +272,7 @@ function playHeartSound() {
     gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
     osc.stop(ctx.currentTime + 0.1);
   } catch (e) {
-    // Silently ignore — Web Audio may not be available
+    // Silently ignore â€” Web Audio may not be available
   }
 }
 
@@ -286,7 +281,7 @@ function playStampSound() {
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
     const t = ctx.currentTime;
-    // Thud — low freq burst
+    // Thud â€” low freq burst
     const osc1 = ctx.createOscillator();
     const g1 = ctx.createGain();
     osc1.type = 'square';
@@ -298,7 +293,7 @@ function playStampSound() {
     g1.connect(ctx.destination);
     osc1.start(t);
     osc1.stop(t + 0.1);
-    // Click — high freq tick
+    // Click â€” high freq tick
     const osc2 = ctx.createOscillator();
     const g2 = ctx.createGain();
     osc2.type = 'triangle';
@@ -373,22 +368,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
       if (data.hearted) {
         btn.classList.add('hearted');
-        btn.textContent = '❤';
+        btn.textContent = 'âť¤';
         playHeartSound();
       } else {
         btn.classList.remove('hearted');
-        btn.textContent = '♡';
+        btn.textContent = 'â™ˇ';
       }
     } catch (err) {
-      // Network error — revert and show toast
+      // Network error â€” revert and show toast
       if (wasHearted) {
         btn.classList.add('hearted');
-        btn.textContent = '❤';
+        btn.textContent = 'âť¤';
       } else {
         btn.classList.remove('hearted');
-        btn.textContent = '♡';
+        btn.textContent = 'â™ˇ';
       }
-      showToast('Brak połączenia');
+      showToast('Brak poĹ‚Ä…czenia');
     }
   });
 });
@@ -396,7 +391,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // --- Smart Timer Auto-Advance ---
 
 /**
- * SmartTimer — countdown that drives --timer-progress CSS var on .nbtn
+ * SmartTimer â€” countdown that drives --timer-progress CSS var on .nbtn
  * and auto-calls onComplete (nextRound) when elapsed >= duration.
  *
  * Uses requestAnimationFrame for smooth visual updates.
@@ -460,7 +455,7 @@ class SmartTimer {
     this.cancel();
   }
 
-  /** @private — rAF loop */
+  /** @private â€” rAF loop */
   _tick() {
     if (!this._running || this._paused) return;
 
@@ -481,7 +476,7 @@ class SmartTimer {
     this._rafId = requestAnimationFrame(() => this._tick());
   }
 
-  /** @private — update CSS custom property on .nbtn */
+  /** @private â€” update CSS custom property on .nbtn */
   _setProgress(value) {
     const btn = document.querySelector('.nbtn');
     if (btn) {
@@ -510,15 +505,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// Report wrong frame — player says the image doesn't match the film
+// Report wrong frame â€” player says the image doesn't match the film
 function reportWrongFrame() {
   if (!S.cur) return;
   const count = markBroken(S.cur.id);
   const btn = document.querySelector('.report-btn');
   if (btn) {
     btn.textContent = count >= 3
-      ? '✓ Usunięto z puli (3 zgłoszenia)'
-      : `✓ Zgłoszono (${count}/3)`;
+      ? 'âś“ UsuniÄ™to z puli (3 zgĹ‚oszenia)'
+      : `âś“ ZgĹ‚oszono (${count}/3)`;
     btn.disabled = true;
     btn.style.color = 'rgba(180,90,90,.6)';
   }
@@ -526,3 +521,76 @@ function reportWrongFrame() {
   S.round--;
   setTimeout(() => nextRound(), 1200);
 }
+
+// --- Draggable Island (Pointer Events) ---
+(function initDraggable() {
+  document.addEventListener('DOMContentLoaded', () => {
+    const panel = document.querySelector('.qpanel');
+    if (!panel) return;
+
+    let isDragging = false;
+    let startX, startY, origLeft, origTop;
+
+    function getPanelPos() {
+      const rect = panel.getBoundingClientRect();
+      return { left: rect.left, top: rect.top };
+    }
+
+    panel.addEventListener('pointerdown', (e) => {
+      // Don't drag from buttons/inputs
+      if (e.target.closest('button, input, .opt, a')) return;
+      isDragging = true;
+      panel.classList.add('is-dragging');
+      panel.setPointerCapture(e.pointerId);
+
+      const pos = getPanelPos();
+      startX = e.clientX;
+      startY = e.clientY;
+      origLeft = pos.left;
+      origTop = pos.top;
+
+      // Switch to left/top positioning for drag
+      panel.style.left = origLeft + 'px';
+      panel.style.top = origTop + 'px';
+      panel.style.bottom = 'auto';
+      panel.style.transform = 'none';
+    });
+
+    panel.addEventListener('pointermove', (e) => {
+      if (!isDragging) return;
+      e.preventDefault();
+
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+
+      let newLeft = origLeft + dx;
+      let newTop = origTop + dy;
+
+      // Bounding box â€” keep within viewport
+      const rect = panel.getBoundingClientRect();
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+
+      if (newLeft < 0) newLeft = 0;
+      if (newTop < 0) newTop = 0;
+      if (newLeft + rect.width > vw) newLeft = vw - rect.width;
+      if (newTop + rect.height > vh) newTop = vh - rect.height;
+
+      panel.style.left = newLeft + 'px';
+      panel.style.top = newTop + 'px';
+    });
+
+    panel.addEventListener('pointerup', (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+      panel.classList.remove('is-dragging');
+      panel.releasePointerCapture(e.pointerId);
+    });
+
+    panel.addEventListener('pointercancel', (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+      panel.classList.remove('is-dragging');
+    });
+  });
+})();
