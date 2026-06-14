@@ -185,23 +185,25 @@ function showResult(cls, html) {
   rb.className  = 'rbox ' + cls;
   rb.innerHTML  = html;
   rb.style.display = 'block';
-  document.getElementById('frt').textContent = S.cur.title;
   document.getElementById('frm').style.display = 'none';
   const fr = document.getElementById('fr');
-  fr.querySelectorAll('.meta-pills').forEach(el => el.remove());
+  fr.querySelectorAll('.meta-pills, .heart-btn').forEach(el => el.remove());
+  // Heart inline with title in .frt-row
+  const frt = document.getElementById('frt');
+  frt.textContent = S.cur.title;
+  const frtRow = frt.closest('.frt-row');
+  if (frtRow) {
+    frtRow.querySelectorAll('.heart-btn').forEach(el => el.remove());
+    frtRow.insertAdjacentHTML('afterbegin', renderHeartButton());
+  }
   fr.insertAdjacentHTML('beforeend', renderMetaPills(S.cur));
   fr.style.display = 'block';
-  // Floating heart in qinner — only reveal on correct answer
-  const qi = fr.closest('.qinner');
-  if (qi) {
-    qi.querySelectorAll('.heart-btn').forEach(el => el.remove());
-    qi.insertAdjacentHTML('afterbegin', renderHeartButton());
-    if (cls === 'ok') {
-      setTimeout(() => {
-        const hb = qi.querySelector('.heart-btn');
-        if (hb) { hb.classList.add('heart-revealed'); playStampSound(); }
-      }, 400);
-    }
+  // Reveal heart only on correct answer
+  if (cls === 'ok') {
+    setTimeout(() => {
+      const hb = frtRow ? frtRow.querySelector('.heart-btn') : null;
+      if (hb) { hb.classList.add('heart-revealed'); playStampSound(); }
+    }, 400);
   }
   document.getElementById('nb').style.display = 'block';
   smartTimer.start();
@@ -218,23 +220,25 @@ function sr(ok, pts, ct, ex) {
     ? `✓ &nbsp;Tak! &nbsp;<strong>${he(ct)}</strong> &nbsp;+${pts} pkt`
     : `✗ &nbsp;Nie. To: &nbsp;<strong>${he(ct)}</strong>${ex}`;
   rb.style.display = 'block';
-  document.getElementById('frt').textContent = S.cur.title;
   document.getElementById('frm').style.display = 'none';
   const fr = document.getElementById('fr');
-  fr.querySelectorAll('.meta-pills').forEach(el => el.remove());
+  fr.querySelectorAll('.meta-pills, .heart-btn').forEach(el => el.remove());
+  // Heart inline with title in .frt-row
+  const frt = document.getElementById('frt');
+  frt.textContent = S.cur.title;
+  const frtRow = frt.closest('.frt-row');
+  if (frtRow) {
+    frtRow.querySelectorAll('.heart-btn').forEach(el => el.remove());
+    frtRow.insertAdjacentHTML('afterbegin', renderHeartButton());
+  }
   fr.insertAdjacentHTML('beforeend', renderMetaPills(S.cur));
   fr.style.display = 'block';
-  // Floating heart in qinner — only reveal on correct answer
-  const qi = fr.closest('.qinner');
-  if (qi) {
-    qi.querySelectorAll('.heart-btn').forEach(el => el.remove());
-    qi.insertAdjacentHTML('afterbegin', renderHeartButton());
-    if (ok) {
-      setTimeout(() => {
-        const hb = qi.querySelector('.heart-btn');
-        if (hb) { hb.classList.add('heart-revealed'); playStampSound(); }
-      }, 400);
-    }
+  // Reveal heart only on correct answer
+  if (ok) {
+    setTimeout(() => {
+      const hb = frtRow ? frtRow.querySelector('.heart-btn') : null;
+      if (hb) { hb.classList.add('heart-revealed'); playStampSound(); }
+    }, 400);
   }
   document.getElementById('nb').style.display = 'block';
   smartTimer.start();
@@ -329,12 +333,12 @@ function showToast(msg, durationMs = 2500) {
 }
 
 // Delegated click handler for the heart button.
-// Attached once via event delegation on .qinner (the floating island container).
+// Attached once via event delegation on .frev (the film reveal container).
 document.addEventListener('DOMContentLoaded', function() {
-  const qi = document.querySelector('.qinner');
-  if (!qi) return;
+  const fr = document.getElementById('fr');
+  if (!fr) return;
 
-  qi.addEventListener('click', async function(e) {
+  fr.addEventListener('click', async function(e) {
     const btn = e.target.closest('.heart-btn');
     if (!btn) return;
 

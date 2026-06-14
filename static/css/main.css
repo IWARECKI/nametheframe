@@ -745,43 +745,41 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .rbox.partial{background:var(--warn);border:1px solid rgba(200,160,60,.28);color:var(--warn-t);}
 
 .frev{margin-top:.75rem;padding:.75rem 1rem;background:rgba(6,6,6,.55);border:1px solid var(--border);border-radius:var(--r);display:none;backdrop-filter:blur(4px);}
+.frev .frt-row{display:flex;align-items:center;flex-direction:row;}
 .frt{font-family:'Cormorant Garamond',serif;font-size:1rem;margin-bottom:2px;}
 .frm{font-size:10px;letter-spacing:.1em;color:var(--muted);}
 
 /* ── Heart / Favorite button ─────────────────────────────────── */
 .heart-btn{
-  position:absolute;top:15px;right:15px;
-  display:flex;align-items:center;justify-content:center;
-  background:rgba(8,10,8,.7);
-  border:1px solid rgba(201,169,110,.25);
-  border-radius:10px;
-  font-size:1.8rem;line-height:1;
+  position:relative;
+  display:inline-flex;align-items:center;justify-content:center;
+  background:none;border:none;
+  font-size:1.6rem;line-height:1;
   cursor:pointer;
-  padding:8px 10px;
-  color:rgba(255,215,0,.3);
+  padding:0;margin-right:10px;
+  color:rgba(218,165,32,.6);
   transition:color .25s ease,filter .3s ease,transform .4s cubic-bezier(.34,1.56,.64,1),opacity .4s ease;
-  z-index:2;
+  flex-shrink:0;
   /* Hidden by default — revealed on correct answer */
   opacity:0;
-  transform:translateY(-20px) scale(0.6);
+  transform:scale(0.5);
   pointer-events:none;
 }
 .heart-btn.heart-revealed{
   opacity:1;
-  transform:translateY(0) scale(1);
+  transform:scale(1);
   pointer-events:auto;
   animation:heart-slot-open .5s cubic-bezier(.34,1.56,.64,1) forwards;
 }
 @keyframes heart-slot-open{
-  0%  {opacity:0;transform:translateY(-20px) scale(0.5);}
-  50% {opacity:1;transform:translateY(4px) scale(1.1);}
-  75% {transform:translateY(-2px) scale(0.95);}
-  100%{transform:translateY(0) scale(1);}
+  0%  {opacity:0;transform:scale(0.4) rotate(-15deg);}
+  50% {opacity:1;transform:scale(1.15) rotate(3deg);}
+  75% {transform:scale(0.92) rotate(-1deg);}
+  100%{transform:scale(1) rotate(0);}
 }
-.heart-btn:hover{color:rgba(255,215,0,.6);transform:translateY(0) scale(1.1);}
+.heart-btn:hover{color:rgba(218,165,32,.9);transform:scale(1.15);}
 .heart-btn.hearted{
   color:rgba(220,20,60,1);
-  border-color:rgba(220,20,60,.4);
   filter:drop-shadow(0 0 8px rgba(220,20,60,.7)) drop-shadow(0 0 16px rgba(220,20,60,.5));
   animation:heart-glow-pulse 2s ease-in-out infinite;
 }
@@ -790,8 +788,8 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .heart-btn::after{
   content:'Dodaj kadr do ulubionych :)';
   position:absolute;
-  right:calc(100% + 10px);top:50%;
-  transform:translateY(-50%) translateX(12px);
+  left:calc(100% + 8px);top:50%;
+  transform:translateY(-50%) translateX(-8px);
   opacity:0;
   pointer-events:none;
   white-space:nowrap;
@@ -836,7 +834,6 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .meta-pills{
   display:flex;flex-wrap:wrap;gap:8px;
   margin-top:.75rem;
-  padding-right:3rem; /* space for floating heart */
 }
 .pill{
   display:inline-flex;align-items:center;gap:4px;
