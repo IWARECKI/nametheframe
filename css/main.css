@@ -489,7 +489,15 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   font-family:'Space Mono',monospace;font-size:8px;
   letter-spacing:.2em;text-transform:uppercase;
   color:var(--muted);
+  display:flex;align-items:center;gap:.75rem;
 }
+.auth-link{
+  color:rgba(201,169,110,.5);text-decoration:none;
+  font-family:'Space Mono',monospace;font-size:8px;
+  letter-spacing:.15em;text-transform:uppercase;
+  transition:color .15s;
+}
+.auth-link:hover{color:var(--gold);}
 
 /* ── Setup form — centered column ── */
 .setup-form{
@@ -849,26 +857,26 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 
 /* ── KARTA WIDZA — Golden Ticket + Profile Panel ─────────────── */
 
-/* Golden Ticket — fixed top-right, peeking tab */
+/* Golden Ticket — fixed top-left, subtle peeking tab */
 .golden-ticket{
-  position:fixed;top:12px;right:12px;z-index:900;
-  background:linear-gradient(135deg,#c9a96e 0%,#f0d090 40%,#c9a96e 100%);
-  border:none;border-radius:6px 6px 6px 16px;
-  padding:10px 14px;
-  font-size:1.4rem;line-height:1;
+  position:fixed;top:12px;left:12px;z-index:900;
+  background:none;
+  border:none;
+  padding:6px 8px;
+  font-size:1.2rem;line-height:1;
   cursor:pointer;
-  box-shadow:0 2px 8px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.3);
-  transform:rotate(3deg);
-  transition:transform .15s ease,box-shadow .15s ease;
-  animation:ticket-shimmer 4s ease-in-out infinite;
+  opacity:.55;
+  transform:rotate(-3deg);
+  transition:transform .15s ease,opacity .15s ease;
+  filter:drop-shadow(0 1px 3px rgba(0,0,0,.4));
 }
 .golden-ticket:hover{
-  transform:rotate(0deg) scale(1.05);
-  box-shadow:0 4px 16px rgba(201,169,110,.5),inset 0 1px 0 rgba(255,255,255,.4);
+  transform:rotate(0deg) scale(1.08);
+  opacity:.9;
 }
 @keyframes ticket-shimmer{
-  0%,100%{filter:brightness(1);}
-  50%{filter:brightness(1.15);}
+  0%,100%{filter:drop-shadow(0 1px 3px rgba(0,0,0,.4)) brightness(1);}
+  50%{filter:drop-shadow(0 1px 3px rgba(0,0,0,.4)) brightness(1.12);}
 }
 
 /* Profile Backdrop */

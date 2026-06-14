@@ -43,7 +43,7 @@
 <!-- Setup section — minimalist: nick + Zapal projektor -->
 <div id="setup-dust"></div>
 <section id="setup">
-  <!-- Auth bar — top strip -->
+  <!-- Auth bar — top-right strip -->
   <div class="auth-bar" id="auth-bar">
     {% if player_nick %}
       <span class="auth-status" id="auth-status">{{ player_nick }}</span>
@@ -51,6 +51,11 @@
       <span class="auth-status" id="auth-status">zalogowany</span>
     {% else %}
       <span class="auth-status" id="auth-status">gość</span>
+    {% endif %}
+    {% if user.is_authenticated %}
+      <a class="auth-link" href="{% url 'account_logout' %}">wyloguj</a>
+    {% else %}
+      <a class="auth-link" href="{% url 'account_login' %}">zaloguj</a>
     {% endif %}
   </div>
 
