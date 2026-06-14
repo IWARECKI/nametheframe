@@ -92,13 +92,13 @@ function renderMetaPills(film) {
     const eraLabel = ERA_LABELS[film.era] || film.era;
     pills += `<span class="pill pill-era">⏳ ${eraLabel}</span>`;
   }
-  return `<div class="meta-pills">${pills}</div>` + renderHeartButton();
+  return `<div class="meta-pills">${pills}</div>`;
 }
 
 // Returns HTML for the heart/favorite button shown after each round result.
-// Positioned below pills to make it clear it's about liking this specific frame.
+// Positioned as floating bookmark in top-right of qinner.
 function renderHeartButton() {
-  return `<button class="heart-btn" type="button" aria-label="Polub ten kadr">🤍 <span class="heart-label">Polub kadr</span></button>`;
+  return `<button class="heart-btn" type="button" aria-label="Polub ten kadr">♡</button>`;
 }
 
 // Handle a multiple-choice option click (Akolita Popcornu mode).
@@ -188,9 +188,12 @@ function showResult(cls, html) {
   document.getElementById('frt').textContent = S.cur.title;
   document.getElementById('frm').style.display = 'none';
   const fr = document.getElementById('fr');
-  fr.querySelectorAll('.meta-pills, .heart-btn').forEach(el => el.remove());
+  fr.querySelectorAll('.meta-pills').forEach(el => el.remove());
   fr.insertAdjacentHTML('beforeend', renderMetaPills(S.cur));
   fr.style.display = 'block';
+  // Floating heart in qinner
+  const qi = fr.closest('.qinner');
+  if (qi) { qi.querySelectorAll('.heart-btn').forEach(el => el.remove()); qi.insertAdjacentHTML('afterbegin', renderHeartButton()); }
   document.getElementById('nb').style.display = 'block';
   smartTimer.start();
 }
@@ -209,9 +212,12 @@ function sr(ok, pts, ct, ex) {
   document.getElementById('frt').textContent = S.cur.title;
   document.getElementById('frm').style.display = 'none';
   const fr = document.getElementById('fr');
-  fr.querySelectorAll('.meta-pills, .heart-btn').forEach(el => el.remove());
+  fr.querySelectorAll('.meta-pills').forEach(el => el.remove());
   fr.insertAdjacentHTML('beforeend', renderMetaPills(S.cur));
   fr.style.display = 'block';
+  // Floating heart in qinner
+  const qi = fr.closest('.qinner');
+  if (qi) { qi.querySelectorAll('.heart-btn').forEach(el => el.remove()); qi.insertAdjacentHTML('afterbegin', renderHeartButton()); }
   document.getElementById('nb').style.display = 'block';
   smartTimer.start();
 }
@@ -272,12 +278,12 @@ function showToast(msg, durationMs = 2500) {
 }
 
 // Delegated click handler for the heart button.
-// Attached once via event delegation on #fr (the film reveal container).
+// Attached once via event delegation on .qinner (the floating island container).
 document.addEventListener('DOMContentLoaded', function() {
-  const fr = document.getElementById('fr');
-  if (!fr) return;
+  const qi = document.querySelector('.qinner');
+  if (!qi) return;
 
-  fr.addEventListener('click', async function(e) {
+  qi.addEventListener('click', async function(e) {
     const btn = e.target.closest('.heart-btn');
     if (!btn) return;
 
@@ -312,20 +318,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
       if (data.hearted) {
         btn.classList.add('hearted');
-        btn.innerHTML = '❤️ <span class="heart-label">Polubione</span>';
+        btn.textContent = '❤';
         playHeartSound();
       } else {
         btn.classList.remove('hearted');
-        btn.innerHTML = '🤍 <span class="heart-label">Polub kadr</span>';
+        btn.textContent = '♡';
       }
     } catch (err) {
       // Network error — revert and show toast
       if (wasHearted) {
         btn.classList.add('hearted');
-        btn.innerHTML = '❤️ <span class="heart-label">Polubione</span>';
+        btn.textContent = '❤';
       } else {
         btn.classList.remove('hearted');
-        btn.innerHTML = '🤍 <span class="heart-label">Polub kadr</span>';
+        btn.textContent = '♡';
       }
       showToast('Brak połączenia');
     }
