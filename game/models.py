@@ -268,3 +268,20 @@ class GameRound(models.Model):
 
     def __str__(self):
         return f'Film {self.film_id} — {"✓" if self.guessed else "✗"} — {self.shown_at:%Y-%m-%d %H:%M}'
+
+
+# ── Player Profile ────────────────────────────────────────────────────────────
+
+class PlayerProfile(models.Model):
+    """Denormalized profile stats for authenticated players."""
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    last_nick_change = models.DateTimeField(null=True, blank=True)
+    games_played = models.PositiveIntegerField(default=0)
+    frames_guessed = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        verbose_name = 'Profil gracza'
+        verbose_name_plural = 'Profile graczy'
+
+    def __str__(self):
+        return f'Profile: {self.user.first_name or self.user.email}'

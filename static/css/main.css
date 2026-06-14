@@ -845,3 +845,154 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   .levels-carousel{width:100%;flex:none;}
   .lvl-card{flex:0 0 78vw;}
 }
+
+
+/* ── KARTA WIDZA — Golden Ticket + Profile Panel ─────────────── */
+
+/* Golden Ticket — fixed top-right, peeking tab */
+.golden-ticket{
+  position:fixed;top:12px;right:12px;z-index:900;
+  background:linear-gradient(135deg,#c9a96e 0%,#f0d090 40%,#c9a96e 100%);
+  border:none;border-radius:6px 6px 6px 16px;
+  padding:10px 14px;
+  font-size:1.4rem;line-height:1;
+  cursor:pointer;
+  box-shadow:0 2px 8px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.3);
+  transform:rotate(3deg);
+  transition:transform .15s ease,box-shadow .15s ease;
+  animation:ticket-shimmer 4s ease-in-out infinite;
+}
+.golden-ticket:hover{
+  transform:rotate(0deg) scale(1.05);
+  box-shadow:0 4px 16px rgba(201,169,110,.5),inset 0 1px 0 rgba(255,255,255,.4);
+}
+@keyframes ticket-shimmer{
+  0%,100%{filter:brightness(1);}
+  50%{filter:brightness(1.15);}
+}
+
+/* Profile Backdrop */
+.profile-backdrop{
+  position:fixed;inset:0;z-index:950;
+  background:rgba(0,0,0,.6);
+  backdrop-filter:blur(4px);
+  opacity:0;pointer-events:none;
+  transition:opacity .3s ease;
+}
+.profile-backdrop.open{opacity:1;pointer-events:auto;}
+
+/* Profile Panel — slides from top with heavy bounce */
+.profile-panel{
+  position:fixed;top:0;left:50%;z-index:960;
+  transform:translateX(-50%) translateY(-110%);
+  width:90%;max-width:380px;
+  background:linear-gradient(180deg,#141414 0%,#0a0a0a 100%);
+  border:1px solid rgba(201,169,110,.25);
+  border-top:none;
+  border-radius:0 0 16px 16px;
+  padding:2rem 1.5rem 1.5rem;
+  box-shadow:0 12px 40px rgba(0,0,0,.8),0 0 60px rgba(201,169,110,.08);
+  transition:transform .55s cubic-bezier(.22,1.6,.36,1);
+}
+.profile-panel.open{
+  transform:translateX(-50%) translateY(0);
+}
+
+/* Close button */
+.profile-close{
+  position:absolute;top:12px;right:14px;
+  background:none;border:none;
+  color:var(--muted);font-size:18px;cursor:pointer;
+  transition:color .15s;
+}
+.profile-close:hover{color:var(--gold);}
+
+/* Title */
+.profile-title{
+  font-family:'Cinzel',serif;font-size:1.1rem;font-weight:600;
+  letter-spacing:.15em;text-align:center;
+  color:var(--gold);margin-bottom:1rem;
+}
+
+/* Nick display */
+.profile-nick-display{
+  font-family:'Cormorant Garamond',serif;font-size:1.5rem;
+  color:var(--text);text-align:center;margin-bottom:1.25rem;
+  font-style:italic;
+}
+
+/* Stats */
+.profile-stats{
+  display:flex;justify-content:center;gap:2rem;
+  margin-bottom:1.5rem;
+}
+.profile-stat{display:flex;flex-direction:column;align-items:center;gap:.25rem;}
+.stat-value{
+  font-family:'Space Mono',monospace;font-size:1.6rem;font-weight:700;
+  color:var(--gold);
+  text-shadow:0 0 8px rgba(201,169,110,.4);
+}
+.stat-label{
+  font-family:'Space Mono',monospace;font-size:8px;
+  letter-spacing:.15em;text-transform:uppercase;
+  color:var(--muted);
+}
+
+/* Nick change form */
+.profile-nick-section-title{
+  font-family:'Space Mono',monospace;font-size:9px;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:.75rem;text-align:center;
+}
+.profile-nick-input{
+  width:100%;
+  background:rgba(255,255,255,.03);border:1px solid var(--border);
+  border-radius:var(--r);padding:.6rem .875rem;
+  color:var(--text);font-family:'Cormorant Garamond',serif;font-size:1rem;
+  outline:none;transition:border-color .15s;
+  margin-bottom:.5rem;
+}
+.profile-nick-input:focus{border-color:rgba(201,169,110,.4);}
+.profile-nick-input:disabled{opacity:.5;cursor:not-allowed;}
+
+.profile-nick-btn{
+  width:100%;
+  background:rgba(201,169,110,.08);
+  border:1px solid rgba(201,169,110,.35);
+  border-radius:var(--r);padding:.65rem;
+  color:var(--gold);
+  font-family:'Space Mono',monospace;font-size:9px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;
+  cursor:pointer;transition:all .12s;
+}
+.profile-nick-btn:hover{background:rgba(201,169,110,.15);border-color:var(--gold);}
+.profile-nick-btn:disabled{opacity:.4;cursor:not-allowed;}
+
+/* Cooldown tape — red warning stripe */
+.profile-cooldown{
+  margin-top:.75rem;padding:.5rem .75rem;
+  background:repeating-linear-gradient(135deg,rgba(180,40,40,.12) 0px,rgba(180,40,40,.12) 10px,transparent 10px,transparent 20px);
+  border:1px solid rgba(180,40,40,.3);border-radius:var(--r);
+  font-family:'Space Mono',monospace;font-size:8px;
+  letter-spacing:.1em;color:rgba(220,80,80,.8);
+  text-align:center;display:none;
+}
+.profile-cooldown.visible{display:block;}
+
+/* Nick error */
+.profile-nick-error{
+  margin-top:.5rem;
+  font-family:'Space Mono',monospace;font-size:9px;
+  color:rgba(220,80,80,.8);text-align:center;
+  min-height:1em;
+}
+
+/* Locked shake animation */
+@keyframes locked-shake{
+  0%,100%{transform:translateX(0);}
+  20%{transform:translateX(-4px);}
+  40%{transform:translateX(4px);}
+  60%{transform:translateX(-3px);}
+  80%{transform:translateX(3px);}
+}
+.profile-nick-btn.shake{animation:locked-shake .3s ease;}

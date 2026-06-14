@@ -5,3 +5,6 @@ class GameConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'game'
     verbose_name = 'Baza filmów'
+
+    def ready(self):
+        import game.signals  # noqa: F401

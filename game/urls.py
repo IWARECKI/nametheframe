@@ -26,4 +26,8 @@ urlpatterns = [
 
     # Nick availability check
     path('api/nick-check/', views.api_nick_check, name='api_nick_check'),
+
+    # Player profile (Karta Widza)
+    path('api/profile/stats/', views.api_profile_stats, name='api_profile_stats'),
+    path('api/profile/nick/', views.api_profile_nick, name='api_profile_nick'),
 ]

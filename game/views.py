@@ -4,6 +4,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 
@@ -96,6 +97,7 @@ def api_scores_save(request):
         level = str(body.get('level', ''))
         score = int(body.get('score', 0))
         duration_ms = int(body.get('duration_ms', 0)) or None
+        frames_guessed = int(body.get('frames_guessed', 0))
     except (json.JSONDecodeError, ValueError, TypeError):
         return JsonResponse({'error': 'invalid payload'}, status=400)
 
@@ -123,7 +125,68 @@ def api_scores_save(request):
             request.user.first_name = nick
             request.user.save(update_fields=['first_name'])
 
+    # Update frames_guessed on player profile
+    if request.user.is_authenticated and frames_guessed > 0:
+        from .models import PlayerProfile
+        profile, _ = PlayerProfile.objects.get_or_create(user=request.user)
+        profile.frames_guessed += frames_guessed
+        profile.save(update_fields=['frames_guessed'])
+
     return JsonResponse({'ok': True})
+
+
+# ── API: player profile ────────────────────────────────────────────────────────
+
+@require_http_methods(['GET'])
+def api_profile_stats(request):
+    """Return profile stats for the authenticated user."""
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'unauthorized'}, status=403)
+    from .models import PlayerProfile
+    profile, _ = PlayerProfile.objects.get_or_create(user=request.user)
+    nick = request.user.first_name or None
+    cooldown_remaining = 0
+    if profile.last_nick_change:
+        elapsed = (timezone.now() - profile.last_nick_change).days
+        if elapsed < 30:
+            cooldown_remaining = 30 - elapsed
+    return JsonResponse({
+        'nick': nick,
+        'games_played': profile.games_played,
+        'frames_guessed': profile.frames_guessed,
+        'cooldown_remaining': cooldown_remaining,
+    })
+
+
+@require_http_methods(['POST'])
+def api_profile_nick(request):
+    """Change the authenticated user's nick (with validation and cooldown)."""
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'unauthorized'}, status=403)
+    try:
+        body = json.loads(request.body)
+        nick = str(body.get('nick', '')).strip()
+    except (json.JSONDecodeError, ValueError, TypeError):
+        return JsonResponse({'error': 'invalid payload'}, status=400)
+    if not nick or len(nick) > 22:
+        return JsonResponse({'error': 'Nick musi mieć 1-22 znaków'}, status=400)
+    from django.contrib.auth.models import User
+    taken_user = User.objects.filter(first_name__iexact=nick).exclude(pk=request.user.pk).exists()
+    taken_score = Score.objects.filter(nick__iexact=nick).exclude(user=request.user).exists()
+    if taken_user or taken_score:
+        return JsonResponse({'error': 'Ten nick jest już zajęty'}, status=409)
+    from .models import PlayerProfile
+    profile, _ = PlayerProfile.objects.get_or_create(user=request.user)
+    if profile.last_nick_change:
+        elapsed = (timezone.now() - profile.last_nick_change).days
+        if elapsed < 30:
+            remaining = 30 - elapsed
+            return JsonResponse({'error': f'Zmiana nicku możliwa za {remaining} dni', 'remaining_days': remaining}, status=429)
+    request.user.first_name = nick
+    request.user.save(update_fields=['first_name'])
+    profile.last_nick_change = timezone.now()
+    profile.save(update_fields=['last_nick_change'])
+    return JsonResponse({'ok': True, 'nick': nick})
 
 
 # ── API: TMDB backdrop proxy ───────────────────────────────────────────────────

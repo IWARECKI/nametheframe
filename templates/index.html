@@ -22,6 +22,9 @@
 </head>
 <body>
 
+<!-- Złoty Bilet — Karta Widza trigger -->
+<button class="golden-ticket" id="golden-ticket" onclick="onGoldenTicketClick()" aria-label="Otwórz Kartę Widza">🎫</button>
+
 <!-- Intro section -->
 <div id="intro">
   <div id="film-counter">25/24</div>
@@ -141,10 +144,36 @@
 <script src="{% static 'js/ui/game.js' %}"></script>
 <script src="{% static 'js/ui/end.js' %}"></script>
 <script src="{% static 'js/ui/setup.js' %}"></script>
+<script src="{% static 'js/ui/profile.js' %}"></script>
 <script src="{% static 'js/ui/intro.js' %}"></script>
 
 <!-- App bootstrap -->
 <script src="{% static 'js/app.js' %}"></script>
+
+<!-- Karta Widza — Profile Panel -->
+<div class="profile-backdrop" id="profile-backdrop" onclick="closeProfilePanel()"></div>
+<div class="profile-panel" id="profile-panel" role="dialog" aria-label="Karta Widza">
+  <button class="profile-close" onclick="closeProfilePanel()" aria-label="Zamknij">✕</button>
+  <h2 class="profile-title">Karta Widza</h2>
+  <div class="profile-nick-display" id="profile-nick">—</div>
+  <div class="profile-stats">
+    <div class="profile-stat">
+      <span class="stat-value" id="profile-games">0</span>
+      <span class="stat-label">Rozegrane seanse</span>
+    </div>
+    <div class="profile-stat">
+      <span class="stat-value" id="profile-frames">0</span>
+      <span class="stat-label">Trafione kadry</span>
+    </div>
+  </div>
+  <div class="profile-nick-form" id="profile-nick-form">
+    <div class="profile-nick-section-title">Tożsamość</div>
+    <input type="text" class="profile-nick-input" id="profile-nick-input" maxlength="22" placeholder="Nowy pseudonim…"/>
+    <button class="profile-nick-btn" id="profile-nick-btn" onclick="submitNickChange()">Zmień tożsamość</button>
+    <div class="profile-cooldown" id="profile-cooldown"></div>
+    <div class="profile-nick-error" id="profile-nick-error"></div>
+  </div>
+</div>
 
 <!-- Global footer — covered by intro (z-index:100) during animation -->
 <div id="screen-flash"></div>

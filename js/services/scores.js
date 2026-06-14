@@ -7,6 +7,8 @@ const SCORES_KEY = 'ntf_scores';
 // Save score: send to backend AND keep local copy for instant UI.
 async function saveScore(nick, genre, level, score) {
   const entry = {nick, genre, level, score, ts: Date.now()};
+  const duration_ms = S.sessionMs || null;
+  const framesGuessed = (S.history || []).filter(h => h.guessed === true).length;
 
   // Local fallback (instant, no network needed)
   const all = getScores();
@@ -21,7 +23,7 @@ async function saveScore(nick, genre, level, score) {
         'Content-Type': 'application/json',
         'X-CSRFToken': getCsrfToken(),
       },
-      body: JSON.stringify({nick, genre, level, score}),
+      body: JSON.stringify({nick, genre, level, score, duration_ms, frames_guessed: framesGuessed}),
     });
   } catch {
     // Network error — local copy is enough
