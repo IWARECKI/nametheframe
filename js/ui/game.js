@@ -92,14 +92,13 @@ function renderMetaPills(film) {
     const eraLabel = ERA_LABELS[film.era] || film.era;
     pills += `<span class="pill pill-era">⏳ ${eraLabel}</span>`;
   }
-  pills += renderHeartButton();
-  return `<div class="meta-pills">${pills}</div>`;
+  return `<div class="meta-pills">${pills}</div>` + renderHeartButton();
 }
 
 // Returns HTML for the heart/favorite button shown after each round result.
-// Uses an empty heart ♡ by default; the .hearted class switches it to a filled ❤️ with glow.
+// Positioned below pills to make it clear it's about liking this specific frame.
 function renderHeartButton() {
-  return `<button class="heart-btn" aria-label="Dodaj do ulubionych">♡</button>`;
+  return `<button class="heart-btn" type="button" aria-label="Polub ten kadr">🤍 <span class="heart-label">Polub kadr</span></button>`;
 }
 
 // Handle a multiple-choice option click (Akolita Popcornu mode).
@@ -313,20 +312,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
       if (data.hearted) {
         btn.classList.add('hearted');
-        btn.textContent = '❤️';
+        btn.innerHTML = '❤️ <span class="heart-label">Polubione</span>';
         playHeartSound();
       } else {
         btn.classList.remove('hearted');
-        btn.textContent = '♡';
+        btn.innerHTML = '🤍 <span class="heart-label">Polub kadr</span>';
       }
     } catch (err) {
       // Network error — revert and show toast
       if (wasHearted) {
         btn.classList.add('hearted');
-        btn.textContent = '❤️';
+        btn.innerHTML = '❤️ <span class="heart-label">Polubione</span>';
       } else {
         btn.classList.remove('hearted');
-        btn.textContent = '♡';
+        btn.innerHTML = '🤍 <span class="heart-label">Polub kadr</span>';
       }
       showToast('Brak połączenia');
     }

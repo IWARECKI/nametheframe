@@ -748,46 +748,33 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .frt{font-family:'Cormorant Garamond',serif;font-size:1rem;margin-bottom:2px;}
 .frm{font-size:10px;letter-spacing:.1em;color:var(--muted);}
 
-/* ── Metadata pills — film info after reveal ─────────────────── */
-.meta-pills{
-  display:flex;flex-wrap:wrap;gap:6px;
-  margin-top:.6rem;
-}
-.pill{
-  display:inline-flex;align-items:center;gap:4px;
-  padding:.3rem .7rem;
-  border-radius:12px;
-  border:1px solid var(--border);
-  background:rgba(6,6,6,.55);
-  font-family:'Space Mono',monospace;font-size:9px;
-  letter-spacing:.04em;
-  color:var(--muted);
-  white-space:nowrap;
-}
-.pill-dir{border-color:rgba(201,169,110,.3);color:rgba(201,169,110,.85);}
-.pill-year{border-color:rgba(140,180,220,.25);color:rgba(160,200,240,.8);}
-.pill-country{border-color:rgba(120,200,160,.25);color:rgba(140,220,180,.8);}
-.pill-era{border-color:rgba(180,140,220,.25);color:rgba(200,160,240,.8);}
-
 /* ── Heart / Favorite button ─────────────────────────────────── */
 .heart-btn{
-  display:inline-flex;align-items:center;justify-content:center;
-  background:none;border:none;
-  font-size:1.4rem;line-height:1;
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(6,6,6,.4);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:20px;
+  font-size:1.1rem;line-height:1;
   cursor:pointer;
-  padding:6px 8px;
-  border-radius:50%;
-  transition:transform .15s ease,text-shadow .3s ease;
-  opacity:.7;
+  padding:6px 14px 6px 10px;
+  margin-top:8px;
+  color:var(--muted);
+  transition:all .2s ease;
+  opacity:.85;
 }
-.heart-btn:hover{opacity:1;transform:scale(1.15);}
+.heart-btn .heart-label{
+  font-family:'Space Mono',monospace;font-size:9px;
+  letter-spacing:.04em;text-transform:uppercase;
+}
+.heart-btn:hover{opacity:1;border-color:rgba(255,80,100,.4);color:#fff;}
 .heart-btn.hearted{
   opacity:1;
+  border-color:rgba(255,40,60,.5);
+  color:#fff;
   text-shadow:
     0 0 6px rgba(255,40,60,.8),
     0 0 14px rgba(255,40,60,.6),
-    0 0 28px rgba(255,40,60,.4),
-    0 0 48px rgba(255,20,40,.25);
+    0 0 28px rgba(255,40,60,.4);
   animation:heart-glow-pulse 1.8s ease-in-out infinite;
 }
 @keyframes heart-glow-pulse{
@@ -816,6 +803,27 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   60% {transform:scale(.9);}
   100%{transform:scale(1);}
 }
+
+/* ── Metadata pills — film info after reveal ─────────────────── */
+.meta-pills{
+  display:flex;flex-wrap:wrap;gap:6px;
+  margin-top:.6rem;
+}
+.pill{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:.3rem .7rem;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:rgba(6,6,6,.55);
+  font-family:'Space Mono',monospace;font-size:9px;
+  letter-spacing:.04em;
+  color:var(--muted);
+  white-space:nowrap;
+}
+.pill-dir{border-color:rgba(201,169,110,.3);color:rgba(201,169,110,.85);}
+.pill-year{border-color:rgba(140,180,220,.25);color:rgba(160,200,240,.8);}
+.pill-country{border-color:rgba(120,200,160,.25);color:rgba(140,220,180,.8);}
+.pill-era{border-color:rgba(180,140,220,.25);color:rgba(200,160,240,.8);}
 
 .nbtn{--timer-progress:0;margin-top:.75rem;width:100%;background:linear-gradient(90deg,rgba(201,169,110,.18) calc(var(--timer-progress)*100%),transparent calc(var(--timer-progress)*100%));border:1px solid rgba(255,255,255,.12);border-radius:var(--r);padding:.7rem;color:var(--muted);font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.25em;text-transform:uppercase;cursor:pointer;transition:all .12s;display:none;}
 .nbtn:hover{border-color:var(--gold);color:var(--gold);}
