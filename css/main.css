@@ -857,54 +857,73 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 
 /* ── KARTA WIDZA — Golden Ticket + Profile Panel ─────────────── */
 
-/* Golden Ticket — fixed top-left, subtle peeking tab */
+/* Golden Ticket — small inline icon, subtle */
 .golden-ticket{
-  position:fixed;top:12px;left:12px;z-index:900;
-  background:none;
-  border:none;
-  padding:6px 8px;
-  font-size:1.2rem;line-height:1;
-  cursor:pointer;
-  opacity:.55;
-  transform:rotate(-3deg);
-  transition:transform .15s ease,opacity .15s ease;
-  filter:drop-shadow(0 1px 3px rgba(0,0,0,.4));
+  background:none;border:none;
+  font-size:1rem;line-height:1;
+  cursor:pointer;opacity:.5;
+  transition:opacity .15s ease,transform .15s ease;
+  padding:2px 4px;
 }
-.golden-ticket:hover{
-  transform:rotate(0deg) scale(1.08);
-  opacity:.9;
-}
-@keyframes ticket-shimmer{
-  0%,100%{filter:drop-shadow(0 1px 3px rgba(0,0,0,.4)) brightness(1);}
-  50%{filter:drop-shadow(0 1px 3px rgba(0,0,0,.4)) brightness(1.12);}
-}
+.golden-ticket:hover{opacity:.9;transform:scale(1.1);}
+
+/* Setup-screen variant */
+.golden-ticket--setup{font-size:.85rem;}
+
+/* HUD variant — sits next to nick */
+.golden-ticket--hud{font-size:.9rem;margin-right:2px;}
 
 /* Profile Backdrop */
 .profile-backdrop{
   position:fixed;inset:0;z-index:950;
-  background:rgba(0,0,0,.6);
-  backdrop-filter:blur(4px);
+  background:rgba(0,0,0,.7);
+  backdrop-filter:blur(6px);
   opacity:0;pointer-events:none;
-  transition:opacity .3s ease;
+  transition:opacity .35s ease;
 }
 .profile-backdrop.open{opacity:1;pointer-events:auto;}
 
-/* Profile Panel — slides from top with heavy bounce */
+/* Profile Panel — hero animation from small ticket to center panel */
 .profile-panel{
-  position:fixed;top:0;left:50%;z-index:960;
-  transform:translateX(-50%) translateY(-110%);
-  width:90%;max-width:380px;
+  position:fixed;z-index:960;
+  /* Start: small, positioned top-right (near HUD ticket) */
+  top:12px;right:80px;
+  width:40px;height:24px;
+  opacity:0;
+  transform:scale(0.15);
+  transform-origin:top right;
+  /* End state applied via .open */
   background:linear-gradient(180deg,#141414 0%,#0a0a0a 100%);
   border:1px solid rgba(201,169,110,.25);
-  border-top:none;
-  border-radius:0 0 16px 16px;
+  border-radius:16px;
   padding:2rem 1.5rem 1.5rem;
   box-shadow:0 12px 40px rgba(0,0,0,.8),0 0 60px rgba(201,169,110,.08);
-  transition:transform .55s cubic-bezier(.22,1.6,.36,1);
+  overflow:hidden;
+  pointer-events:none;
+  transition:
+    top .5s cubic-bezier(.22,1.2,.36,1),
+    right .5s cubic-bezier(.22,1.2,.36,1),
+    width .5s cubic-bezier(.22,1.2,.36,1),
+    height .5s cubic-bezier(.22,1.2,.36,1),
+    transform .5s cubic-bezier(.22,1.2,.36,1),
+    opacity .3s ease;
 }
 .profile-panel.open{
-  transform:translateX(-50%) translateY(0);
+  top:50%;right:auto;
+  left:50%;
+  width:90%;max-width:380px;
+  height:auto;min-height:320px;
+  opacity:1;
+  transform:translate(-50%,-50%) scale(1);
+  transform-origin:center center;
+  pointer-events:auto;
 }
+/* Inner content hidden until panel opens */
+.profile-panel > *{
+  opacity:0;
+  transition:opacity .2s ease .3s;
+}
+.profile-panel.open > *{opacity:1;}
 
 /* Close button */
 .profile-close{

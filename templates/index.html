@@ -22,8 +22,7 @@
 </head>
 <body>
 
-<!-- Złoty Bilet — Karta Widza trigger -->
-<button class="golden-ticket" id="golden-ticket" onclick="onGoldenTicketClick()" aria-label="Otwórz Kartę Widza">🎫</button>
+<!-- Złoty Bilet trigger removed from here — now inside HUD -->
 
 <!-- Intro section -->
 <div id="intro">
@@ -45,6 +44,7 @@
 <section id="setup">
   <!-- Auth bar — top-right strip -->
   <div class="auth-bar" id="auth-bar">
+    <button class="golden-ticket golden-ticket--setup" id="golden-ticket-setup" onclick="onGoldenTicketClick()" aria-label="Karta Widza">🎫</button>
     {% if player_nick %}
       <span class="auth-status" id="auth-status">{{ player_nick }}</span>
     {% elif user.is_authenticated %}
@@ -94,6 +94,7 @@
   <header class="hud">
     <span class="hbrand">Name the Frame</span>
     <div class="hright">
+      <button class="golden-ticket golden-ticket--hud" id="golden-ticket" onclick="onGoldenTicketClick()" aria-label="Karta Widza">🎫</button>
       <span class="hnick" id="hnick"></span>
       <div class="hstats">
         <span>RUNDA <b id="rnd">1</b>/<b id="mrnd">10</b></span>
