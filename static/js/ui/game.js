@@ -71,6 +71,36 @@ function skipBrokenRound() {
   nextRound();
 }
 
+// --- Metadata Pills ---
+
+const ERA_LABELS = {
+  silent: 'Era ciszy',
+  golden: 'Złoty wiek',
+  new_wave: 'Nowa fala',
+  modern: 'Kino współczesne',
+  contemporary: 'Najnowsze',
+};
+
+function renderMetaPills(film) {
+  let pills = '';
+  pills += `<span class="pill pill-dir">🎬 ${film.dir}</span>`;
+  pills += `<span class="pill pill-year">📅 ${film.y}</span>`;
+  if (film.country) {
+    pills += `<span class="pill pill-country">🌍 ${film.country}</span>`;
+  }
+  if (film.era) {
+    const eraLabel = ERA_LABELS[film.era] || film.era;
+    pills += `<span class="pill pill-era">⏳ ${eraLabel}</span>`;
+  }
+  return `<div class="meta-pills">${pills}</div>`;
+}
+
+// Returns HTML for the heart/favorite button shown after each round result.
+// Uses an empty heart ♡ by default; the .hearted class switches it to a filled ❤️ with glow.
+function renderHeartButton() {
+  return `<button class="heart-btn" aria-label="Dodaj do ulubionych">♡</button>`;
+}
+
 // Handle a multiple-choice option click (Akolita Popcornu mode).
 // Django equivalent: POST /game/answer/ with {type: 'test', picked: '...'}
 function cOpt(btn, correct, picked) {
@@ -79,9 +109,7 @@ function cOpt(btn, correct, picked) {
     if (b.textContent.trim() === correct) b.classList.add('correct');
   });
   if (picked !== correct) btn.classList.add('wrong');
-  const guessed = picked === correct;
-  sr(guessed, 1, correct, '');
-  logRound(S.cur.id, guessed);
+  sr(picked === correct, 1, correct, '');
 }
 
 // Handle answer submission in hangman mode (Samozwańczy Kinoman).
@@ -107,7 +135,6 @@ function cLetter() {
 
   S.score += pts;
   showResult(pts > 0 ? 'ok' : 'bad', lines.join('<br>'));
-  logRound(S.cur.id, titleOK);
 }
 
 // Handle answer submission in expert mode (Orędownik Wielkiej Kinezy).
@@ -142,7 +169,6 @@ function cExpert() {
   S.score += pts;
   const cls = pts === 0 ? 'bad' : (partial || pts < 5) ? 'partial' : 'ok';
   showResult(cls, lines.join('<br>'));
-  logRound(S.cur.id, titleOK);
 }
 
 // Disable all answer inputs after submission to prevent re-submitting.
@@ -161,16 +187,13 @@ function showResult(cls, html) {
   rb.style.display = 'block';
   document.getElementById('frt').textContent = S.cur.title;
   document.getElementById('frm').textContent = `${S.cur.dir} · ${S.cur.y}`;
-  document.getElementById('fr').style.display = 'block';
+  const fr = document.getElementById('fr');
+  fr.querySelectorAll('.meta-pills, .heart-btn').forEach(el => el.remove());
+  fr.insertAdjacentHTML('beforeend', renderMetaPills(S.cur));
+  fr.insertAdjacentHTML('beforeend', renderHeartButton());
+  fr.style.display = 'block';
   document.getElementById('nb').style.display = 'block';
-
-  // Record for summary grid
-  const bgImg = document.getElementById('bgimg');
-  S.history.push({
-    film: S.cur,
-    backdrop: bgImg ? bgImg.src : '',
-    guessed: cls !== 'bad',
-  });
+  smartTimer.start();
 }
 
 // Simplified result renderer used by multiple-choice mode (cOpt).
@@ -186,17 +209,247 @@ function sr(ok, pts, ct, ex) {
   rb.style.display = 'block';
   document.getElementById('frt').textContent = S.cur.title;
   document.getElementById('frm').textContent = `${S.cur.dir} · ${S.cur.y}`;
-  document.getElementById('fr').style.display = 'block';
+  const fr = document.getElementById('fr');
+  fr.querySelectorAll('.meta-pills, .heart-btn').forEach(el => el.remove());
+  fr.insertAdjacentHTML('beforeend', renderMetaPills(S.cur));
+  fr.insertAdjacentHTML('beforeend', renderHeartButton());
+  fr.style.display = 'block';
   document.getElementById('nb').style.display = 'block';
-
-  // Record for summary grid
-  const bgImg = document.getElementById('bgimg');
-  S.history.push({
-    film: S.cur,
-    backdrop: bgImg ? bgImg.src : '',
-    guessed: ok,
-  });
+  smartTimer.start();
 }
+
+// --- Heart Button Click Handler ---
+
+// Extract TMDB backdrop file_path from a full image URL.
+// e.g. "https://image.tmdb.org/t/p/w1280/abc123.jpg" → "/abc123.jpg"
+function extractBackdropPath(url) {
+  if (!url) return '';
+  try {
+    const pathname = new URL(url).pathname;
+    // pathname is like /t/p/w1280/abc123.jpg — we want the last segment
+    const parts = pathname.split('/');
+    return '/' + parts[parts.length - 1];
+  } catch {
+    // Fallback: grab everything after the last /t/p/.../ pattern
+    const m = url.match(/\/t\/p\/[^/]+(\/.+)$/);
+    return m ? m[1] : url;
+  }
+}
+
+// Play a short Web Audio sine burst for heart activation feedback.
+function playHeartSound() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = 880;
+    gain.gain.value = 0.15;
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+    osc.stop(ctx.currentTime + 0.1);
+  } catch (e) {
+    // Silently ignore — Web Audio may not be available
+  }
+}
+
+// Show a brief toast notification at the bottom of the screen.
+function showToast(msg, durationMs = 2500) {
+  let toast = document.getElementById('ntf-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'ntf-toast';
+    toast.style.cssText = 'position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);' +
+      'background:rgba(20,20,20,.92);color:#fff;padding:.6rem 1.4rem;border-radius:8px;' +
+      'font-size:12px;font-family:"Space Mono",monospace;letter-spacing:.05em;' +
+      'z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.style.opacity = '1';
+  clearTimeout(toast._tid);
+  toast._tid = setTimeout(() => { toast.style.opacity = '0'; }, durationMs);
+}
+
+// Delegated click handler for the heart button.
+// Attached once via event delegation on #fr (the film reveal container).
+document.addEventListener('DOMContentLoaded', function() {
+  const fr = document.getElementById('fr');
+  if (!fr) return;
+
+  fr.addEventListener('click', async function(e) {
+    const btn = e.target.closest('.heart-btn');
+    if (!btn) return;
+
+    // Auth gate: if not authenticated, do nothing
+    if (typeof DJANGO_USER === 'undefined' || !DJANGO_USER.authenticated) return;
+
+    // Determine backdrop path from current image
+    const bgImg = document.getElementById('bgimg');
+    const backdropPath = extractBackdropPath(bgImg ? bgImg.src : '');
+
+    if (!S.cur || !backdropPath) return;
+
+    // Remember previous state for revert on error
+    const wasHearted = btn.classList.contains('hearted');
+
+    try {
+      const res = await fetch('/api/hearts/toggle/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCsrfToken(),
+        },
+        body: JSON.stringify({
+          film_id: S.cur.id,
+          backdrop_path: backdropPath,
+        }),
+      });
+
+      if (!res.ok) return;
+
+      const data = await res.json();
+
+      if (data.hearted) {
+        btn.classList.add('hearted');
+        btn.textContent = '❤️';
+        playHeartSound();
+      } else {
+        btn.classList.remove('hearted');
+        btn.textContent = '♡';
+      }
+    } catch (err) {
+      // Network error — revert and show toast
+      if (wasHearted) {
+        btn.classList.add('hearted');
+        btn.textContent = '❤️';
+      } else {
+        btn.classList.remove('hearted');
+        btn.textContent = '♡';
+      }
+      showToast('Brak połączenia');
+    }
+  });
+});
+
+// --- Smart Timer Auto-Advance ---
+
+/**
+ * SmartTimer — countdown that drives --timer-progress CSS var on .nbtn
+ * and auto-calls onComplete (nextRound) when elapsed >= duration.
+ *
+ * Uses requestAnimationFrame for smooth visual updates.
+ */
+class SmartTimer {
+  constructor(duration = 7000, onComplete = null) {
+    this.duration = duration;
+    this.onComplete = onComplete;
+    this._elapsed = 0;
+    this._startTime = null;
+    this._rafId = null;
+    this._running = false;
+    this._paused = false;
+  }
+
+  /** Begin countdown from 0. */
+  start() {
+    this.cancel();
+    this._elapsed = 0;
+    this._running = true;
+    this._paused = false;
+    this._startTime = performance.now();
+    this._tick();
+  }
+
+  /** Pause at current position. */
+  pause() {
+    if (!this._running || this._paused) return;
+    this._paused = true;
+    // Accumulate elapsed up to this moment
+    this._elapsed += performance.now() - this._startTime;
+    if (this._rafId) {
+      cancelAnimationFrame(this._rafId);
+      this._rafId = null;
+    }
+  }
+
+  /** Resume from paused position. */
+  resume() {
+    if (!this._running || !this._paused) return;
+    this._paused = false;
+    this._startTime = performance.now();
+    this._tick();
+  }
+
+  /** Stop countdown and reset progress to 0. */
+  cancel() {
+    this._running = false;
+    this._paused = false;
+    this._elapsed = 0;
+    this._startTime = null;
+    if (this._rafId) {
+      cancelAnimationFrame(this._rafId);
+      this._rafId = null;
+    }
+    this._setProgress(0);
+  }
+
+  /** Alias for cancel. */
+  reset() {
+    this.cancel();
+  }
+
+  /** @private — rAF loop */
+  _tick() {
+    if (!this._running || this._paused) return;
+
+    const now = performance.now();
+    const totalElapsed = this._elapsed + (now - this._startTime);
+    const progress = Math.min(totalElapsed / this.duration, 1);
+
+    this._setProgress(progress);
+
+    if (totalElapsed >= this.duration) {
+      // Timer complete
+      this._running = false;
+      this._rafId = null;
+      if (this.onComplete) this.onComplete();
+      return;
+    }
+
+    this._rafId = requestAnimationFrame(() => this._tick());
+  }
+
+  /** @private — update CSS custom property on .nbtn */
+  _setProgress(value) {
+    const btn = document.querySelector('.nbtn');
+    if (btn) {
+      btn.style.setProperty('--timer-progress', value);
+    }
+  }
+}
+
+// --- Smart Timer Instance & Activity-Pause Logic ---
+
+const smartTimer = new SmartTimer(7000, () => nextRound());
+
+let _activityTimeout = null;
+function onActivity() {
+  if (!smartTimer._running) return;
+  smartTimer.pause();
+  clearTimeout(_activityTimeout);
+  _activityTimeout = setTimeout(() => smartTimer.resume(), 3000);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const game = document.getElementById('game');
+  if (game) {
+    game.addEventListener('mousemove', onActivity);
+    game.addEventListener('touchstart', onActivity);
+  }
+});
 
 // Report wrong frame — player says the image doesn't match the film
 function reportWrongFrame() {

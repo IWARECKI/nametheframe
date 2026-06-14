@@ -30,4 +30,7 @@ urlpatterns = [
     # Player profile (Karta Widza)
     path('api/profile/stats/', views.api_profile_stats, name='api_profile_stats'),
     path('api/profile/nick/', views.api_profile_nick, name='api_profile_nick'),
+
+    # Hearts (favorite frames)
+    path('api/hearts/toggle/', views.api_hearts_toggle, name='api_hearts_toggle'),
 ]

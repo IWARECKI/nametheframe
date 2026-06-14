@@ -270,6 +270,25 @@ class GameRound(models.Model):
         return f'Film {self.film_id} — {"✓" if self.guessed else "✗"} — {self.shown_at:%Y-%m-%d %H:%M}'
 
 
+# ── Hearted Frames ────────────────────────────────────────────────────────────
+
+class HeartedFrame(models.Model):
+    """A frame favorited/hearted by a player."""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='hearted_frames')
+    film = models.ForeignKey(Film, on_delete=models.CASCADE, related_name='hearts')
+    backdrop_path = models.CharField(max_length=120, help_text='TMDB backdrop file_path')
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = [('user', 'film', 'backdrop_path')]
+        ordering = ['-created']
+        verbose_name = 'Ulubiony kadr'
+        verbose_name_plural = 'Ulubione kadry'
+
+    def __str__(self):
+        return f'{self.user} ❤️ {self.film.title} — {self.backdrop_path}'
+
+
 # ── Player Profile ────────────────────────────────────────────────────────────
 
 class PlayerProfile(models.Model):

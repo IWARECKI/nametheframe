@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 
-from .models import Score, FrameReport, BlockedBackdrop, BlockedFilm, Film, GameRound
+from .models import Score, FrameReport, BlockedBackdrop, BlockedFilm, Film, GameRound, HeartedFrame
 
 
 # ── Main page ─────────────────────────────────────────────────────────────────
@@ -286,8 +286,10 @@ def api_films(request):
             'y': f.year,
             't': f.tier,
             'era': f.cinema_era,
+            'country': f.country,
+            'genres': f.genres,
         }
-        for f in qs.only('tmdb_id', 'title', 'director', 'year', 'tier', 'cinema_era')
+        for f in qs.only('tmdb_id', 'title', 'director', 'year', 'tier', 'cinema_era', 'country', 'genres')
     ]
     return JsonResponse({'films': data})
 
@@ -338,3 +340,45 @@ def api_nick_check(request):
 
     available = not (taken_by_user or taken_by_score)
     return JsonResponse({'available': available, 'nick': nick})
+
+
+# ── API: heart/favorite toggle ────────────────────────────────────────────────
+
+@csrf_exempt
+@require_http_methods(['POST'])
+def api_hearts_toggle(request):
+    """Toggle a hearted frame for the authenticated user.
+
+    POST body: {"film_id": <tmdb_id>, "backdrop_path": "/abc123.jpg"}
+    Returns: {"hearted": bool, "heart_count": int}
+    """
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'authentication required'}, status=403)
+
+    try:
+        body = json.loads(request.body)
+        film_id = int(body['film_id'])
+        backdrop_path = str(body['backdrop_path'])
+    except (json.JSONDecodeError, ValueError, TypeError, KeyError):
+        return JsonResponse({'error': 'invalid payload'}, status=400)
+
+    try:
+        film = Film.objects.get(tmdb_id=film_id)
+    except Film.DoesNotExist:
+        return JsonResponse({'error': 'film not found'}, status=404)
+
+    existing = HeartedFrame.objects.filter(
+        user=request.user, film=film, backdrop_path=backdrop_path
+    ).first()
+
+    if existing:
+        existing.delete()
+        hearted = False
+    else:
+        HeartedFrame.objects.create(
+            user=request.user, film=film, backdrop_path=backdrop_path
+        )
+        hearted = True
+
+    heart_count = HeartedFrame.objects.filter(user=request.user).count()
+    return JsonResponse({'hearted': hearted, 'heart_count': heart_count})
