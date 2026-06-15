@@ -670,3 +670,13 @@ function closeLoginModal() {
   const overlay = document.getElementById('login-overlay');
   if (overlay) overlay.classList.remove('is-open');
 }
+
+// --- Logout Modal ---
+function openLogoutModal() {
+  const overlay = document.getElementById('logout-overlay');
+  if (overlay) overlay.classList.add('is-open');
+}
+function closeLogoutModal() {
+  const overlay = document.getElementById('logout-overlay');
+  if (overlay) overlay.classList.remove('is-open');
+}

@@ -1306,3 +1306,50 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   cursor:pointer;transition:all .15s;
 }
 .login-submit:hover{background:rgba(201,169,110,.18);border-color:var(--gold);}
+
+/* ── Login CTA + Guest Divider (Setup screen) ────────────────── */
+.login-cta{
+  display:block;width:100%;max-width:320px;margin:0 auto .75rem;
+  padding:.85rem 1.5rem;
+  background:rgba(201,169,110,.06);
+  border:1px solid rgba(201,169,110,.4);
+  border-radius:10px;
+  color:var(--gold);
+  font-family:'Space Mono',monospace;font-size:10px;font-weight:700;
+  letter-spacing:.15em;text-transform:uppercase;
+  cursor:pointer;transition:all .15s;
+}
+.login-cta:hover{background:rgba(201,169,110,.12);border-color:var(--gold);}
+
+.guest-divider{
+  display:flex;align-items:center;gap:10px;
+  margin:.5rem auto .75rem;max-width:320px;
+  color:var(--muted);font-family:'Space Mono',monospace;font-size:8px;
+  letter-spacing:.08em;
+}
+.guest-divider::before,.guest-divider::after{
+  content:'';flex:1;height:1px;background:var(--border);
+}
+
+/* ── Logout Modal Actions ────────────────────────────────────── */
+.logout-actions{
+  display:flex;gap:10px;margin-top:1.5rem;
+}
+.logout-btn{
+  flex:1;padding:.75rem;
+  border-radius:8px;
+  font-family:'Space Mono',monospace;font-size:9px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+  cursor:pointer;transition:all .15s;border:1px solid transparent;
+}
+.logout-btn--stay{
+  background:rgba(255,255,255,.05);border-color:var(--border);
+  color:var(--muted);
+}
+.logout-btn--stay:hover{background:rgba(255,255,255,.08);color:var(--text);}
+.logout-btn--leave{
+  width:100%;
+  background:rgba(180,60,60,.12);border-color:rgba(180,60,60,.4);
+  color:rgba(220,80,80,.9);
+}
+.logout-btn--leave:hover{background:rgba(180,60,60,.2);border-color:rgba(220,80,80,.6);}

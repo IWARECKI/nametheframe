@@ -54,7 +54,7 @@
       <span class="auth-status" id="auth-status">gość</span>
     {% endif %}
     {% if user.is_authenticated %}
-      <a class="auth-link" href="{% url 'account_logout' %}">wyloguj</a>
+      <a class="auth-link" href="#" onclick="openLogoutModal();return false;">wyloguj</a>
     {% else %}
       <a class="auth-link" href="#" onclick="openLoginModal();return false;">zaloguj</a>
     {% endif %}
@@ -64,6 +64,11 @@
   <p class="tagline">Rozpoznaj kadr &nbsp;·&nbsp; Sprawdź swój poziom filmowtajemniczenia</p>
 
   <div class="setup-form">
+    {% if not user.is_authenticated %}
+    <button class="login-cta" onclick="openLoginModal()">Zaloguj / Zarejestruj</button>
+    <div class="guest-divider"><span>lub zagraj jako go&#347;&#263;</span></div>
+    {% endif %}
+
     <div class="field-wrap">
       {% if player_nick %}
         <input class="nick-input nick-input--authed" id="nick-input" type="text"
@@ -71,12 +76,12 @@
                autocomplete="off" disabled/>
       {% else %}
         <input class="nick-input" id="nick-input" type="text"
-               placeholder="Przedstaw się wędrowcze…" maxlength="22" autocomplete="off"/>
+               placeholder="Przedstaw si&#281; w&#281;drowcze&#8230;" maxlength="22" autocomplete="off"/>
       {% endif %}
       <span class="nick-error" id="nick-error"></span>
     </div>
 
-    <button class="start-btn start-btn--metal" id="start-btn" onclick="startGame()">▶ &nbsp;Zapal projektor</button>
+    <button class="start-btn start-btn--metal" id="start-btn" onclick="startGame()">&#9654; &nbsp;Zapal projektor</button>
 
     <a class="scores-link" href="#" id="scores-link" onclick="toggleScores();return false;">Wyniki</a>
   </div>
@@ -187,7 +192,23 @@
 
 <!-- Global footer — covered by intro (z-index:100) during animation -->
 <div id="screen-flash"></div>
-<div id="site-footer">© 2026 iwarecki</div>
+<div id="site-footer">&copy; 2026 iwarecki</div>
+
+<!-- Logout Modal -->
+<div class="login-overlay" id="logout-overlay" onclick="closeLogoutModal()">
+  <div class="login-modal" onclick="event.stopPropagation()">
+    <button class="login-close" onclick="closeLogoutModal()">&times;</button>
+    <div class="login-title">Opu&#347;ci&#263; sal&#281; kinow&#261;?</div>
+    <p class="login-subtitle">Czy na pewno chcesz si&#281; wylogowa&#263;?</p>
+    <div class="logout-actions">
+      <button class="logout-btn logout-btn--stay" onclick="closeLogoutModal()">Zosta&#324;</button>
+      <form method="POST" action="{% url 'account_logout' %}" style="flex:1;">
+        {% csrf_token %}
+        <button class="logout-btn logout-btn--leave" type="submit">Wyloguj</button>
+      </form>
+    </div>
+  </div>
+</div>
 
 <!-- Login Modal -->
 {% get_providers as socialaccount_providers %}
