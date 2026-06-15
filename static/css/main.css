@@ -1387,3 +1387,49 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   opacity:0 !important;
   transition:opacity .5s ease !important;
 }
+
+/* ── Fullscreen Interaction Overlay (transparent start trigger) ── */
+.huge-interaction-overlay{
+  position:fixed;inset:0;z-index:100;
+  cursor:pointer;
+  background:transparent;
+}
+/* Nick input sits above overlay so it's typeable */
+.nick-input{position:relative;z-index:101;}
+.nick-error{position:relative;z-index:101;}
+.scores-link{position:relative;z-index:101;}
+
+/* Start hint — subtle pulsing text */
+.start-hint{
+  font-family:'Space Mono',monospace;font-size:8px;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:var(--muted);opacity:.5;
+  margin-top:1.5rem;
+  animation:hint-pulse 2.5s ease-in-out infinite;
+}
+@keyframes hint-pulse{
+  0%,100%{opacity:.3;}
+  50%{opacity:.6;}
+}
+
+/* ── Implode UI Animation ────────────────────────────────────── */
+.implode-ui{
+  animation:implode .6s cubic-bezier(.55,.06,.68,.19) forwards;
+}
+@keyframes implode{
+  0%  {opacity:1;transform:scale(1);}
+  60% {opacity:.4;transform:scale(.7);}
+  100%{opacity:0;transform:scale(.1);}
+}
+
+/* Projector beam expanding from center */
+.projector-light-overlay.beam-expand{
+  opacity:1;
+  background:radial-gradient(circle at 50% 50%,rgba(255,220,100,.35) 0%,rgba(201,169,110,.15) 30%,transparent 70%);
+  animation:beam-grow 1.5s ease-out forwards,projector-flicker 0.1s ease-in-out 8 alternate;
+}
+@keyframes beam-grow{
+  0%  {transform:scale(0.05);opacity:1;}
+  40% {transform:scale(0.6);opacity:1;}
+  100%{transform:scale(3);opacity:0;}
+}

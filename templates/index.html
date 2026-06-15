@@ -63,7 +63,7 @@
   <div class="brand">Name the <em>Frame</em></div>
   <p class="tagline">Rozpoznaj kadr &nbsp;&middot;&nbsp; Sprawdź sw&oacute;j poziom filmowtajemniczenia</p>
 
-  <div class="setup-form">
+  <div class="setup-form" id="setup-center">
     <div class="field-wrap">
       {% if player_nick %}
         <input class="nick-input nick-input--authed" id="nick-input" type="text"
@@ -75,11 +75,12 @@
       {% endif %}
       <span class="nick-error" id="nick-error"></span>
     </div>
-
-    <button class="start-btn start-btn--metal" id="start-btn" onclick="zaprojektoruj()">&#9654; &nbsp;Zapal projektor</button>
-
+    <p class="start-hint">kliknij gdziekolwiek, aby zapalić projektor</p>
     <a class="scores-link" href="#" id="scores-link" onclick="toggleScores();return false;">Wyniki</a>
   </div>
+
+  <!-- Fullscreen transparent click trigger -->
+  <div class="huge-interaction-overlay" id="start-overlay"></div>
 
   <div class="scores-panel" id="scores-panel"></div>
   <p class="scred">&copy; 2026 iwarecki &middot; Dane i obrazy: The Movie Database (TMDB) &middot; nametheframe.com</p>

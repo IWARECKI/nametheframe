@@ -681,30 +681,50 @@ function closeLogoutModal() {
   if (overlay) overlay.classList.remove('is-open');
 }
 
-// --- Projector "WOW" Effect on Start ---
+// --- Projector "WOW" Effect — triggered by fullscreen overlay click ---
+document.addEventListener('DOMContentLoaded', () => {
+  const overlay = document.getElementById('start-overlay');
+  if (!overlay) return;
+
+  overlay.addEventListener('click', () => {
+    zaprojektoruj();
+  });
+});
+
 function zaprojektoruj() {
   const setup = document.getElementById('setup');
+  const center = document.getElementById('setup-center');
   const light = document.getElementById('projector-light');
+  const overlay = document.getElementById('start-overlay');
+
   if (!setup) { startGame(); return; }
 
-  // Step 1: Fade out UI (lights off)
-  setup.classList.add('fade-out-ui');
+  // Remove overlay immediately
+  if (overlay) overlay.style.display = 'none';
 
-  // Step 2: Audio (placeholder path — silently fails if missing)
+  // Step 1: Implode UI to center point
+  if (center) center.classList.add('implode-ui');
+
+  // Step 2: Audio
   try {
     const audio = new Audio('/static/audio/projector.mp3');
-    audio.volume = 0.5;
+    audio.volume = 0.4;
     audio.play().catch(() => {});
   } catch(e) {}
 
-  // Step 3: Projector light flash (after 500ms)
+  // Step 3: After implode (600ms), fire beam from center
   setTimeout(() => {
-    if (light) light.classList.add('active');
-  }, 500);
+    setup.style.opacity = '0';
+    if (light) {
+      light.classList.remove('active');
+      light.classList.add('beam-expand');
+    }
+  }, 600);
 
-  // Step 4: Start the actual game (after 2000ms total)
+  // Step 4: Start game after beam animation (2s total)
   setTimeout(() => {
-    if (light) { light.classList.remove('active'); light.style.opacity = '0'; }
+    if (light) { light.classList.remove('beam-expand'); light.style.opacity = '0'; }
     startGame();
-  }, 2000);
+  }, 2100);
 }
+
