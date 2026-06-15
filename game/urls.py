@@ -5,6 +5,9 @@ urlpatterns = [
     # SPA
     path('', views.index, name='index'),
 
+    # Privacy policy
+    path('privacy/', views.privacy, name='privacy'),
+
     # Auth state
     path('api/me/', views.api_me, name='api_me'),
 

@@ -13,6 +13,11 @@ from .models import Score, FrameReport, BlockedBackdrop, BlockedFilm, Film, Game
 
 # ── Main page ─────────────────────────────────────────────────────────────────
 
+def privacy(request):
+    """Privacy policy page."""
+    return render(request, 'privacy.html')
+
+
 @ensure_csrf_cookie
 def index(request):
     """Serve the single-page app. Passes auth state to template.
