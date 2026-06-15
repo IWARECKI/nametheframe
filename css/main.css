@@ -1543,3 +1543,35 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   from{opacity:0;max-height:0;transform:translateY(-8px);}
   to{opacity:1;max-height:400px;transform:translateY(0);}
 }
+
+/* ── MOBILE: Setup Screen Fixes (max-width: 768px) ──────────── */
+@media(max-width:768px){
+  /* ZAPAL PROJEKTOR — prevent line break */
+  .frame-btn-label{
+    font-size:7px;letter-spacing:2px;
+    padding:.6rem 1rem;
+    background:none !important;
+  }
+  .cinematic-frame-button{
+    top:60px;left:3vw;right:3vw;bottom:3vw;
+    padding-bottom:3vh;
+  }
+
+  /* Copyright — hide or minimize */
+  .scred{font-size:0.5rem;bottom:5px;right:10px;opacity:.25;}
+
+  /* Top navigation — safe area */
+  .scores-link{top:20px;left:15px;font-size:7px;}
+  .auth-bar{top:20px;right:15px;font-size:7px;}
+  .auth-bar .auth-status{display:none;}
+
+  /* Title — smaller for mobile */
+  .brand{font-size:2.2rem !important;}
+  .tagline{font-size:8px !important;max-width:90%;line-height:1.4;letter-spacing:.12em !important;}
+
+  /* Input field */
+  .nick-input{font-size:1rem;padding:.6rem .75rem .5rem;}
+
+  /* Setup padding adjustment */
+  #setup{padding:60px 1rem 2rem;}
+}
