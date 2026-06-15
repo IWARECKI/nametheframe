@@ -1,4 +1,4 @@
-﻿// Django equivalent: views/game.py â€” handles game round interactions
+// Django equivalent: views/game.py â€” handles game round interactions
 // In Django each answer submission would be a POST request:
 //   class AnswerView(LoginRequiredMixin, View):
 //       def post(self, request): ...  # validate answer, update score, return JSON
@@ -76,16 +76,16 @@ function skipBrokenRound() {
 function renderMetaPills(film) {
   // Row 1: Director, Year, Country
   let row1 = '';
-  row1 += `<span class="pill pill-dir">đźŽ¬ ${film.dir}</span>`;
-  row1 += `<span class="pill pill-year">đź“… ${film.y}</span>`;
+  row1 += `<span class="pill pill-dir">🎬 ${film.dir}</span>`;
+  row1 += `<span class="pill pill-year">📅 ${film.y}</span>`;
   if (film.country) {
-    row1 += `<span class="pill pill-country">đźŚŤ ${film.country}</span>`;
+    row1 += `<span class="pill pill-country">🌍 ${film.country}</span>`;
   }
   // Row 2: Genres
   let row2 = '';
   if (film.genres && film.genres.length) {
-    const genreText = film.genres.slice(0, 3).join(' Â· ');
-    row2 = `<div class="meta-pills-row2"><span class="pill pill-genre">đźŽ­ ${genreText}</span></div>`;
+    const genreText = film.genres.slice(0, 3).join(' · ');
+    row2 = `<div class="meta-pills-row2"><span class="pill pill-genre">🎭 ${genreText}</span></div>`;
   }
   return `<div class="meta-pills">${row1}</div>${row2}`;
 }
@@ -93,7 +93,7 @@ function renderMetaPills(film) {
 // Returns HTML for the heart/favorite button shown after each round result.
 // Positioned as floating bookmark in top-right of qinner.
 function renderHeartButton() {
-  return `<button class="heart-btn" type="button" aria-label="Polub ten kadr">â™ˇ</button>`;
+  return `<button class="heart-btn" type="button" aria-label="Polub ten kadr">♡</button>`;
 }
 
 // Handle a multiple-choice option click (Akolita Popcornu mode).
@@ -119,13 +119,13 @@ function cLetter() {
   let pts = 0, lines = [];
 
   if (titleOK) { pts += 2; lines.push(`âś“ TytuĹ‚: <strong>${he(f.title)}</strong> +2 pkt`); }
-  else          {           lines.push(`âś— TytuĹ‚: <strong>${he(f.title)}</strong>`); }
+  else          {           lines.push(`✗ TytuĹ‚: <strong>${he(f.title)}</strong>`); }
 
   if (dir) {
     // Accept if the normalized guess contains the director's last name
     const dirOK = nm(dir).includes(nm(f.dir).split(' ').pop());
     if (dirOK) { pts += 3; lines.push(`âś“ ReĹĽyser: <strong>${he(f.dir)}</strong> +3 pkt`); }
-    else        { pts = Math.max(0, pts - 1); lines.push(`âś— ReĹĽyser: <strong>${he(f.dir)}</strong> -1 pkt`); }
+    else        { pts = Math.max(0, pts - 1); lines.push(`✗ ReĹĽyser: <strong>${he(f.dir)}</strong> -1 pkt`); }
   }
 
   S.score += pts;
@@ -146,19 +146,19 @@ function cExpert() {
   // Title: up to 3 pts
   const titleOK = fuzzyMatch(title, f.title);
   if (titleOK) { pts += 3; lines.push(`âś“ TytuĹ‚: <strong>${he(f.title)}</strong> +3 pkt`); }
-  else          {           lines.push(`âś— TytuĹ‚: <strong>${he(f.title)}</strong>`); }
+  else          {           lines.push(`✗ TytuĹ‚: <strong>${he(f.title)}</strong>`); }
 
   // Year: up to 2 pts with partial credit
   const ys = yearScore(year, f.y, 2);
   pts += ys.pts;
   if (ys.pts > 0 && ys.pts < 2) partial = true;
-  lines.push(`${ys.pts > 0 ? 'âś“' : 'âś—'} Rok: <strong>${f.y}</strong> ${ys.label}`);
+  lines.push(`${ys.pts > 0 ? 'âś“' : '✗'} Rok: <strong>${f.y}</strong> ${ys.label}`);
 
   // Director: optional bonus/penalty
   if (dir) {
     const dirOK = nm(dir).includes(nm(f.dir).split(' ').pop());
     if (dirOK) { pts += 3; lines.push(`âś“ ReĹĽyser: <strong>${he(f.dir)}</strong> +3 pkt`); }
-    else        { pts = Math.max(0, pts - 1); lines.push(`âś— ReĹĽyser: <strong>${he(f.dir)}</strong> -1 pkt`); }
+    else        { pts = Math.max(0, pts - 1); lines.push(`✗ ReĹĽyser: <strong>${he(f.dir)}</strong> -1 pkt`); }
   }
 
   S.score += pts;
@@ -212,8 +212,8 @@ function sr(ok, pts, ct, ex) {
   const rb = document.getElementById('rb');
   rb.className = 'rbox ' + (ok ? 'ok' : 'bad');
   rb.innerHTML = ok
-    ? `âś“ &nbsp;Tak! &nbsp;<strong>${he(ct)}</strong> &nbsp;+${pts} pkt`
-    : `âś— &nbsp;Nie. To: &nbsp;<strong>${he(ct)}</strong>${ex}`;
+    ? `✓ &nbsp;Tak! &nbsp;<strong>${he(ct)}</strong> &nbsp;+${pts} pkt`
+    : `✗ &nbsp;Nie. To: &nbsp;<strong>${he(ct)}</strong>${ex}`;
   rb.style.display = 'block';
   document.getElementById('frm').style.display = 'none';
   const fr = document.getElementById('fr');
@@ -368,11 +368,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
       if (data.hearted) {
         btn.classList.add('hearted');
-        btn.textContent = 'âť¤';
+        btn.textContent = '❤';
         playHeartSound();
       } else {
         btn.classList.remove('hearted');
-        btn.textContent = 'â™ˇ';
+        btn.textContent = '♡';
       }
     } catch (err) {
       // Network error â€” revert and show toast
@@ -381,7 +381,7 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.textContent = 'âť¤';
       } else {
         btn.classList.remove('hearted');
-        btn.textContent = 'â™ˇ';
+        btn.textContent = '♡';
       }
       showToast('Brak poĹ‚Ä…czenia');
     }
