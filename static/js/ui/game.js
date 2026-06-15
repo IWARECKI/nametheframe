@@ -196,6 +196,15 @@ function showResult(cls, html) {
   if (frtRow) frtRow.style.display = 'none';
   fr.insertAdjacentHTML('beforeend', renderMetaPills(S.cur));
   fr.style.display = 'block';
+
+  // Record for summary grid
+  const bgImg = document.getElementById('bgimg');
+  S.history.push({
+    film: S.cur,
+    backdrop: bgImg ? bgImg.src : '',
+    guessed: cls !== 'bad',
+  });
+
   // Activate heart on correct answer
   if (cls === 'ok') {
     const hb = document.querySelector('.qinner > .heart-btn');
@@ -246,6 +255,15 @@ function sr(ok, pts, ct, ex) {
   if (frtRow) frtRow.style.display = 'none';
   fr.insertAdjacentHTML('beforeend', renderMetaPills(S.cur));
   fr.style.display = 'block';
+
+  // Record for summary grid
+  const bgImg2 = document.getElementById('bgimg');
+  S.history.push({
+    film: S.cur,
+    backdrop: bgImg2 ? bgImg2.src : '',
+    guessed: ok,
+  });
+
   // Activate heart on correct answer
   if (ok) {
     const hb = document.querySelector('.qinner > .heart-btn');
