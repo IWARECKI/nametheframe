@@ -728,15 +728,15 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 /* Winner button — heart as top-edge badge above first letter */
 .opt-winner{position:relative;font-weight:bold;color:#E5C158;text-shadow:0 1px 4px rgba(201,169,110,.3);}
 .opt-winner .heart-btn{
-  position:absolute;top:-13px;left:12px;
+  position:absolute;top:-12px;left:12px;
   display:flex;align-items:center;justify-content:center;
-  width:28px;height:28px;
-  font-size:1.1rem;line-height:1;
+  width:24px;height:24px;
+  font-size:1rem;line-height:1;
   margin:0;padding:0;
   background:rgba(255,255,255,.06);
   backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
   border:1px solid rgba(201,169,110,.35);
-  border-radius:50%;
+  border-radius:6px;
   opacity:0;transform:scale(0.4);
   pointer-events:auto !important;
   color:rgba(218,165,32,.6);
