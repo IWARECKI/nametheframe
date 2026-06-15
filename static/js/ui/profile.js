@@ -5,7 +5,7 @@
 // ── 7.1 Auth gate ────────────────────────────────────────────────────────────
 function onGoldenTicketClick() {
   if (typeof DJANGO_USER === 'undefined' || !DJANGO_USER.authenticated) {
-    window.location.href = '/accounts/login/';
+    openLoginModal();
     return;
   }
   openProfilePanel();

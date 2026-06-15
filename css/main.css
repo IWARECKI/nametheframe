@@ -1274,13 +1274,20 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .login-social-icon{flex-shrink:0;}
 
 .login-divider{
-  display:flex;align-items:center;gap:12px;
+  border-top:1px solid rgba(212,175,55,.2);
   margin:1.25rem 0;
-  color:var(--muted);font-family:'Space Mono',monospace;font-size:8px;
-  letter-spacing:.1em;text-transform:uppercase;
 }
-.login-divider::before,.login-divider::after{
-  content:'';flex:1;height:1px;background:var(--border);
+.login-separator{
+  border-top:1px solid rgba(212,175,55,.2);
+  margin:1.25rem 0;
+}
+
+.login-social--soon{
+  opacity:.4;pointer-events:none;position:relative;
+}
+.login-soon-badge{
+  font-size:7px;letter-spacing:.1em;
+  color:rgba(201,169,110,.6);margin-left:auto;
 }
 
 .login-form{display:flex;flex-direction:column;gap:10px;}
