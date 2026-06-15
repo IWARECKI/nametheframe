@@ -725,38 +725,8 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .opt:hover:not(:disabled){border-color:rgba(201,169,110,.4);background:rgba(201,169,110,.1);}
 .opt.correct{background:var(--ok);border-color:rgba(100,180,120,.5);color:var(--ok-t);}
 .opt.wrong{background:var(--bad);border-color:rgba(180,90,90,.5);color:var(--bad-t);}
-/* Winner button — heart as top-edge badge above first letter */
+/* Winner button — title highlight only, no heart inside */
 .opt-winner{position:relative;font-weight:bold;color:#E5C158;text-shadow:0 1px 4px rgba(201,169,110,.3);}
-.opt-winner .heart-btn{
-  position:absolute;top:-12px;left:7px;
-  display:flex;align-items:center;justify-content:center;
-  width:24px;height:24px;
-  font-size:1rem;line-height:1;
-  margin:0;padding:0;
-  background:rgba(255,255,255,.06);
-  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
-  border:1px solid rgba(201,169,110,.35);
-  border-radius:6px;
-  opacity:0;transform:scale(0.4);
-  pointer-events:auto !important;
-  color:rgba(218,165,32,.6);
-  cursor:pointer;
-  z-index:10;
-  transition:color .25s ease,filter .3s ease,transform .4s cubic-bezier(.34,1.56,.64,1),opacity .4s ease,background .25s ease;
-}
-.opt-winner .heart-btn.heart-revealed{opacity:1;transform:scale(1);}
-.opt-winner .heart-btn:hover{
-  background:rgba(255,255,255,.12);
-  color:rgba(218,165,32,.9);
-  transform:scale(1.15);
-}
-.opt-winner .heart-btn.hearted{
-  color:rgba(220,20,60,1);
-  background:rgba(220,20,60,.1);
-  border-color:rgba(220,20,60,.4);
-  filter:drop-shadow(0 0 8px rgba(220,20,60,.7)) drop-shadow(0 0 16px rgba(220,20,60,.5));
-  animation:heart-glow-pulse 2s ease-in-out infinite;
-}
 @media(min-width:768px){.opts{grid-template-columns:1fr 1fr;}}
 
 .ti{background:rgba(6,6,6,.62);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;color:var(--text);font-family:'Space Mono',monospace;font-size:12px;width:100%;outline:none;transition:border-color .12s;margin-bottom:6px;backdrop-filter:blur(4px);}
@@ -796,47 +766,52 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .frt{font-family:'Cormorant Garamond',serif;font-size:1.2em;margin-bottom:2px;color:rgba(255,248,230,.95);text-shadow:0 1px 6px rgba(201,169,110,.25);}
 .frm{font-size:10px;letter-spacing:.1em;color:var(--muted);}
 
-/* ── Heart / Favorite button ─────────────────────────────────── */
+/* ── Heart / Favorite button — top-right of qinner ────────────── */
 .heart-btn{
-  position:relative;
-  display:inline-flex;align-items:center;justify-content:center;
-  background:none;border:none;
-  font-size:1.6rem;line-height:1;
-  cursor:pointer;
-  padding:0;margin-right:10px;
-  color:rgba(218,165,32,.6);
-  transition:color .25s ease,filter .3s ease,transform .4s cubic-bezier(.34,1.56,.64,1),opacity .4s ease;
-  flex-shrink:0;
-  /* Hidden by default — revealed on correct answer */
-  opacity:0;
-  transform:scale(0.5);
+  position:absolute;top:0;right:0;
+  display:flex;align-items:center;justify-content:center;
+  width:32px;height:32px;
+  font-size:1.5rem;line-height:1;
+  margin:0;padding:0;
+  background:rgba(180,90,90,.12);
+  border:1px solid rgba(180,90,90,.25);
+  border-radius:8px;
+  color:rgba(180,140,140,.4);
+  cursor:default;
   pointer-events:none;
+  z-index:10;
+  transition:color .3s ease,filter .3s ease,transform .3s ease,background .3s ease,border-color .3s ease;
 }
-.heart-btn.heart-revealed{
-  opacity:1;
-  transform:scale(1);
+/* Active state — correct answer, can click */
+.heart-btn.heart-active{
+  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+  border-color:rgba(201,169,110,.4);
+  color:rgba(218,165,32,.7);
+  cursor:pointer;
   pointer-events:auto;
-  animation:heart-slot-open .5s cubic-bezier(.34,1.56,.64,1) forwards;
 }
-@keyframes heart-slot-open{
-  0%  {opacity:0;transform:scale(0.4) rotate(-15deg);}
-  50% {opacity:1;transform:scale(1.15) rotate(3deg);}
-  75% {transform:scale(0.92) rotate(-1deg);}
-  100%{transform:scale(1) rotate(0);}
+.heart-btn.heart-active:hover{
+  background:rgba(255,255,255,.14);
+  color:rgba(218,165,32,.95);
+  transform:scale(1.1);
 }
-.heart-btn:hover{color:rgba(218,165,32,.9);transform:scale(1.15);}
+/* Lit state — hearted */
 .heart-btn.hearted{
   color:rgba(220,20,60,1);
+  background:rgba(220,20,60,.1);
+  border-color:rgba(220,20,60,.45);
   filter:drop-shadow(0 0 8px rgba(220,20,60,.7)) drop-shadow(0 0 16px rgba(220,20,60,.5));
   animation:heart-glow-pulse 2s ease-in-out infinite;
+  pointer-events:auto;
+  cursor:pointer;
 }
-
-/* ── Heart Tooltip (Nintendo-style, slides from right) ──────── */
+/* Tooltip — slides left */
 .heart-btn::after{
-  content:'Dodaj kadr do ulubionych :)';
+  content:'Polub kadr';
   position:absolute;
-  left:calc(100% + 8px);top:50%;
-  transform:translateY(-50%) translateX(-8px);
+  right:calc(100% + 8px);top:50%;
+  transform:translateY(-50%) translateX(8px);
   opacity:0;
   pointer-events:none;
   white-space:nowrap;
@@ -844,21 +819,21 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
   border:1px solid rgba(201,169,110,.35);
   border-radius:8px;
-  padding:6px 12px;
-  font-family:'Space Mono',monospace;font-size:9px;
+  padding:5px 10px;
+  font-family:'Space Mono',monospace;font-size:8px;
   letter-spacing:.03em;
   color:#fff;
   box-shadow:0 4px 16px rgba(0,0,0,.5);
   transition:opacity .3s cubic-bezier(.34,1.56,.64,1),transform .3s cubic-bezier(.34,1.56,.64,1);
 }
-.heart-btn:hover::after{
+.heart-btn.heart-active:hover::after,
+.heart-btn.hearted:hover::after{
   opacity:1;
   transform:translateY(-50%) translateX(0);
 }
 .heart-btn.hearted::after{
-  content:'Polubiony kadr ❤️';
-}
-@keyframes heart-glow-pulse{
+  content:'Polubione \u2764';
+}@keyframes heart-glow-pulse{
   0%,100%{
     filter:drop-shadow(0 0 8px rgba(220,20,60,.7)) drop-shadow(0 0 16px rgba(220,20,60,.5));
   }

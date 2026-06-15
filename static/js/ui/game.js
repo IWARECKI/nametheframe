@@ -101,7 +101,7 @@ function renderMetaPills(film) {
 // Returns HTML for the heart/favorite button shown after each round result.
 // Positioned as floating bookmark in top-right of qinner.
 function renderHeartButton() {
-  return `<button class="heart-btn" type="button" aria-label="Polub ten kadr">♡</button>`;
+  return '<button class="heart-btn" type="button" aria-label="Polub ten kadr">♡</button>';
 }
 
 // Handle a multiple-choice option click (Akolita Popcornu mode).
@@ -196,17 +196,10 @@ function showResult(cls, html) {
   if (frtRow) frtRow.style.display = 'none';
   fr.insertAdjacentHTML('beforeend', renderMetaPills(S.cur));
   fr.style.display = 'block';
-  // Heart moves into the winning button (correct answer)
+  // Activate heart on correct answer
   if (cls === 'ok') {
-    setTimeout(() => {
-      const winBtn = document.querySelector('.opt.correct');
-      if (winBtn) {
-        winBtn.classList.add('opt-winner');
-        winBtn.insertAdjacentHTML('beforeend', renderHeartButton());
-        const hb = winBtn.querySelector('.heart-btn');
-        if (hb) { hb.classList.add('heart-revealed'); }
-      }
-    }, 400);
+    const hb = document.querySelector('.qinner > .heart-btn');
+    if (hb) hb.classList.add('heart-active');
   }
   document.getElementById('nb').style.display = 'block';
   smartTimer.start();
@@ -219,6 +212,7 @@ function sr(ok, pts, ct, ex) {
 
   // Remove old toast/rbox
   document.querySelectorAll('.result-toast').forEach(el => el.remove());
+  ensureHeartInQinner();
   const rb = document.getElementById('rb');
 
   if (ok) {
@@ -252,25 +246,10 @@ function sr(ok, pts, ct, ex) {
   if (frtRow) frtRow.style.display = 'none';
   fr.insertAdjacentHTML('beforeend', renderMetaPills(S.cur));
   fr.style.display = 'block';
-  // Heart as corner badge on winning button
+  // Activate heart on correct answer
   if (ok) {
-    setTimeout(() => {
-      const winBtn = document.querySelector('.opt.correct');
-      if (winBtn) {
-        winBtn.classList.add('opt-winner');
-        winBtn.insertAdjacentHTML('beforeend', renderHeartButton());
-        const hb = winBtn.querySelector('.heart-btn');
-        if (hb) {
-          hb.classList.add('heart-revealed');
-          // Direct click listener — bypasses disabled parent
-          hb.addEventListener('click', function(ev) {
-            ev.stopPropagation();
-            ev.preventDefault();
-            handleHeartClick(hb);
-          });
-        }
-      }
-    }, 400);
+    const hb = document.querySelector('.qinner > .heart-btn');
+    if (hb) hb.classList.add('heart-active');
   }
   document.getElementById('nb').style.display = 'block';
   smartTimer.start();
@@ -543,6 +522,40 @@ function reportWrongFrame() {
   // Skip round without penalty
   S.round--;
   setTimeout(() => nextRound(), 1200);
+}
+
+
+// --- Heart Button: Always present in qinner, state-driven ---
+function ensureHeartInQinner() {
+  const qi = document.querySelector('.qinner');
+  if (!qi) return;
+  let hb = qi.querySelector(':scope > .heart-btn');
+  if (!hb) {
+    qi.insertAdjacentHTML('afterbegin', renderHeartButton());
+    hb = qi.querySelector(':scope > .heart-btn');
+  }
+  // Reset to inactive state
+  hb.classList.remove('heart-active', 'hearted');
+  hb.textContent = '♡';
+  // Attach direct click handler
+  hb.onclick = function(ev) {
+    ev.stopPropagation();
+    ev.preventDefault();
+    if (!hb.classList.contains('heart-active')) return;
+    handleHeartClick(hb);
+  };
+}
+
+// Call on DOMContentLoaded
+document.addEventListener('DOMContentLoaded', ensureHeartInQinner);
+
+// Also reset heart state each new round (called from nextRound)
+function resetHeartState() {
+  const hb = document.querySelector('.qinner > .heart-btn');
+  if (hb) {
+    hb.classList.remove('heart-active', 'hearted');
+    hb.textContent = '♡';
+  }
 }
 
 // --- Draggable Island (Pointer Events) ---
