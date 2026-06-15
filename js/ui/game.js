@@ -260,7 +260,16 @@ function sr(ok, pts, ct, ex) {
         winBtn.classList.add('opt-winner');
         winBtn.insertAdjacentHTML('beforeend', renderHeartButton());
         const hb = winBtn.querySelector('.heart-btn');
-        if (hb) { hb.classList.add('heart-revealed'); playStampSound(); }
+        if (hb) {
+          hb.classList.add('heart-revealed');
+          playStampSound();
+          // Direct click listener — bypasses disabled parent
+          hb.addEventListener('click', function(ev) {
+            ev.stopPropagation();
+            ev.preventDefault();
+            handleHeartClick(hb);
+          });
+        }
       }
     }, 400);
   }
@@ -356,66 +365,52 @@ function showToast(msg, durationMs = 2500) {
   toast._tid = setTimeout(() => { toast.style.opacity = '0'; }, durationMs);
 }
 
-// Delegated click handler for the heart button.
-// Attached once via event delegation on .frev (the film reveal container).
-document.addEventListener('DOMContentLoaded', function() {
-  const fr = document.getElementById('fr');
-  if (!fr) return;
+// Heart click handler — called directly from button listener
+async function handleHeartClick(btn) {
+  // Auth gate
+  if (typeof DJANGO_USER === 'undefined' || !DJANGO_USER.authenticated) return;
 
-  fr.addEventListener('click', async function(e) {
-    const btn = e.target.closest('.heart-btn');
-    if (!btn) return;
+  const bgImg = document.getElementById('bgimg');
+  const backdropPath = extractBackdropPath(bgImg ? bgImg.src : '');
+  if (!S.cur || !backdropPath) return;
 
-    // Auth gate: if not authenticated, do nothing
-    if (typeof DJANGO_USER === 'undefined' || !DJANGO_USER.authenticated) return;
+  const wasHearted = btn.classList.contains('hearted');
 
-    // Determine backdrop path from current image
-    const bgImg = document.getElementById('bgimg');
-    const backdropPath = extractBackdropPath(bgImg ? bgImg.src : '');
+  try {
+    const res = await fetch('/api/hearts/toggle/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCsrfToken(),
+      },
+      body: JSON.stringify({
+        film_id: S.cur.id,
+        backdrop_path: backdropPath,
+      }),
+    });
 
-    if (!S.cur || !backdropPath) return;
+    if (!res.ok) return;
+    const data = await res.json();
 
-    // Remember previous state for revert on error
-    const wasHearted = btn.classList.contains('hearted');
-
-    try {
-      const res = await fetch('/api/hearts/toggle/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': getCsrfToken(),
-        },
-        body: JSON.stringify({
-          film_id: S.cur.id,
-          backdrop_path: backdropPath,
-        }),
-      });
-
-      if (!res.ok) return;
-
-      const data = await res.json();
-
-      if (data.hearted) {
-        btn.classList.add('hearted');
-        btn.textContent = '❤';
-        playHeartSound();
-      } else {
-        btn.classList.remove('hearted');
-        btn.textContent = '♡';
-      }
-    } catch (err) {
-      // Network error â€” revert and show toast
-      if (wasHearted) {
-        btn.classList.add('hearted');
-        btn.textContent = 'âť¤';
-      } else {
-        btn.classList.remove('hearted');
-        btn.textContent = '♡';
-      }
-      showToast('Brak poĹ‚Ä…czenia');
+    if (data.hearted) {
+      btn.classList.add('hearted');
+      btn.textContent = '❤';
+      playHeartSound();
+    } else {
+      btn.classList.remove('hearted');
+      btn.textContent = '♡';
     }
-  });
-});
+  } catch (err) {
+    if (wasHearted) {
+      btn.classList.add('hearted');
+      btn.textContent = '❤';
+    } else {
+      btn.classList.remove('hearted');
+      btn.textContent = '♡';
+    }
+    showToast('Brak połączenia');
+  }
+}
 
 // --- Smart Timer Auto-Advance ---
 
