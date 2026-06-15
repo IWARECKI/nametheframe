@@ -594,3 +594,33 @@ function reportWrongFrame() {
     });
   });
 })();
+
+// --- Mobile: Hide UI on background tap ---
+(function initMobileUIHide() {
+  document.addEventListener('DOMContentLoaded', () => {
+    if (window.innerWidth > 768) return; // only mobile
+
+    const bgf = document.querySelector('.bgf');
+    if (!bgf) return;
+
+    let uiHidden = false;
+
+    bgf.addEventListener('pointerdown', (e) => {
+      // Only if tap is on the background itself (not on island/hud)
+      if (e.target.closest('.qpanel, .hud, .opt, button')) return;
+
+      const panel = document.querySelector('.qpanel');
+      const hud = document.querySelector('.hud');
+
+      if (!uiHidden) {
+        if (panel) panel.classList.add('ui-hidden');
+        if (hud) hud.classList.add('ui-hidden');
+        uiHidden = true;
+      } else {
+        if (panel) panel.classList.remove('ui-hidden');
+        if (hud) hud.classList.remove('ui-hidden');
+        uiHidden = false;
+      }
+    });
+  });
+})();
