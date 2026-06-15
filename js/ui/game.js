@@ -376,7 +376,7 @@ async function handleHeartClick(btn) {
       playHeartSound();
     } else {
       btn.classList.remove('hearted');
-      btn.textContent = '♡';
+      btn.textContent = '♥';
     }
   } catch (err) {
     if (wasHearted) {
@@ -384,7 +384,7 @@ async function handleHeartClick(btn) {
       btn.textContent = '❤';
     } else {
       btn.classList.remove('hearted');
-      btn.textContent = '♡';
+      btn.textContent = '♥';
     }
     showToast('Brak połączenia');
   }
@@ -536,7 +536,7 @@ function ensureHeartInQinner() {
   }
   // Reset to inactive state
   hb.classList.remove('heart-active', 'hearted');
-  hb.textContent = '♡';
+  hb.textContent = '♥';
   // Attach direct click handler
   hb.onclick = function(ev) {
     ev.stopPropagation();
@@ -554,7 +554,7 @@ function resetHeartState() {
   const hb = document.querySelector('.qinner > .heart-btn');
   if (hb) {
     hb.classList.remove('heart-active', 'hearted');
-    hb.textContent = '♡';
+    hb.textContent = '♥';
   }
 }
 

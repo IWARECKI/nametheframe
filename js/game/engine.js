@@ -55,6 +55,7 @@ function pickWeighted(pool, level) {
 // Django equivalent: a view that increments session state and redirects.
 function nextRound() {
   smartTimer.reset();
+  resetHeartState();
   if (S.round >= ROUNDS_PER_GAME) { endGame(); return; }
   const available = FILMS.filter(f => !S.used.includes(f.id) && !isPermaBroken(f.id));
   if (!available.length) { endGame(); return; }
