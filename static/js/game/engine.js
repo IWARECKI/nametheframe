@@ -143,6 +143,9 @@ function endGame() {
   // Render summary grid (12 frames, 3×4)
   renderSummaryGrid();
 
+  // XP system
+  renderXPBar();
+
   // Render leaderboard
   renderLeaderboard();
 }
@@ -170,6 +173,72 @@ function renderSummaryGrid() {
     cell.appendChild(img);
     cell.appendChild(overlay);
     container.appendChild(cell);
+  });
+}
+
+// XP reward table (non-linear)
+const XP_TABLE = [0,1,2,3,4,5,6,8,10,12,14,18,24];
+// Level thresholds: [xpNeeded, levelName]
+const LEVELS = [
+  [0, 'Akolita Popcornu'],
+  [10, 'Kinoman Weekendowy'],
+  [30, 'Kinoman Zaawansowany'],
+  [60, 'Ekspert Kadru'],
+  [100, 'Mistrz Ekranu'],
+  [160, 'Or\u0119downik Wielkiej Kinezy'],
+  [250, 'Legenda Srebrnego Ekranu'],
+];
+
+function getXP() {
+  try { return parseInt(localStorage.getItem('ntf_xp') || '0', 10); } catch { return 0; }
+}
+function setXP(val) {
+  try { localStorage.setItem('ntf_xp', String(val)); } catch {}
+}
+function getLevelInfo(xp) {
+  let lvl = 1, name = LEVELS[0][1], nextXp = LEVELS[1] ? LEVELS[1][0] : 999, prevXp = 0;
+  for (let i = LEVELS.length - 1; i >= 0; i--) {
+    if (xp >= LEVELS[i][0]) {
+      lvl = i + 1;
+      name = LEVELS[i][1];
+      prevXp = LEVELS[i][0];
+      nextXp = LEVELS[i + 1] ? LEVELS[i + 1][0] : LEVELS[i][0] + 50;
+      break;
+    }
+  }
+  return { lvl, name, prevXp, nextXp };
+}
+
+function renderXPBar() {
+  const correct = S.history.filter(e => e.guessed).length;
+  const xpGained = XP_TABLE[correct] || 0;
+  const prevXP = getXP();
+  const newXP = prevXP + xpGained;
+  setXP(newXP);
+
+  const labelEl = document.getElementById('xp-label');
+  const fillEl = document.getElementById('xp-bar-fill');
+  const levelEl = document.getElementById('xp-level');
+  if (!labelEl || !fillEl || !levelEl) return;
+
+  const info = getLevelInfo(newXP);
+  const range = info.nextXp - info.prevXp;
+  const progress = range > 0 ? Math.min(1, (newXP - info.prevXp) / range) : 1;
+
+  labelEl.textContent = `ZDOBYTE DO\u015AWIADCZENIE: +${xpGained} XP`;
+  levelEl.textContent = `Level ${info.lvl} \u2014 ${info.name} (${newXP}/${info.nextXp} XP)`;
+
+  // Animate from previous to new
+  const prevInfo = getLevelInfo(prevXP);
+  const prevProgress = range > 0 ? Math.min(1, (prevXP - info.prevXp) / range) : 0;
+  fillEl.style.width = (Math.max(0, prevProgress) * 100) + '%';
+  fillEl.style.transition = 'none';
+  // Force reflow then animate
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      fillEl.style.transition = 'width 1.5s ease-out';
+      fillEl.style.width = (progress * 100) + '%';
+    });
   });
 }
 
