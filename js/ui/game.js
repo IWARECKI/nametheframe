@@ -8,6 +8,14 @@ function imgOK() {
   const loader = document.getElementById('floader');
   loader.style.opacity = '0';
   setTimeout(() => loader.style.display = 'none', 300);
+  // Mobile: set blurred background from the same image
+  if (window.innerWidth <= 768) {
+    const img = document.getElementById('bgimg');
+    const bgf = document.querySelector('.bgf');
+    if (img && bgf && img.src) {
+      bgf.style.setProperty('--blur-bg', 'url(' + img.src + ')');
+    }
+  }
 }
 
 // Track broken films in localStorage
@@ -183,21 +191,21 @@ function showResult(cls, html) {
   document.getElementById('frm').style.display = 'none';
   const fr = document.getElementById('fr');
   fr.querySelectorAll('.meta-pills, .meta-pills-row2, .heart-btn').forEach(el => el.remove());
-  // Heart inline with title in .frt-row
-  const frt = document.getElementById('frt');
-  frt.textContent = S.cur.title;
-  const frtRow = frt.closest('.frt-row');
-  if (frtRow) {
-    frtRow.querySelectorAll('.heart-btn').forEach(el => el.remove());
-    frtRow.insertAdjacentHTML('afterbegin', renderHeartButton());
-  }
+  // Hide the title row — info already in result box
+  const frtRow = document.querySelector('.frt-row');
+  if (frtRow) frtRow.style.display = 'none';
   fr.insertAdjacentHTML('beforeend', renderMetaPills(S.cur));
   fr.style.display = 'block';
-  // Reveal heart only on correct answer
+  // Heart moves into the winning button (correct answer)
   if (cls === 'ok') {
     setTimeout(() => {
-      const hb = frtRow ? frtRow.querySelector('.heart-btn') : null;
-      if (hb) { hb.classList.add('heart-revealed'); playStampSound(); }
+      const winBtn = document.querySelector('.opt.correct');
+      if (winBtn) {
+        winBtn.classList.add('opt-winner');
+        winBtn.insertAdjacentHTML('beforeend', renderHeartButton());
+        const hb = winBtn.querySelector('.heart-btn');
+        if (hb) { hb.classList.add('heart-revealed'); playStampSound(); }
+      }
     }, 400);
   }
   document.getElementById('nb').style.display = 'block';
@@ -218,21 +226,21 @@ function sr(ok, pts, ct, ex) {
   document.getElementById('frm').style.display = 'none';
   const fr = document.getElementById('fr');
   fr.querySelectorAll('.meta-pills, .meta-pills-row2, .heart-btn').forEach(el => el.remove());
-  // Heart inline with title in .frt-row
-  const frt = document.getElementById('frt');
-  frt.textContent = S.cur.title;
-  const frtRow = frt.closest('.frt-row');
-  if (frtRow) {
-    frtRow.querySelectorAll('.heart-btn').forEach(el => el.remove());
-    frtRow.insertAdjacentHTML('afterbegin', renderHeartButton());
-  }
+  // Hide the title row — info already in result box
+  const frtRow = document.querySelector('.frt-row');
+  if (frtRow) frtRow.style.display = 'none';
   fr.insertAdjacentHTML('beforeend', renderMetaPills(S.cur));
   fr.style.display = 'block';
-  // Reveal heart only on correct answer
+  // Heart moves into the winning button (correct answer)
   if (ok) {
     setTimeout(() => {
-      const hb = frtRow ? frtRow.querySelector('.heart-btn') : null;
-      if (hb) { hb.classList.add('heart-revealed'); playStampSound(); }
+      const winBtn = document.querySelector('.opt.correct');
+      if (winBtn) {
+        winBtn.classList.add('opt-winner');
+        winBtn.insertAdjacentHTML('beforeend', renderHeartButton());
+        const hb = winBtn.querySelector('.heart-btn');
+        if (hb) { hb.classList.add('heart-revealed'); playStampSound(); }
+      }
     }, 400);
   }
   document.getElementById('nb').style.display = 'block';
