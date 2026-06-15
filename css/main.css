@@ -290,22 +290,22 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .field-label{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);}
 .field-sub{font-size:9px;color:var(--muted);letter-spacing:.04em;display:none;}
 .field-wrap:hover .field-sub{display:block;}
-.nick-input{background:transparent;border:none;border-radius:0;padding:.75rem 1rem .6rem;color:#fceea7;font-family:'Cormorant Garamond',serif;font-size:1.15rem;width:100%;outline:none;transition:color .2s;letter-spacing:2px;text-align:center;}
-.nick-input:focus{color:#fceea7;letter-spacing:2px;}
+.nick-input{background:transparent;border:none;border-radius:0;padding:.75rem 1rem .6rem;color:#DAA520;font-family:'Cormorant Garamond',serif;font-size:1.15rem;width:100%;outline:none;transition:color .2s;letter-spacing:2px;text-align:center;}
+.nick-input:focus{color:#DAA520;letter-spacing:2px;}
 .nick-input::placeholder{color:var(--muted);font-style:italic;letter-spacing:1px;}
 
-/* Animated underline via ::after on container */
+/* Animated underline — grows with text length via JS */
 .field-wrap{position:relative;width:100%;}
-.field-wrap::after{
-  content:'';display:block;
-  width:0;height:2px;
+.nick-underline{
+  display:block;
+  width:15px;min-width:15px;
+  height:2px;
   background:#d4af37;
   margin:0 auto;
   border-radius:2px;
-  transition:width .3s ease,box-shadow .3s ease;
+  transition:width .15s ease-out,box-shadow .3s ease;
 }
-.field-wrap:focus-within::after{
-  width:100%;
+.field-wrap:focus-within .nick-underline{
   box-shadow:0 0 10px rgba(212,175,55,.8);
 }
 
