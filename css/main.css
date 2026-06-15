@@ -503,6 +503,7 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .setup-form{
   width:100%;max-width:380px;
   display:flex;flex-direction:column;align-items:center;gap:1.25rem;
+  margin-top:4vh;
 }
 
 /* ── Nick input — neon error state ── */
@@ -678,7 +679,7 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .scores-panel .sp-lvl{font-size:12px;}
 .scores-panel .sp-score{font-family:'Space Mono',monospace;font-size:11px;color:var(--gold);font-weight:700;min-width:28px;text-align:right;}
 .scores-panel .sp-date{font-size:9px;color:var(--muted);min-width:50px;text-align:right;}
-.scred{margin-top:1.25rem;font-size:9px;letter-spacing:.1em;color:rgba(240,235,226,.13);text-align:center;}
+.scred{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:.1em;color:rgba(240,235,226,.13);text-align:center;z-index:60;margin:0;}
 
 /* ── GAME ──────────────────────────────────────────────────── */
 #game{display:none;min-height:100vh;position:relative;flex-direction:column;}
@@ -1397,7 +1398,7 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   cursor:pointer;
   z-index:50;
   display:flex;align-items:flex-end;justify-content:center;
-  padding-bottom:3vh;
+  padding-bottom:6vh;
   transition:border-color .4s ease,box-shadow .4s ease;
 }
 .cinematic-frame-button:hover{
@@ -1428,8 +1429,8 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 /* Nick input sits above frame so it's typeable */
 .nick-input{position:relative;z-index:100;}
 .nick-error{position:relative;z-index:100;}
-.scores-link{position:relative;z-index:100;}
-.auth-bar{position:relative;z-index:100;}
+.scores-link{position:fixed;z-index:100;bottom:20px;left:50%;transform:translateX(-50%);}
+.auth-bar{position:fixed;top:40px;right:40px;z-index:100;}
 .setup-form{position:relative;z-index:100;}
 
 /* ── Implode UI Animation ────────────────────────────────────── */
