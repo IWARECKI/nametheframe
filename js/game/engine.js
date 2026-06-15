@@ -251,6 +251,13 @@ function resetGame() {
   document.getElementById('end').style.display   = 'none';
   document.getElementById('setup').style.display = 'flex';
   document.getElementById('setup').classList.add('vis');
+  document.getElementById('setup').style.opacity = '';
+
+  // Reset implode animation and frame button
+  const center = document.getElementById('setup-center');
+  if (center) center.classList.remove('implode-ui');
+  const frameBtn = document.querySelector('.cinematic-frame-button');
+  if (frameBtn) frameBtn.style.display = '';
 
   // Reset the start button so it can be pressed again
   const btn = document.getElementById('start-btn');
