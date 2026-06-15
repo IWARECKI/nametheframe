@@ -689,7 +689,13 @@ function zaprojektoruj() {
   const nickInput = document.getElementById('nick-input');
   const nick = nickInput ? nickInput.value.trim() : '';
   if (!nick) {
-    if (typeof showNickError === 'function') showNickError('Podaj pseudonim, wędrowcze');
+    const errEl = document.getElementById('name-error');
+    if (errEl) {
+      errEl.classList.add('visible');
+      errEl.classList.remove('shake');
+      void errEl.offsetWidth;
+      errEl.classList.add('shake');
+    }
     return;
   }
 
