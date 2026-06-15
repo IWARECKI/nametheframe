@@ -312,11 +312,11 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 /* Custom error message */
 .nick-error-msg{
   display:block;text-align:center;
-  font-family:'Space Mono',monospace;font-size:9px;
-  letter-spacing:.1em;
+  font-family:'Space Mono',monospace;font-size:0.8rem;
+  letter-spacing:1px;
   color:#c95c55;
   opacity:0;
-  margin-top:8px;
+  margin-top:15px;
   transition:opacity .25s ease;
 }
 .nick-error-msg.visible{opacity:1;}
@@ -714,7 +714,9 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .scores-panel .sp-lvl{font-size:12px;}
 .scores-panel .sp-score{font-family:'Space Mono',monospace;font-size:11px;color:var(--gold);font-weight:700;min-width:28px;text-align:right;}
 .scores-panel .sp-date{font-size:9px;color:var(--muted);min-width:50px;text-align:right;}
-.scred{position:fixed;bottom:15px;right:20px;font-size:0.7rem;letter-spacing:.08em;color:rgba(240,235,226,.13);text-align:right;z-index:60;margin:0;opacity:.4;}
+.scred{position:fixed;bottom:12px;left:0;width:100%;text-align:center;font-size:0.65rem;color:rgba(255,255,255,.4);letter-spacing:1px;z-index:100;margin:0;}
+.scred a{color:inherit;text-decoration:none;transition:color .15s;}
+.scred a:hover{color:rgba(255,255,255,.7);}
 
 /* ── GAME ──────────────────────────────────────────────────── */
 #game{display:none;min-height:100vh;position:relative;flex-direction:column;}
@@ -1434,7 +1436,7 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 /* ── Cinematic Frame Button — visible border around entire screen ── */
 .cinematic-frame-button{
   position:fixed;
-  top:80px;left:2vw;right:2vw;bottom:2vw;
+  top:80px;left:2vw;right:2vw;bottom:45px;
   border:1px solid rgba(212,175,55,.25);
   border-radius:12px;
   cursor:pointer;
@@ -1553,7 +1555,7 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
     background:none !important;
   }
   .cinematic-frame-button{
-    top:60px;left:3vw;right:3vw;bottom:3vw;
+    top:60px;left:3vw;right:3vw;bottom:35px;
     padding-bottom:3vh;
   }
 
