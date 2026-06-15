@@ -753,3 +753,14 @@ function switchLoginTab(tab) {
     formLogin.classList.remove('login-form--visible');
   }
 }
+
+// --- Hide nick error on typing ---
+document.addEventListener('DOMContentLoaded', () => {
+  const nickInput = document.getElementById('nick-input');
+  const nameError = document.getElementById('name-error');
+  if (nickInput && nameError) {
+    nickInput.addEventListener('input', () => {
+      nameError.classList.remove('visible', 'shake');
+    });
+  }
+});
