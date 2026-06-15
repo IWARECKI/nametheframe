@@ -754,13 +754,24 @@ function switchLoginTab(tab) {
   }
 }
 
-// --- Hide nick error on typing ---
+// --- Dynamic underline growth + hide error on typing ---
 document.addEventListener('DOMContentLoaded', () => {
   const nickInput = document.getElementById('nick-input');
   const nameError = document.getElementById('name-error');
-  if (nickInput && nameError) {
+  const underline = document.getElementById('nick-underline');
+
+  if (nickInput) {
     nickInput.addEventListener('input', () => {
-      nameError.classList.remove('visible', 'shake');
+      // Hide error
+      if (nameError) nameError.classList.remove('visible', 'shake');
+
+      // Grow underline based on text length
+      if (underline) {
+        const len = nickInput.value.length;
+        const maxWidth = nickInput.offsetWidth || 280;
+        const newWidth = Math.min(maxWidth, Math.max(15, len * (maxWidth / 30)));
+        underline.style.width = newWidth + 'px';
+      }
     });
   }
 });
