@@ -204,7 +204,7 @@ function showResult(cls, html) {
         winBtn.classList.add('opt-winner');
         winBtn.insertAdjacentHTML('beforeend', renderHeartButton());
         const hb = winBtn.querySelector('.heart-btn');
-        if (hb) { hb.classList.add('heart-revealed'); playStampSound(); }
+        if (hb) { hb.classList.add('heart-revealed'); }
       }
     }, 400);
   }
@@ -262,7 +262,6 @@ function sr(ok, pts, ct, ex) {
         const hb = winBtn.querySelector('.heart-btn');
         if (hb) {
           hb.classList.add('heart-revealed');
-          playStampSound();
           // Direct click listener — bypasses disabled parent
           hb.addEventListener('click', function(ev) {
             ev.stopPropagation();
