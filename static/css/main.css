@@ -277,7 +277,7 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 @keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── SETUP ─────────────────────────────────────────────────── */
-#setup{min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;padding:2.5rem 1.5rem;opacity:0;transition:opacity .6s;}
+#setup{min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;padding:80px 1.5rem 2.5rem;opacity:0;transition:opacity .6s;}
 #setup.vis{opacity:1;}
 #setup::before{content:'';position:fixed;top:0;left:50%;transform:translateX(-50%);width:700px;height:300px;background:radial-gradient(ellipse,rgba(201,169,110,.06) 0%,transparent 70%);pointer-events:none;}
 .brand{font-family:'Cinzel',serif;font-weight:400;font-size:clamp(2.4rem,6vw,4.5rem);letter-spacing:.14em;line-height:1;text-align:center;margin-bottom:.4rem;}
@@ -1392,7 +1392,7 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 /* ── Cinematic Frame Button — visible border around entire screen ── */
 .cinematic-frame-button{
   position:fixed;
-  top:2vw;left:2vw;right:2vw;bottom:2vw;
+  top:80px;left:2vw;right:2vw;bottom:2vw;
   border:1px solid rgba(212,175,55,.25);
   border-radius:12px;
   cursor:pointer;
@@ -1429,8 +1429,8 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 /* Nick input sits above frame so it's typeable */
 .nick-input{position:relative;z-index:100;}
 .nick-error{position:relative;z-index:100;}
-.scores-link{position:fixed;z-index:100;top:40px;left:40px;}
-.auth-bar{position:fixed;top:40px;right:40px;z-index:100;}
+.scores-link{position:fixed;z-index:100;top:25px;left:40px;}
+.auth-bar{position:fixed;top:25px;right:40px;z-index:100;}
 .setup-form{position:relative;z-index:100;}
 
 /* ── Implode UI Animation ────────────────────────────────────── */
