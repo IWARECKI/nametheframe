@@ -660,3 +660,13 @@ function resetHeartState() {
     });
   });
 })();
+
+// --- Login Modal ---
+function openLoginModal() {
+  const overlay = document.getElementById('login-overlay');
+  if (overlay) overlay.classList.add('is-open');
+}
+function closeLoginModal() {
+  const overlay = document.getElementById('login-overlay');
+  if (overlay) overlay.classList.remove('is-open');
+}
