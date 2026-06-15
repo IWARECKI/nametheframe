@@ -165,16 +165,20 @@ async function startGame() {
   // Play clunk immediately on press for tactile feel
   playClunk();
 
-  // Disable button during check
-  btn.disabled = true;
-  btn.classList.add('checking');
+  // Disable button during check (if button exists)
+  if (btn) {
+    btn.disabled = true;
+    btn.classList.add('checking');
+  }
 
   // Check nick availability (skip for authed users)
   if (!_authNick) {
     const available = await checkNickAvailability(nick);
     if (!available) {
-      btn.disabled = false;
-      btn.classList.remove('checking');
+      if (btn) {
+        btn.disabled = false;
+        btn.classList.remove('checking');
+      }
       showNickError('Ten pseudonim jest już na taśmie');
       return;
     }

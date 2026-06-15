@@ -685,6 +685,14 @@ function closeLogoutModal() {
 // Frame button click handled via onclick="zaprojektoruj()" in HTML
 
 function zaprojektoruj() {
+  // Validate nick BEFORE starting animation
+  const nickInput = document.getElementById('nick-input');
+  const nick = nickInput ? nickInput.value.trim() : '';
+  if (!nick) {
+    if (typeof showNickError === 'function') showNickError('Podaj pseudonim, wędrowcze');
+    return;
+  }
+
   const setup = document.getElementById('setup');
   const center = document.getElementById('setup-center');
   const light = document.getElementById('projector-light');
@@ -692,7 +700,7 @@ function zaprojektoruj() {
 
   if (!setup) { startGame(); return; }
 
-  // Remove overlay immediately
+  // Hide frame button immediately
   if (overlay) overlay.style.display = 'none';
 
   // Step 1: Implode UI to center point
