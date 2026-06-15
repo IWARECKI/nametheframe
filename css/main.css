@@ -290,9 +290,9 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .field-label{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);}
 .field-sub{font-size:9px;color:var(--muted);letter-spacing:.04em;display:none;}
 .field-wrap:hover .field-sub{display:block;}
-.nick-input{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;color:var(--text);font-family:'Cormorant Garamond',serif;font-size:1.15rem;width:100%;outline:none;transition:border-color .15s;letter-spacing:.04em;}
-.nick-input:focus{border-color:rgba(212,175,55,.7);box-shadow:0 5px 15px rgba(212,175,55,.15);color:rgba(255,248,230,.95);}
-.nick-input::placeholder{color:var(--muted);font-style:italic;}
+.nick-input{background:transparent;border:none;border-bottom:1px solid rgba(212,175,55,.4);border-radius:0;padding:.75rem 1rem .6rem;color:#fceea7;font-family:'Cormorant Garamond',serif;font-size:1.15rem;width:100%;outline:none;transition:border-color .2s,box-shadow .2s;letter-spacing:2px;text-align:center;}
+.nick-input:focus{border-bottom:2px solid rgba(212,175,55,1);box-shadow:0 4px 10px -2px rgba(212,175,55,.4);color:#fceea7;letter-spacing:2px;}
+.nick-input::placeholder{color:var(--muted);font-style:italic;letter-spacing:1px;}
 .genre-select{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;color:var(--text);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;width:100%;outline:none;transition:border-color .15s;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23c9a96e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center;}
 .genre-select:focus{border-color:rgba(201,169,110,.4);}
 .genre-select option,.genre-select optgroup{background:#141414;color:var(--text);}
