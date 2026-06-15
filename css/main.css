@@ -728,7 +728,7 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 /* Winner button — heart as top-edge badge above first letter */
 .opt-winner{position:relative;font-weight:bold;color:#E5C158;text-shadow:0 1px 4px rgba(201,169,110,.3);}
 .opt-winner .heart-btn{
-  position:absolute;top:-12px;left:12px;
+  position:absolute;top:-12px;left:5px;
   display:flex;align-items:center;justify-content:center;
   width:24px;height:24px;
   font-size:1rem;line-height:1;
