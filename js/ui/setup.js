@@ -191,8 +191,8 @@ async function startGame() {
 
   const flash = document.getElementById('screen-flash');
 
-  // Phase 1: button fires (lamp explosion)
-  btn.classList.add('firing');
+  // Phase 1: button fires (lamp explosion) — skip if btn doesn't exist
+  if (btn) btn.classList.add('firing');
 
   // Phase 2: full-screen flash at peak of button animation (~450ms)
   setTimeout(() => {
