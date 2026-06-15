@@ -158,7 +158,7 @@ async function startGame() {
 
   // Validate nick presence
   if (!nick) {
-    showNickError('Podaj pseudonim, wędrowcze');
+    showNickError('Przedstaw si\u0119, w\u0119drowcze!');
     return;
   }
 
