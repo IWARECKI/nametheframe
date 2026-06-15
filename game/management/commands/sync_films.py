@@ -268,8 +268,12 @@ class Command(BaseCommand):
         film.save()
 
     def _sync_backdrops(self, film):
-        """Fetch backdrops from TMDB /images endpoint and create Backdrop records."""
-        data = self._tmdb_get(f'/movie/{film.tmdb_id}/images')
+        """Fetch backdrops from TMDB /images endpoint and create Backdrop records.
+        Only saves backdrops with no language (iso_639_1=None) — pure film frames.
+        """
+        data = self._tmdb_get(f'/movie/{film.tmdb_id}/images', params={
+            'include_image_language': 'null',
+        })
         time.sleep(0.25)
 
         backdrops = data.get('backdrops', [])[:20]  # Cap at 20 per film
@@ -279,6 +283,9 @@ class Command(BaseCommand):
             file_path = bd.get('file_path', '')
             if not file_path:
                 continue
+            # Skip backdrops with a language tag (they have text overlays)
+            if bd.get('iso_639_1'):
+                continue
 
             _, created = Backdrop.objects.get_or_create(
                 film=film,
@@ -286,7 +293,7 @@ class Command(BaseCommand):
                 defaults={
                     'width': bd.get('width', 0),
                     'height': bd.get('height', 0),
-                    'language': bd.get('iso_639_1') or '',
+                    'language': '',
                     'status': 'active',
                 },
             )

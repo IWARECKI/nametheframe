@@ -197,6 +197,7 @@ TMDB_CACHE = {}  # film_id -> list of TMDB file_paths (in-process; resets on res
 def fetch_backdrop_paths(film_id):
     """Return up to 12 TMDB backdrop file_paths for a film (cached).
 
+    Only returns backdrops with iso_639_1=None (no text overlay).
     Caching paths (not final URLs) lets blocked-backdrop filtering apply at
     response time, so an admin block takes effect without a cache flush.
     Raises requests.RequestException on TMDB failure.
@@ -205,11 +206,13 @@ def fetch_backdrop_paths(film_id):
         return TMDB_CACHE[film_id]
     resp = requests.get(
         f'{settings.TMDB_BASE_URL}/movie/{film_id}/images',
-        params={'api_key': settings.TMDB_API_KEY},
+        params={'api_key': settings.TMDB_API_KEY, 'include_image_language': 'null'},
         timeout=5,
     )
     resp.raise_for_status()
-    paths = [b['file_path'] for b in resp.json().get('backdrops', [])[:12]]
+    # Only keep backdrops with no language (pure film frames, no text)
+    all_backdrops = resp.json().get('backdrops', [])
+    paths = [b['file_path'] for b in all_backdrops if not b.get('iso_639_1')][:12]
     TMDB_CACHE[film_id] = paths
     return paths
 
