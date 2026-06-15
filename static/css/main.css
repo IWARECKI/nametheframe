@@ -1353,3 +1353,37 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   color:rgba(220,80,80,.9);
 }
 .logout-btn--leave:hover{background:rgba(180,60,60,.2);border-color:rgba(220,80,80,.6);}
+
+/* ── Auth link gold variant (top-right login) ────────────────── */
+.auth-link--gold{
+  color:var(--gold) !important;
+  font-weight:700;letter-spacing:.08em;
+}
+.auth-link--gold:hover{text-shadow:0 0 8px rgba(201,169,110,.4);}
+
+/* ── Projector Light Overlay (WOW effect) ────────────────────── */
+.projector-light-overlay{
+  position:fixed;inset:0;z-index:9999;
+  pointer-events:none;
+  opacity:0;
+  background:radial-gradient(ellipse 40% 90% at 50% -5%,rgba(255,240,180,.25) 0%,rgba(255,220,100,.08) 40%,transparent 75%);
+  filter:blur(20px);
+  transition:opacity .4s ease;
+}
+.projector-light-overlay.active{
+  opacity:1;
+  animation:projector-flicker 0.12s ease-in-out 4 alternate;
+}
+@keyframes projector-flicker{
+  0%  {opacity:.7;}
+  25% {opacity:1;}
+  50% {opacity:.85;}
+  75% {opacity:1;}
+  100%{opacity:.9;}
+}
+
+/* Fade out UI for projector effect */
+.fade-out-ui{
+  opacity:0 !important;
+  transition:opacity .5s ease !important;
+}

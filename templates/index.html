@@ -45,30 +45,25 @@
 <section id="setup">
   <!-- Auth bar — top-right strip -->
   <div class="auth-bar" id="auth-bar">
-    <button class="golden-ticket golden-ticket--setup" id="golden-ticket-setup" onclick="onGoldenTicketClick()" aria-label="Karta Widza">🎫</button>
+    <button class="golden-ticket golden-ticket--setup" id="golden-ticket-setup" onclick="onGoldenTicketClick()" aria-label="Karta Widza">&#127915;</button>
     {% if player_nick %}
       <span class="auth-status" id="auth-status">{{ player_nick }}</span>
     {% elif user.is_authenticated %}
       <span class="auth-status" id="auth-status">zalogowany</span>
     {% else %}
-      <span class="auth-status" id="auth-status">gość</span>
+      <span class="auth-status" id="auth-status">go&#347;&#263;</span>
     {% endif %}
     {% if user.is_authenticated %}
       <a class="auth-link" href="#" onclick="openLogoutModal();return false;">wyloguj</a>
     {% else %}
-      <a class="auth-link" href="#" onclick="openLoginModal();return false;">zaloguj</a>
+      <a class="auth-link auth-link--gold" href="#" onclick="openLoginModal();return false;">zaloguj / zarejestruj</a>
     {% endif %}
   </div>
 
   <div class="brand">Name the <em>Frame</em></div>
-  <p class="tagline">Rozpoznaj kadr &nbsp;·&nbsp; Sprawdź swój poziom filmowtajemniczenia</p>
+  <p class="tagline">Rozpoznaj kadr &nbsp;&middot;&nbsp; Sprawdź sw&oacute;j poziom filmowtajemniczenia</p>
 
   <div class="setup-form">
-    {% if not user.is_authenticated %}
-    <button class="login-cta" onclick="openLoginModal()">Zaloguj / Zarejestruj</button>
-    <div class="guest-divider"><span>lub zagraj jako go&#347;&#263;</span></div>
-    {% endif %}
-
     <div class="field-wrap">
       {% if player_nick %}
         <input class="nick-input nick-input--authed" id="nick-input" type="text"
@@ -81,14 +76,17 @@
       <span class="nick-error" id="nick-error"></span>
     </div>
 
-    <button class="start-btn start-btn--metal" id="start-btn" onclick="startGame()">&#9654; &nbsp;Zapal projektor</button>
+    <button class="start-btn start-btn--metal" id="start-btn" onclick="zaprojektoruj()">&#9654; &nbsp;Zapal projektor</button>
 
     <a class="scores-link" href="#" id="scores-link" onclick="toggleScores();return false;">Wyniki</a>
   </div>
 
   <div class="scores-panel" id="scores-panel"></div>
-  <p class="scred">© 2026 iwarecki · Dane i obrazy: The Movie Database (TMDB) · nametheframe.com</p>
+  <p class="scred">&copy; 2026 iwarecki &middot; Dane i obrazy: The Movie Database (TMDB) &middot; nametheframe.com</p>
 </section>
+
+<!-- Projector Light Overlay (WOW effect) -->
+<div class="projector-light-overlay" id="projector-light"></div>
 
 <!-- Game section -->
 <div id="game" style="display:none;flex-direction:column;min-height:100vh;">

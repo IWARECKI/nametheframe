@@ -680,3 +680,31 @@ function closeLogoutModal() {
   const overlay = document.getElementById('logout-overlay');
   if (overlay) overlay.classList.remove('is-open');
 }
+
+// --- Projector "WOW" Effect on Start ---
+function zaprojektoruj() {
+  const setup = document.getElementById('setup');
+  const light = document.getElementById('projector-light');
+  if (!setup) { startGame(); return; }
+
+  // Step 1: Fade out UI (lights off)
+  setup.classList.add('fade-out-ui');
+
+  // Step 2: Audio (placeholder path — silently fails if missing)
+  try {
+    const audio = new Audio('/static/audio/projector.mp3');
+    audio.volume = 0.5;
+    audio.play().catch(() => {});
+  } catch(e) {}
+
+  // Step 3: Projector light flash (after 500ms)
+  setTimeout(() => {
+    if (light) light.classList.add('active');
+  }, 500);
+
+  // Step 4: Start the actual game (after 2000ms total)
+  setTimeout(() => {
+    if (light) { light.classList.remove('active'); light.style.opacity = '0'; }
+    startGame();
+  }, 2000);
+}
