@@ -213,25 +213,46 @@ function showResult(cls, html) {
 }
 
 // Simplified result renderer used by multiple-choice mode (cOpt).
-// Kept separate for clarity â€” test mode only has a binary correct/wrong state.
 function sr(ok, pts, ct, ex) {
   if (ok) S.score += pts;
   document.getElementById('pts').textContent = S.score;
+
+  // Remove old toast/rbox
+  document.querySelectorAll('.result-toast').forEach(el => el.remove());
   const rb = document.getElementById('rb');
-  rb.className = 'rbox ' + (ok ? 'ok' : 'bad');
-  rb.innerHTML = ok
-    ? `✓ &nbsp;Tak! &nbsp;<strong>${he(ct)}</strong> &nbsp;+${pts} pkt`
-    : `✗ &nbsp;Nie. To: &nbsp;<strong>${he(ct)}</strong>${ex}`;
-  rb.style.display = 'block';
+
+  if (ok) {
+    // Floating toast for correct answer — disappears on any interaction
+    rb.style.display = 'none';
+    const qi = document.querySelector('.qinner');
+    if (qi) {
+      qi.insertAdjacentHTML('afterbegin', `<div class="result-toast">✓ Tak! +${pts} pkt</div>`);
+      const toast = qi.querySelector('.result-toast');
+      const hideToast = () => {
+        if (toast) toast.classList.add('toast-hidden');
+        window.removeEventListener('mousemove', hideToast);
+        window.removeEventListener('touchstart', hideToast);
+      };
+      setTimeout(() => {
+        window.addEventListener('mousemove', hideToast, {once: true});
+        window.addEventListener('touchstart', hideToast, {once: true});
+      }, 600);
+    }
+  } else {
+    // Standard rbox for wrong answer
+    rb.className = 'rbox bad';
+    rb.innerHTML = `✗ &nbsp;Nie. To: &nbsp;<strong>${he(ct)}</strong>${ex}`;
+    rb.style.display = 'block';
+  }
+
   document.getElementById('frm').style.display = 'none';
   const fr = document.getElementById('fr');
   fr.querySelectorAll('.meta-pills, .meta-pills-row2, .heart-btn').forEach(el => el.remove());
-  // Hide the title row — info already in result box
   const frtRow = document.querySelector('.frt-row');
   if (frtRow) frtRow.style.display = 'none';
   fr.insertAdjacentHTML('beforeend', renderMetaPills(S.cur));
   fr.style.display = 'block';
-  // Heart moves into the winning button (correct answer)
+  // Heart as corner badge on winning button
   if (ok) {
     setTimeout(() => {
       const winBtn = document.querySelector('.opt.correct');
