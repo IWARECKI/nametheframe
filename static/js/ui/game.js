@@ -729,3 +729,27 @@ function zaprojektoruj() {
   }, 2100);
 }
 
+
+// --- Login Modal Tab Switching ---
+function switchLoginTab(tab) {
+  const tabLogin = document.getElementById('tab-login');
+  const tabSignup = document.getElementById('tab-signup');
+  const formLogin = document.getElementById('form-login');
+  const formSignup = document.getElementById('form-signup');
+
+  if (tab === 'login') {
+    tabLogin.classList.add('login-tab--active');
+    tabSignup.classList.remove('login-tab--active');
+    formLogin.classList.remove('login-form--hidden');
+    formLogin.classList.add('login-form--visible');
+    formSignup.classList.add('login-form--hidden');
+    formSignup.classList.remove('login-form--visible');
+  } else {
+    tabSignup.classList.add('login-tab--active');
+    tabLogin.classList.remove('login-tab--active');
+    formSignup.classList.remove('login-form--hidden');
+    formSignup.classList.add('login-form--visible');
+    formLogin.classList.add('login-form--hidden');
+    formLogin.classList.remove('login-form--visible');
+  }
+}

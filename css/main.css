@@ -1461,3 +1461,39 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   40% {transform:scale(0.6);opacity:1;}
   100%{transform:scale(3);opacity:0;}
 }
+
+/* ── Login Modal Tabs ────────────────────────────────────────── */
+.login-tabs{
+  display:flex;gap:0;margin-bottom:1.25rem;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.login-tab{
+  flex:1;padding:.7rem 0;
+  background:none;border:none;border-bottom:2px solid transparent;
+  font-family:'Space Mono',monospace;font-size:9px;
+  letter-spacing:.15em;text-transform:uppercase;
+  color:var(--muted);cursor:pointer;
+  transition:color .2s,border-color .2s;
+}
+.login-tab:hover{color:var(--text);}
+.login-tab--active{
+  color:var(--gold);
+  border-bottom-color:rgba(212,175,55,.6);
+}
+/* Form visibility with smooth animation */
+.login-form--hidden{
+  display:none;
+  opacity:0;
+  max-height:0;
+  overflow:hidden;
+}
+.login-form--visible{
+  display:flex !important;
+  opacity:1;
+  max-height:400px;
+  animation:form-reveal .3s ease-out;
+}
+@keyframes form-reveal{
+  from{opacity:0;max-height:0;transform:translateY(-8px);}
+  to{opacity:1;max-height:400px;transform:translateY(0);}
+}

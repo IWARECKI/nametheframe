@@ -215,8 +215,14 @@
 <div class="login-overlay" id="login-overlay" onclick="closeLoginModal()">
   <div class="login-modal" onclick="event.stopPropagation()">
     <button class="login-close" onclick="closeLoginModal()">&times;</button>
-    <div class="login-title">Zaloguj si&#281;</div>
 
+    <!-- Tabs -->
+    <div class="login-tabs">
+      <button class="login-tab login-tab--active" id="tab-login" onclick="switchLoginTab('login')">Logowanie</button>
+      <button class="login-tab" id="tab-signup" onclick="switchLoginTab('signup')">Rejestracja</button>
+    </div>
+
+    <!-- Social buttons — always visible -->
     <div class="login-socials">
       {% for provider in socialaccount_providers %}
         {% if provider.id == 'google' %}
@@ -231,7 +237,6 @@
         </a>
         {% endif %}
       {% endfor %}
-      <!-- Steam — coming soon -->
       <div class="login-social-btn login-social--steam login-social--soon" title="Wkr&oacute;tce">
         <svg class="login-social-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="#fff" d="M11.979 0C5.678 0 .511 4.86.022 10.92l6.432 2.658a3.387 3.387 0 0 1 1.912-.588c.063 0 .126.002.188.005l2.861-4.142V8.77c0-2.427 1.976-4.402 4.403-4.402 2.428 0 4.403 1.975 4.403 4.402 0 2.428-1.975 4.403-4.403 4.403-.048 0-.095-.001-.142-.003l-4.078 2.91c0 .049.003.098.003.147 0 1.822-1.48 3.303-3.303 3.303-1.611 0-2.955-1.16-3.242-2.688L.436 14.71C1.863 19.93 6.44 24 11.979 24c6.627 0 12-5.373 12-12S18.606 0 11.979 0z"/></svg>
         <span>Steam</span>
@@ -241,11 +246,22 @@
 
     <div class="login-separator"></div>
 
-    <form class="login-form" method="POST" action="{% url 'account_login' %}">
+    <!-- Login form -->
+    <form class="login-form" id="form-login" method="POST" action="{% url 'account_login' %}">
       {% csrf_token %}
       <input class="login-input" type="email" name="login" placeholder="Email" required autocomplete="email"/>
       <input class="login-input" type="password" name="password" placeholder="Has&#322;o" required autocomplete="current-password"/>
       <button class="login-submit" type="submit">Zaloguj</button>
+    </form>
+
+    <!-- Signup form (hidden by default) -->
+    <form class="login-form login-form--hidden" id="form-signup" method="POST" action="{% url 'account_signup' %}">
+      {% csrf_token %}
+      <input class="login-input" type="text" name="username" placeholder="Ksywka w&#281;drowca" required maxlength="22" autocomplete="username"/>
+      <input class="login-input" type="email" name="email" placeholder="Email" required autocomplete="email"/>
+      <input class="login-input" type="password" name="password1" placeholder="Has&#322;o" required autocomplete="new-password"/>
+      <input class="login-input" type="password" name="password2" placeholder="Powt&oacute;rz has&#322;o" required autocomplete="new-password"/>
+      <button class="login-submit" type="submit">Zarejestruj</button>
     </form>
   </div>
 </div>
