@@ -978,15 +978,6 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 .lb-score{font-family:'Space Mono',monospace;font-size:11px;color:var(--gold);font-weight:700;min-width:28px;text-align:right;}
 .lb-date{font-size:9px;color:var(--muted);min-width:44px;text-align:right;}
 
-/* ── Global footer — visible on setup / game / end ─────────── */
-#site-footer{
-  position:fixed;bottom:1.5rem;right:1.75rem;
-  font-family:'Cormorant Garamond',serif;font-size:11px;font-style:italic;
-  color:var(--muted);letter-spacing:.08em;
-  z-index:50;pointer-events:none;
-  opacity:.45;
-}
-
 /* ── Setup gold dust ─────────────────────────────────────────── */
 #setup-dust{
   position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;
