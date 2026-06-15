@@ -130,12 +130,14 @@ def api_scores_save(request):
             request.user.first_name = nick
             request.user.save(update_fields=['first_name'])
 
-    # Update frames_guessed on player profile
-    if request.user.is_authenticated and frames_guessed > 0:
+    # Update frames_guessed and games_played on player profile
+    if request.user.is_authenticated:
         from .models import PlayerProfile
         profile, _ = PlayerProfile.objects.get_or_create(user=request.user)
-        profile.frames_guessed += frames_guessed
-        profile.save(update_fields=['frames_guessed'])
+        profile.games_played += 1
+        if frames_guessed > 0:
+            profile.frames_guessed += frames_guessed
+        profile.save(update_fields=['frames_guessed', 'games_played'])
 
     return JsonResponse({'ok': True})
 
