@@ -1153,18 +1153,25 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
 
 /* ── MOBILE OPTIMIZATION (max-width: 768px) ──────────────────── */
 @media(max-width:768px){
-  /* Cinematic Blur — blurred bg layer + contain frame on top */
+  /* Cinematic Blur — blurred duplicate bg + contain frame on top */
+  .bgf{
+    background:var(--blur-bg, #000) center/cover no-repeat;
+    filter:none;
+  }
+  .bgf::before{
+    content:'';position:absolute;inset:0;z-index:0;
+    background:inherit;
+    filter:blur(25px) brightness(0.35);
+    transform:scale(1.15);
+  }
   .bgf img{
+    position:relative;z-index:1;
     object-fit:contain;
     object-position:center 15%;
+    margin-top:6vh;
   }
-  /* Blurred background layer — gets image URL from JS via CSS var */
-  .bgf::before{
-    content:'';position:absolute;inset:0;z-index:-1;
-    background:var(--blur-bg, none) center/cover no-repeat;
-    filter:blur(25px) brightness(0.3);
-    transform:scale(1.15); /* hide blur edges */
-  }
+  .bgf::after{z-index:2;}
+  .bgf .vig{z-index:3;}
 
   /* Mobile Diet — HUD */
   .hud{padding:.5rem .75rem;}
@@ -1182,20 +1189,18 @@ body{font-family:'Space Mono',monospace;background:#080808;color:var(--text);min
   }
 
   /* Mobile Diet — Answer buttons */
-  .opt{padding:.45rem .65rem;font-size:10px;}
+  .opt{padding:.4rem .6rem;font-size:10px;line-height:1.3;}
+  .opt-winner{font-size:10px;}
 
-  /* Mobile Diet — Pills */
-  .pill{font-size:8px;padding:.25rem .55rem;}
-  .meta-pills{gap:5px;margin-top:.5rem;}
-  .meta-pills-row2{gap:5px;margin-top:4px;}
-
-  /* Mobile Diet — Title */
-  .frt{font-size:1em;}
+  /* Mobile Diet — Pills (15% smaller, tighter) */
+  .pill{font-size:7.5px;padding:.2rem .45rem;gap:3px;}
+  .meta-pills{gap:4px;margin-top:.4rem;}
+  .meta-pills-row2{gap:4px;margin-top:3px;}
 
   /* Mobile Diet — Next button */
-  .nbtn{padding:.55rem;font-size:8px;}
+  .nbtn{padding:.5rem;font-size:8px;margin-top:.5rem;}
 
-  /* Znikaj\u0105cy interfejs (UI hide) */
+  /* Znikajacy interfejs (UI hide) */
   .qpanel,.hud{
     transition:opacity .3s ease;
   }
