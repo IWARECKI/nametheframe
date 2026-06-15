@@ -682,14 +682,7 @@ function closeLogoutModal() {
 }
 
 // --- Projector "WOW" Effect — triggered by fullscreen overlay click ---
-document.addEventListener('DOMContentLoaded', () => {
-  const overlay = document.getElementById('start-overlay');
-  if (!overlay) return;
-
-  overlay.addEventListener('click', () => {
-    zaprojektoruj();
-  });
-});
+// Frame button click handled via onclick="zaprojektoruj()" in HTML
 
 function zaprojektoruj() {
   const setup = document.getElementById('setup');
